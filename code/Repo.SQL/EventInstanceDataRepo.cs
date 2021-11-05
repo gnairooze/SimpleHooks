@@ -188,9 +188,10 @@ namespace Repo.SQL
                     }
                     #endregion
 
-                    results.Add(instance);
                     counter++;
                 }
+
+                results.Add(instance);
             }
         }
         #endregion

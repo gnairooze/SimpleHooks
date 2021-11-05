@@ -10,7 +10,7 @@ namespace Log.Console
         static int _Counter = 0;
         public LogModel Add(LogModel model)
         {
-            if (this.MinLogType < model.LogType) return null;
+            if (this.MinLogType > model.LogType) return null;
             
             model.Id = Logger._Counter++;
             System.Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(model));

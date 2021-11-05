@@ -7,36 +7,36 @@ using System.Text;
 
 namespace Repo.SQL
 {
-    public class EventDefinitionDataRepo : IDataRepository<EventDefinition>
+    public class AppOptionDataRepo : IDataRepository<AppOption>
     {
-        public EventDefinition Create(EventDefinition entity, object connection, object transaction)
+        public AppOption Create(AppOption entity, object connection, object transaction)
         {
             throw new NotImplementedException();
         }
 
-        public EventDefinition Edit(EventDefinition entity, object connection, object transaction)
+        public AppOption Edit(AppOption entity, object connection, object transaction)
         {
             throw new NotImplementedException();
         }
 
-        public List<EventDefinition> Read(Dictionary<string, string> options, object connection, object transaction)
+        public List<AppOption> Read(Dictionary<string, string> options, object connection, object transaction)
         {
-            SqlCommand cmd = new SqlCommand(Constants.SP_EVENT_DEFINITION_GET_ALL, (SqlConnection)connection);
+            SqlCommand cmd = new SqlCommand(Constants.SP_EVENT_APP_OPTION_GET_ALL, (SqlConnection)connection);
 
             var reader = cmd.ExecuteReader();
 
-            List<EventDefinition> definitons = FillEventDefinitions(reader);
+            List<AppOption> definitons = FillAppOptionDefinitions(reader);
 
             return definitons;
         }
 
-        private List<EventDefinition> FillEventDefinitions(SqlDataReader reader)
+        private List<AppOption> FillAppOptionDefinitions(SqlDataReader reader)
         {
-            List<EventDefinition> definitions = new List<EventDefinition>();
+            List<AppOption> definitions = new List<AppOption>();
 
             while (reader.Read())
             {
-                EventDefinition definition = new EventDefinition();
+                AppOption definition = new AppOption();
 
                 int counter = 0;
 
@@ -75,6 +75,12 @@ namespace Repo.SQL
                         case Constants.FIELD_NAME:
                             definition.Name = (string)reader[counter];
                             break;
+                        case Constants.FIELD_CATEGORY:
+                            definition.Category = (string)reader[counter];
+                            break;
+                        case Constants.FIELD_VALUE:
+                            definition.Value = (string)reader[counter];
+                            break;
                     }
                     #endregion
 
@@ -87,7 +93,7 @@ namespace Repo.SQL
             return definitions;
         }
 
-        public EventDefinition Remove(EventDefinition entity, object connection, object transaction)
+        public AppOption Remove(AppOption entity, object connection, object transaction)
         {
             throw new NotImplementedException();
         }

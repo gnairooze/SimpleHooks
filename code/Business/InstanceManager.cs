@@ -42,7 +42,13 @@ namespace Business
             
             this._HttpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
-            this._DefinitionManager = new DefinitionManager(logger, eventDefRepo, listenerDefRepo, eventDefListenerDefRepo, appOptionRepo);
+            this._DefinitionManager = new DefinitionManager(logger, eventDefRepo, listenerDefRepo, eventDefListenerDefRepo, appOptionRepo, connectionRepo);
+            
+            var succeeded = this._DefinitionManager.LoadDefinitions();
+            if(!succeeded)
+            {
+                throw new InvalidOperationException("definitions failed to load");
+            }
         }
         #endregion
 
@@ -60,13 +66,12 @@ namespace Business
             Models.Instance.EventInstance resultInstance = null;
             
             object trans = null;
-            object conn = null;
+            object conn = this._ConnectionRepo.CreateConnection(); ;
 
             try
             {
                 FetchListenersForEventInstance(eventInstance);
 
-                conn = this._ConnectionRepo.CreateConnection();
                 this._ConnectionRepo.OpenConnection(conn);
                 trans = this._ConnectionRepo.BeginTransaction(conn);
 
@@ -96,8 +101,9 @@ namespace Business
             finally
             {
                 this._ConnectionRepo.CloseConnection(conn);
-                this._ConnectionRepo.DisposeConnection(conn);
             }
+
+            this._ConnectionRepo.DisposeConnection(conn);
 
             //add end log
             log.LogType = LogModel.LogTypes.Debug;

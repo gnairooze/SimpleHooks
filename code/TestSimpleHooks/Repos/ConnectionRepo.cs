@@ -1,0 +1,48 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TestSimpleHooks.Repos
+{
+    internal class ConnectionRepo : Interfaces.IConnectionRepository
+    {
+        public string ConnectionString { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public object BeginTransaction(object connection)
+        {
+            return new object();
+        }
+
+        public void CloseConnection(object connection)
+        {
+            
+        }
+
+        public void CommitTransaction(object transaction)
+        {
+            
+        }
+
+        public object CreateConnection()
+        {
+            return new object();
+        }
+
+        public void DisposeConnection(object connection)
+        {
+            
+        }
+
+        public void OpenConnection(object connection)
+        {
+            
+        }
+
+        public void RollbackTransaction(object transaction)
+        {
+            
+        }
+    }
+}

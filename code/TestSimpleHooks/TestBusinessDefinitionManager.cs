@@ -10,7 +10,7 @@ namespace TestSimpleHooks
     {
         public static void TestLoadDefinition1()
         {
-            Business.DefinitionManager manager = new(new Log.Console.Logger(), new Repos.EventDefRepo(), new Repos.ListenerDefRepo(), new Repos.EventDefListenerDefRepo(), new Repos.AppOptionsRepo());
+            Business.DefinitionManager manager = new(new Log.Console.Logger(), new Repos.EventDefRepo(), new Repos.ListenerDefRepo(), new Repos.EventDefListenerDefRepo(), new Repos.AppOptionsRepo(), new Repos.ConnectionRepo());
 
             manager.LoadDefinitions();
 

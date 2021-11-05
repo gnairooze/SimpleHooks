@@ -155,9 +155,10 @@ namespace Repo.SQL
                     }
                     #endregion
 
-                    listenerInstances.Add(instance);
                     counter++;
                 }
+
+                listenerInstances.Add(instance);
             }
 
             return listenerInstances;

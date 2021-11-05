@@ -10,9 +10,9 @@ namespace TestSimpleHooks
     {
         public static void TestAddEventInstance1()
         {
-            string connectionString = "";
+            string connectionString = "Data Source=.;Initial Catalog=SimpleHooks;Integrated Security=SSPI;";
 
-            Business.InstanceManager manager = new Business.InstanceManager(
+            Business.InstanceManager manager = new (
                 new Log.Console.Logger() { MinLogType = Log.Interface.LogModel.LogTypes.Debug },
                 new Repo.SQL.SqlConnectionRepo() { ConnectionString = connectionString },
                 new Repo.SQL.EventInstanceDataRepo(),
@@ -21,7 +21,7 @@ namespace TestSimpleHooks
                 new Repo.SQL.EventDefinitionDataRepo(),
                 new Repo.SQL.ListenerDefinitionDataRepo(),
                 new Repo.SQL.EventIistenerDefinitionDataRepo(),
-                null);
+                new Repo.SQL.AppOptionDataRepo());
 
             var instance = manager.Add(new Models.Instance.EventInstance() { 
                 Active = true,

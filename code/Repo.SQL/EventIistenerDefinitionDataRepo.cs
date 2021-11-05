@@ -81,9 +81,10 @@ namespace Repo.SQL
                     }
                     #endregion
 
-                    definitions.Add(definition);
                     counter++;
                 }
+
+                definitions.Add(definition);
             }
 
             return definitions;
