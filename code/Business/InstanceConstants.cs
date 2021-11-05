@@ -12,6 +12,7 @@ namespace Business
 
         #region users
         public const string USER_SYSTEM_PROCESSOR = "system.processor";
+        public const string USER_SYSTEM_EVENT_MANAGER = "system.event-manager";
         #endregion
 
         #region http codes

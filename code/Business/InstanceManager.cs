@@ -1,8 +1,10 @@
 ﻿using HttpClient.Interface;
+using Interfaces;
 using Log.Interface;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -12,12 +14,24 @@ namespace Business
     {
         private readonly ILog _Logger;
 
-        private readonly Interfaces.IConnectionRepository _ConnectionRepo;
-        private readonly Interfaces.IDataRepository<Models.Instance.EventInstance> _EventInstanceRepo;
-        private readonly Interfaces.IDataRepository<Models.Instance.ListenerInstance> _ListenerInstanceRepo;
+        private readonly IConnectionRepository _ConnectionRepo;
+        private readonly IDataRepository<Models.Instance.EventInstance> _EventInstanceRepo;
+        private readonly IDataRepository<Models.Instance.ListenerInstance> _ListenerInstanceRepo;
         private readonly IHttpClient _HttpClient;
+        private readonly DefinitionManager _DefinitionManager;
 
-        public InstanceManager(ILog logger, Interfaces.IConnectionRepository connectionRepo, Interfaces.IDataRepository<Models.Instance.EventInstance> eventInstanceRepo, Interfaces.IDataRepository<Models.Instance.ListenerInstance> listenerInstanceRepo, HttpClient.Interface.IHttpClient httpClient)
+        #region constructors
+        public InstanceManager(
+            ILog logger, 
+            IConnectionRepository connectionRepo, 
+            IDataRepository<Models.Instance.EventInstance> eventInstanceRepo, 
+            IDataRepository<Models.Instance.ListenerInstance> listenerInstanceRepo, 
+            IHttpClient httpClient, 
+            IDataRepository<Models.Definition.EventDefinition> eventDefRepo, 
+            IDataRepository<Models.Definition.ListenerDefinition> listenerDefRepo, 
+            IDataRepository<Models.Definition.EventDefinitionListenerDefinition> eventDefListenerDefRepo, 
+            IDataRepository<Models.Definition.AppOption> appOptionRepo
+            )
         {
             this._Logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
@@ -27,7 +41,16 @@ namespace Business
             this._ListenerInstanceRepo = listenerInstanceRepo ?? throw new ArgumentNullException(nameof(listenerInstanceRepo));
             
             this._HttpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+
+            this._DefinitionManager = new DefinitionManager(logger, eventDefRepo, listenerDefRepo, eventDefListenerDefRepo, appOptionRepo);
         }
+        #endregion
+
+        /// <summary>
+        /// Add event instance
+        /// </summary>
+        /// <param name="eventInstance">fill the event instance properties only. listener instances will be added automatically</param>
+        /// <returns></returns>
         public Models.Instance.EventInstance Add(Models.Instance.EventInstance eventInstance)
         {
             //intialize log and add first log
@@ -35,13 +58,14 @@ namespace Business
             this._Logger.Add(log);
 
             Models.Instance.EventInstance resultInstance = null;
-            //todo: fetch listener definitions
-            //set listenerinstance remaining trial count from definition and set next run to utc now
+            
             object trans = null;
             object conn = null;
 
             try
             {
+                FetchListenersForEventInstance(eventInstance);
+
                 conn = this._ConnectionRepo.CreateConnection();
                 this._ConnectionRepo.OpenConnection(conn);
                 trans = this._ConnectionRepo.BeginTransaction(conn);
@@ -50,6 +74,7 @@ namespace Business
                 List<Models.Instance.ListenerInstance> listenerInstances = new List<Models.Instance.ListenerInstance>();
                 foreach (var item in eventInstance.ListenerInstances)
                 {
+                    item.EventInstanceId = eventInstance.Id;
                     var listenerInstance = this._ListenerInstanceRepo.Create(item, conn, trans);
                     listenerInstances.Add(listenerInstance);
                 }
@@ -79,6 +104,29 @@ namespace Business
             this._Logger.Add(this.GetLogModelMethodEnd(log));
 
             return resultInstance;
+        }
+
+        private void FetchListenersForEventInstance(Models.Instance.EventInstance eventInstance)
+        {
+            eventInstance.ListenerInstances.Clear();
+            var relations = this._DefinitionManager.EventDefinitionListenerDefinitionRelations.Where(r => r.EventDefinitiontId == eventInstance.EventDefinitionId);
+            foreach (var relation in relations)
+            {
+                var listenerInstance = new Models.Instance.ListenerInstance()
+                {
+                    Active = true,
+                    CreateBy = InstanceConstants.USER_SYSTEM_EVENT_MANAGER,
+                    CreateDate = DateTime.UtcNow,
+                    ListenerDefinitionId = relation.ListenerDefinitionId,
+                    ModifyBy = InstanceConstants.USER_SYSTEM_EVENT_MANAGER,
+                    ModifyDate = DateTime.UtcNow,
+                    NextRun = DateTime.UtcNow,
+                    RemainingTrialCount = this._DefinitionManager.ListenerDefinitions.Single(l => l.Id == relation.ListenerDefinitionId).TrialCount,
+                    Status = Models.Instance.Enums.ListenerInstanceStatus.InQueue
+                };
+
+                eventInstance.ListenerInstances.Add(listenerInstance);
+            }
         }
 
         public List<Models.Instance.EventInstance> GetEventInstancesToProcess(DateTime runDate)
@@ -114,9 +162,22 @@ namespace Business
                 this._ConnectionRepo.DisposeConnection(conn);
             }
 
+            foreach (var eventInstance in results)
+            {
+                EnrichListenerDefinition(eventInstance);
+            }
+
             this._Logger.Add(this.GetLogModelMethodEnd(log));
 
             return results;
+        }
+
+        private void EnrichListenerDefinition(Models.Instance.EventInstance eventInstance)
+        {
+            foreach (var listenerInstnace in eventInstance.ListenerInstances)
+            {
+                listenerInstnace.Definition = this._DefinitionManager.ListenerDefinitions.Single(d => d.Id == listenerInstnace.ListenerDefinitionId);
+            }
         }
 
         public void Process(List<Models.Instance.EventInstance> eventInstances)
