@@ -33,13 +33,26 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tables", "Tables", "{C1323C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StoredProcedures", "StoredProcedures", "{C5C3F890-666D-464C-86ED-ECC2F0748625}"
 	ProjectSection(SolutionItems) = preProject
+		SQL\StoredProcedures\EventInstance_Add.Procedure.sql = SQL\StoredProcedures\EventInstance_Add.Procedure.sql
+		SQL\StoredProcedures\EventInstance_Edit.Procedure.sql = SQL\StoredProcedures\EventInstance_Edit.Procedure.sql
 		SQL\StoredProcedures\EventInstance_GetNotProcessed.Procedure.sql = SQL\StoredProcedures\EventInstance_GetNotProcessed.Procedure.sql
+		SQL\StoredProcedures\EventInstance_Remove.Procedure.sql = SQL\StoredProcedures\EventInstance_Remove.Procedure.sql
+		SQL\StoredProcedures\ListenerInstance_Add.sql = SQL\StoredProcedures\ListenerInstance_Add.sql
+		SQL\StoredProcedures\ListenerInstance_Edit.sql = SQL\StoredProcedures\ListenerInstance_Edit.sql
 		SQL\StoredProcedures\ListenerInstance_GetByEventInstance_Id.Procedure.sql = SQL\StoredProcedures\ListenerInstance_GetByEventInstance_Id.Procedure.sql
+		SQL\StoredProcedures\ListenerInstance_Remove.sql = SQL\StoredProcedures\ListenerInstance_Remove.sql
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repo.SQL", "Repo.SQL\Repo.SQL.csproj", "{9CD688A3-2F96-46D6-8691-29785CB962F5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpClient.Simple", "HttpClient.Simple\HttpClient.Simple.csproj", "{355270E4-F212-4ACF-A3EA-79322D7C9171}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{52464637-A9A9-4A94-994D-3C01EA166C72}"
+	ProjectSection(SolutionItems) = preProject
+		SQL\Data\AppOption-Data.sql = SQL\Data\AppOption-Data.sql
+		SQL\Data\EventInstanceStatus-Data.sql = SQL\Data\EventInstanceStatus-Data.sql
+		SQL\Data\ListenerInstanceStatus-Data.sql = SQL\Data\ListenerInstanceStatus-Data.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -90,6 +103,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{C1323CA7-0ACA-4BAA-8CD7-672B7C9974D9} = {00940EB9-7B57-40A8-93D6-CC5FE0646424}
 		{C5C3F890-666D-464C-86ED-ECC2F0748625} = {00940EB9-7B57-40A8-93D6-CC5FE0646424}
+		{52464637-A9A9-4A94-994D-3C01EA166C72} = {00940EB9-7B57-40A8-93D6-CC5FE0646424}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {019C6500-A05E-4917-85BC-0D9BD2CD2D06}

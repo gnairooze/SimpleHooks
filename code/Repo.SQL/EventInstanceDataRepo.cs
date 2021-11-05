@@ -55,8 +55,6 @@ namespace Repo.SQL
             SqlCommand cmd = new SqlCommand(Constants.SP_EVENTINSTANCE_EDIT, (SqlConnection) connection, (SqlTransaction)transaction);
             #region add parameters
             cmd.Parameters.AddWithValue(Constants.PARAM_ACTIVE, entity.Active);
-            cmd.Parameters.AddWithValue(Constants.PARAM_CREATE_BY, entity.CreateBy);
-            cmd.Parameters.AddWithValue(Constants.PARAM_CREATE_DATE, entity.CreateDate);
             cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_DATA, entity.EventData);
             cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_DEFINITION_ID, entity.EventDefinitionId);
             cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_INSTANCE_STATUS_ID, entity.Status);
