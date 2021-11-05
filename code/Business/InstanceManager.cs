@@ -12,63 +12,70 @@ namespace Business
     {
         private readonly ILog _Logger;
 
-        private readonly Interfaces.IRepository<Models.Instance.EventInstance> _EventInstanceRepo;
-        private readonly Interfaces.IRepository<Models.Instance.ListenerInstance> _ListenerInstanceRepo;
+        private readonly Interfaces.IConnectionRepository _ConnectionRepo;
+        private readonly Interfaces.IDataRepository<Models.Instance.EventInstance> _EventInstanceRepo;
+        private readonly Interfaces.IDataRepository<Models.Instance.ListenerInstance> _ListenerInstanceRepo;
         private readonly IHttpClient _HttpClient;
 
-        public InstanceManager(ILog logger, Interfaces.IRepository<Models.Instance.EventInstance> eventInstanceRepo, Interfaces.IRepository<Models.Instance.ListenerInstance> listenerInstanceRepo, HttpClient.Interface.IHttpClient httpClient)
+        public InstanceManager(ILog logger, Interfaces.IConnectionRepository connectionRepo, Interfaces.IDataRepository<Models.Instance.EventInstance> eventInstanceRepo, Interfaces.IDataRepository<Models.Instance.ListenerInstance> listenerInstanceRepo, HttpClient.Interface.IHttpClient httpClient)
         {
             this._Logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            
+
+            this._ConnectionRepo = connectionRepo ?? throw new ArgumentNullException(nameof(connectionRepo));
+
             this._EventInstanceRepo = eventInstanceRepo ?? throw new ArgumentNullException(nameof(eventInstanceRepo));
             this._ListenerInstanceRepo = listenerInstanceRepo ?? throw new ArgumentNullException(nameof(listenerInstanceRepo));
+            
             this._HttpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
         public Models.Instance.EventInstance Add(Models.Instance.EventInstance eventInstance)
         {
             //intialize log and add first log
-            var log = this.GetLogModelMethodStart(MethodBase.GetCurrentMethod().Name);
+            var log = this.GetLogModelMethodStart(MethodBase.GetCurrentMethod().Name, "eventInstance.Id", eventInstance.Id.ToString());
             this._Logger.Add(log);
 
             Models.Instance.EventInstance resultInstance = null;
             //todo: fetch listener definitions
             //set listenerinstance remaining trial count from definition and set next run to utc now
             object trans = null;
+            object conn = null;
 
             try
             {
-                this._EventInstanceRepo.OpenConnection();
-                trans = this._EventInstanceRepo.BeginTransaction();
+                conn = this._ConnectionRepo.CreateConnection();
+                this._ConnectionRepo.OpenConnection(conn);
+                trans = this._ConnectionRepo.BeginTransaction(conn);
 
-
-                eventInstance = this._EventInstanceRepo.Create(eventInstance, trans);
+                eventInstance = this._EventInstanceRepo.Create(eventInstance, conn, trans);
                 List<Models.Instance.ListenerInstance> listenerInstances = new List<Models.Instance.ListenerInstance>();
                 foreach (var item in eventInstance.ListenerInstances)
                 {
-                    var listenerInstance = this._ListenerInstanceRepo.Create(item, trans);
+                    var listenerInstance = this._ListenerInstanceRepo.Create(item, conn, trans);
                     listenerInstances.Add(listenerInstance);
                 }
 
                 eventInstance.ListenerInstances.Clear();
                 eventInstance.ListenerInstances.AddRange(listenerInstances);
 
-                this._EventInstanceRepo.CommitTransaction(trans);
+                this._ConnectionRepo.CommitTransaction(trans);
 
                 resultInstance = eventInstance;
             }
             catch (Exception ex)
             {
-                this._EventInstanceRepo.RollbackTransaction(trans);
+                this._ConnectionRepo.RollbackTransaction(trans);
 
                 log = GetLogModelException(log, ex);
                 this._Logger.Add(log);
             }
             finally
             {
-                this._EventInstanceRepo.CloseConnection();
+                this._ConnectionRepo.CloseConnection(conn);
+                this._ConnectionRepo.DisposeConnection(conn);
             }
 
             //add end log
+            log.LogType = LogModel.LogTypes.Debug;
             this._Logger.Add(this.GetLogModelMethodEnd(log));
 
             return resultInstance;
@@ -76,51 +83,159 @@ namespace Business
 
         public List<Models.Instance.EventInstance> GetEventInstancesToProcess(DateTime runDate)
         {
+            //intialize log and add first log
+            var log = this.GetLogModelMethodStart(MethodBase.GetCurrentMethod().Name, string.Empty, string.Empty);
+            this._Logger.Add(log);
+
+            List<Models.Instance.EventInstance> results = null;
+
             var readOperation = new Dictionary<string, string>
             {
                 { Models.Instance.Enums.EventInstanceReadOperations.ReadNotProcessed.ToString(), runDate.ToString() }
             };
 
-            return this._EventInstanceRepo.Read(readOperation, null);
+            object conn = null;
+
+            try
+            {
+                conn = this._ConnectionRepo.CreateConnection();
+                this._ConnectionRepo.OpenConnection(conn);
+
+                results = this._EventInstanceRepo.Read(readOperation, conn, null);
+            }
+            catch (Exception ex)
+            {
+                log = GetLogModelException(log, ex);
+                this._Logger.Add(log);
+            }
+            finally
+            {
+                this._ConnectionRepo.CloseConnection(conn);
+                this._ConnectionRepo.DisposeConnection(conn);
+            }
+
+            this._Logger.Add(this.GetLogModelMethodEnd(log));
+
+            return results;
         }
 
         public void Process(List<Models.Instance.EventInstance> eventInstances)
         {
+            //intialize log and add first log
+            var log = this.GetLogModelMethodStart(MethodBase.GetCurrentMethod().Name,string.Empty, string.Empty);
+            this._Logger.Add(log);
+
             foreach (var eventInstance in eventInstances)
             {
                 Process(eventInstance);
             }
+
+            //add end log
+            this._Logger.Add(this.GetLogModelMethodEnd(log));
         }
 
         private void Process(Models.Instance.EventInstance eventInstance)
         {
+            //intialize log and add first log
+            var log = this.GetLogModelMethodStart(MethodBase.GetCurrentMethod().Name, "eventInstance.Id", eventInstance.Id.ToString());
+            log.ReferenceName = "eventInstance.Id";
+            log.ReferenceValue = eventInstance.Id.ToString();
+            this._Logger.Add(log);
+
             //todo: updating the event instance and listener instance should be in the same transaction
             eventInstance.ModifyBy = InstanceConstants.USER_SYSTEM_PROCESSOR;
             eventInstance.ModifyDate = DateTime.UtcNow;
             eventInstance.Status = Models.Instance.Enums.EventInstanceStatus.Processing;
-            this._EventInstanceRepo.Edit(eventInstance, null);
+
+            object conn = this._ConnectionRepo.CreateConnection();
+            try
+            {
+                this._ConnectionRepo.OpenConnection(conn);
+
+                this._EventInstanceRepo.Edit(eventInstance, conn, null);
+                log.Counter++;
+                log.Step = "event instance status updated";
+                log.NotesA = eventInstance.ToString();
+                log.LogType = LogModel.LogTypes.Debug;
+                this._Logger.Add(log);
+
+            }
+            catch(Exception ex)
+            {
+                log = GetLogModelException(log, ex);
+                this._Logger.Add(log);
+            }
+            finally
+            {
+                this._ConnectionRepo.CloseConnection(conn);
+            }
 
             foreach (var item in eventInstance.ListenerInstances)
             {
-                ExecuteListener(item, eventInstance.EventDate);
+                ExecuteListener(item, eventInstance.EventData);
             }
 
             RefereshListeners(eventInstance);
             SetEventInstanceStatus(eventInstance);
-            this._EventInstanceRepo.Edit(eventInstance, null);
+
+            try
+            {
+                this._ConnectionRepo.OpenConnection(conn);
+                this._EventInstanceRepo.Edit(eventInstance, conn, null);
+                log.Counter++;
+                log.Step = "event instance status updated";
+                log.NotesA = eventInstance.ToString();
+                log.LogType = LogModel.LogTypes.Debug;
+                this._Logger.Add(log);
+            }
+            catch (Exception ex)
+            {
+                log = GetLogModelException(log, ex);
+                this._Logger.Add(log);
+            }
+            finally
+            {
+                this._ConnectionRepo.CloseConnection(conn);
+            }
+
+            this._ConnectionRepo.DisposeConnection(conn);
+
+            this._Logger.Add(this.GetLogModelMethodEnd(log));
         }
 
         private void RefereshListeners(Models.Instance.EventInstance eventInstance)
         {
+            var log = this.GetLogModelMethodStart(MethodBase.GetCurrentMethod().Name, "eventInstance.Id", eventInstance.Id.ToString());
+            this._Logger.Add(log);
+
             var readOperation = new Dictionary<string, string>
             {
                 { Models.Instance.Enums.ListenerInstanceReadOperations.ReadByEventInstanceId.ToString(), eventInstance.Id.ToString() }
             };
 
-            var listeners = this._ListenerInstanceRepo.Read(readOperation, null);
+            object conn = this._ConnectionRepo.CreateConnection();
+            List<Models.Instance.ListenerInstance> listeners = null;
+            try
+            {
+                this._ConnectionRepo.OpenConnection(conn);
+                listeners = this._ListenerInstanceRepo.Read(readOperation, conn, null);
+            }
+            catch (Exception ex)
+            {
+                log = GetLogModelException(log, ex);
+                this._Logger.Add(log);
+            }
+            finally
+            {
+                this._ConnectionRepo.CloseConnection(conn);
+            }
+
+            this._ConnectionRepo.DisposeConnection(conn);
 
             eventInstance.ListenerInstances.Clear();
             eventInstance.ListenerInstances.AddRange(listeners);
+
+            this._Logger.Add(this.GetLogModelMethodEnd(log));
         }
 
         private void SetEventInstanceStatus(Models.Instance.EventInstance eventInstance)
@@ -179,12 +294,24 @@ namespace Business
 
         private void ExecuteListener(Models.Instance.ListenerInstance listenerInstance, JObject eventData)
         {
+            //intialize log and add first log
+            var log = this.GetLogModelMethodStart(MethodBase.GetCurrentMethod().Name, "listenerInstance.Id", listenerInstance.Id.ToString());
+            this._Logger.Add(log);
+
             listenerInstance.ModifyBy = InstanceConstants.USER_SYSTEM_PROCESSOR;
-            listenerInstance.ModifyDate = DateTime.UtcNow;
             listenerInstance.RemainingTrialCount--;
             listenerInstance.Status = Models.Instance.Enums.ListenerInstanceStatus.Processing;
-            this._ListenerInstanceRepo.Edit(listenerInstance, null);
 
+            object conn = this._ConnectionRepo.CreateConnection();
+
+            var succeeded = UpdateListenerInstanceStatus(listenerInstance, log, conn);
+
+            if (!succeeded)
+            {
+                this._ConnectionRepo.DisposeConnection(conn);
+                return;
+            }
+            
             var result = this._HttpClient.Post(listenerInstance.Definition.URL, listenerInstance.Definition.Headers, eventData, listenerInstance.Definition.Timeout);
 
             #region handle http client result
@@ -192,27 +319,54 @@ namespace Business
             if (result.HttpCode == InstanceConstants.HTTP_CODE_SUCCEEDED)
             {
                 listenerInstance.Status = Models.Instance.Enums.ListenerInstanceStatus.Succeeded;
-                listenerInstance.ModifyDate = DateTime.UtcNow;
-                this._ListenerInstanceRepo.Edit(listenerInstance, null);
 
-                return;
+                UpdateListenerInstanceStatus(listenerInstance, log, conn);
             }
-
             //failed with no remaining retrials
-            if(listenerInstance.RemainingTrialCount <= 0)
+            else if(listenerInstance.RemainingTrialCount <= 0)
             {
-                listenerInstance.ModifyDate = DateTime.UtcNow;
                 listenerInstance.Status = Models.Instance.Enums.ListenerInstanceStatus.Failed;
-                this._ListenerInstanceRepo.Edit(listenerInstance, null);
-                return;
+                UpdateListenerInstanceStatus(listenerInstance, log, conn);
+            }
+            //failed with remaining retrials
+            else
+            {
+                listenerInstance.Status = Models.Instance.Enums.ListenerInstanceStatus.WaitingForRetrial;
+                listenerInstance.NextRun = listenerInstance.ModifyDate.Add(TimeSpan.FromMinutes(listenerInstance.Definition.RetrialDelay));
+                UpdateListenerInstanceStatus(listenerInstance, log, conn);
+            }
+            #endregion
+
+            this._ConnectionRepo.DisposeConnection(conn);
+        }
+    
+        private bool UpdateListenerInstanceStatus(Models.Instance.ListenerInstance listenerInstance, LogModel log, object conn)
+        {
+            bool succeeded = true;
+            listenerInstance.ModifyDate = DateTime.UtcNow;
+
+            try
+            {
+                this._ConnectionRepo.OpenConnection(conn);
+                this._ListenerInstanceRepo.Edit(listenerInstance, conn, null);
+                log.Counter++;
+                log.Step = "listener instance status updated";
+                log.NotesA = listenerInstance.ToString();
+                log.LogType = LogModel.LogTypes.Debug;
+                this._Logger.Add(log);
+            }
+            catch (Exception ex)
+            {
+                log = GetLogModelException(log, ex);
+                this._Logger.Add(log);
+                succeeded = false;
+            }
+            finally
+            {
+                this._ConnectionRepo.CloseConnection(conn);
             }
 
-            //failed with remaining retrials
-            listenerInstance.Status = Models.Instance.Enums.ListenerInstanceStatus.WaitingForRetrial;
-            listenerInstance.ModifyDate = DateTime.UtcNow;
-            listenerInstance.NextRun = listenerInstance.ModifyDate.Add(TimeSpan.FromMinutes(listenerInstance.Definition.RetrialDelay));
-            this._ListenerInstanceRepo.Edit(listenerInstance, null);
-            #endregion
+            return succeeded;
         }
     }
 }

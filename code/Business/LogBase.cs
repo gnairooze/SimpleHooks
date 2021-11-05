@@ -52,7 +52,7 @@ namespace Business
                 Counter = counter++,
                 CreateDate = DateTime.UtcNow,
                 CodeReference = $"{this.TypeName}|{methodName}",
-                LogType = LogModel.LogTypes.Information,
+                LogType = LogModel.LogTypes.Debug,
                 Location = this.CurrentAssemblyLocation,
                 Machine = this.MachineName,
                 Operation = methodName,
@@ -62,10 +62,12 @@ namespace Business
             return log;
         }
 
-        public LogModel GetLogModelMethodStart(string methodName)
+        public LogModel GetLogModelMethodStart(string methodName, string referenceName, string referenceValue)
         {
             var log = this.GetLogModelProtoType(methodName);
             log.Step = LogMeta.METHOD_START;
+            log.ReferenceName = referenceName;
+            log.ReferenceValue = referenceValue;
 
             return log;
         }
@@ -77,6 +79,7 @@ namespace Business
             log.Duration = (timeNow - log.CreateDate).TotalSeconds;
             log.CreateDate = timeNow;
             log.Step = LogMeta.METHOD_END;
+            log.LogType = LogModel.LogTypes.Debug;
             return log;
         }
 

@@ -14,5 +14,9 @@ namespace Models.Instance
         public DateTime NextRun { get; set; }
         public byte[] TimeStamp { get; set; }
         public Definition.ListenerDefinition Definition {get;set;}
+        public override string ToString()
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
     }
 }

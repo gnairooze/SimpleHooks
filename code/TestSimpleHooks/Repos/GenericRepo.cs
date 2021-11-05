@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TestSimpleHooks.Repos
 {
-    internal class GenericRepo<T> : Interfaces.IRepository<T> where T : Models.ModelBase
+    internal class GenericRepo<T> : Interfaces.IDataRepository<T> where T : Models.ModelBase
     {
         private readonly List<T> _Entities = new();
         private static long _Counter = 2;
@@ -18,9 +18,7 @@ namespace TestSimpleHooks.Repos
             }
         }
 
-        public string ConnectionString { get; set; }
-
-        public T Create(T entity, Object transaction)
+        public T Create(T entity, object connection, Object transaction)
         {
             entity.Id = GenericRepo<T>._Counter++;
 
@@ -29,7 +27,7 @@ namespace TestSimpleHooks.Repos
             return entity;
         }
 
-        public T Edit(T entity, Object transaction)
+        public T Edit(T entity, object connection, Object transaction)
         {
             var savedEntity = this.Entities.Where(e => e.Id == entity.Id).Single();
             savedEntity = entity;
@@ -37,23 +35,17 @@ namespace TestSimpleHooks.Repos
             return savedEntity;
         }
 
-        public List<T> Read(Dictionary<string, string> options, Object transaction)
+        public List<T> Read(Dictionary<string, string> options, object connection, Object transaction)
         {
             return this.Entities;
         }
 
-        public T Remove(T entity, Object transaction)
+        public T Remove(T entity, object connection, Object transaction)
         {
             var savedEntity = this.Entities.Where(e => e.Id == entity.Id).Single();
             this.Entities.Remove(entity);
 
             return savedEntity;
         }
-
-        public void OpenConnection() { }
-        public void CloseConnection() { }
-        public Object BeginTransaction() { return null; }
-        public void CommitTransaction(Object transaction) { }
-        public void RollbackTransaction(Object transaction) { }
     }
 }

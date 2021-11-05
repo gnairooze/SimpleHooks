@@ -9,10 +9,10 @@ namespace Business
     {
         private readonly ILog _Logger;
 
-        private readonly Interfaces.IRepository<Models.Definition.AppOption> _AppOptionRepo;
-        private readonly Interfaces.IRepository<Models.Definition.EventDefinition> _EventDefRepo;
-        private readonly Interfaces.IRepository<Models.Definition.ListenerDefinition> _ListenerDefRepo;
-        private readonly Interfaces.IRepository<Models.Definition.EventDefinitionListenerDefinition> _EventDefListenerDefRepo;
+        private readonly Interfaces.IDataRepository<Models.Definition.AppOption> _AppOptionRepo;
+        private readonly Interfaces.IDataRepository<Models.Definition.EventDefinition> _EventDefRepo;
+        private readonly Interfaces.IDataRepository<Models.Definition.ListenerDefinition> _ListenerDefRepo;
+        private readonly Interfaces.IDataRepository<Models.Definition.EventDefinitionListenerDefinition> _EventDefListenerDefRepo;
 
         public List<Models.Definition.AppOption> AppOptions { get; }
 
@@ -22,7 +22,7 @@ namespace Business
         
         public List<Models.Definition.EventDefinitionListenerDefinition> EventDefinitionListenerDefinitionRelations { get; }
 
-        public DefinitionManager(ILog logger, Interfaces.IRepository<Models.Definition.EventDefinition> eventDefRepo, Interfaces.IRepository<Models.Definition.ListenerDefinition> listenerDefRepo, Interfaces.IRepository<Models.Definition.EventDefinitionListenerDefinition> eventDefListenerDefRepo, Interfaces.IRepository<Models.Definition.AppOption> appOptionRepo)
+        public DefinitionManager(ILog logger, Interfaces.IDataRepository<Models.Definition.EventDefinition> eventDefRepo, Interfaces.IDataRepository<Models.Definition.ListenerDefinition> listenerDefRepo, Interfaces.IDataRepository<Models.Definition.EventDefinitionListenerDefinition> eventDefListenerDefRepo, Interfaces.IDataRepository<Models.Definition.AppOption> appOptionRepo)
         {
             this._Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._AppOptionRepo = appOptionRepo ?? throw new ArgumentNullException(nameof(appOptionRepo));
