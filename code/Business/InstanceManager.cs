@@ -353,7 +353,7 @@ namespace Business
             #endregion
         }
 
-        private void ExecuteListener(Models.Instance.ListenerInstance listenerInstance, JObject eventData)
+        private void ExecuteListener(Models.Instance.ListenerInstance listenerInstance, string eventData)
         {
             //intialize log and add first log
             var log = this.GetLogModelMethodStart(MethodBase.GetCurrentMethod().Name, "listenerInstance.Id", listenerInstance.Id.ToString());

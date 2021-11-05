@@ -10,16 +10,14 @@ namespace TestSimpleHooks
 {
     internal class HttpClientDemo : HttpClient.Interface.IHttpClient
     {
-        public HttpResult Post(string url, List<string> headers, JObject body, int timeout)
+        public HttpResult Post(string url, List<string> headers, string body, int timeout)
         {
             List<string> responseHedaers = new() {
                 "'content-type':'application/json'"
             };
 
-            if (body.ContainsKey("success"))
+            if (body.Contains("success"))
             {
-                body["result"] = "succeeded";
-
                 return new HttpResult()
                 {
                     Body = body,
@@ -27,8 +25,6 @@ namespace TestSimpleHooks
                     HttpCode = 200
                 };
             }
-
-            body["result"] = "failed";
 
             return new HttpResult()
             {

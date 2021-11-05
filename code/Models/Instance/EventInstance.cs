@@ -13,7 +13,7 @@ namespace Models.Instance
             this.ListenerInstances = new List<ListenerInstance>();
         }
         public long EventDefinitionId { get; set; }
-        public JObject EventData { get; set; }
+        public string EventData { get; set; }
         public string ReferenceName { get; set; }
         public string ReferenceValue { get; set; }
         public EventInstanceStatus Status { get; set; }

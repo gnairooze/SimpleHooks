@@ -175,7 +175,7 @@ namespace Repo.SQL
                             instance.TimeStamp = (byte[])reader[counter];
                             break;
                         case Constants.FIELD_EVENT_DATA:
-                            instance.EventData = (JObject)reader[counter];
+                            instance.EventData = (string)reader[counter];
                             break;
                         case Constants.FIELD_EVENT_DEFINITION_ID:
                             instance.EventDefinitionId = (long)reader[counter];

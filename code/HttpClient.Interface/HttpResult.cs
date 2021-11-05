@@ -11,7 +11,7 @@ namespace HttpClient.Interface
         {
             this.Headers = new List<string>();
         }
-        public JObject Body { get; set; }
+        public string Body { get; set; }
         public List<string> Headers { get; set; }
         public int HttpCode { get; set; }
     }
