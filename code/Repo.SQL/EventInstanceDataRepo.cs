@@ -12,7 +12,7 @@ namespace Repo.SQL
     {
         public EventInstance Create(EventInstance entity, object connection, object transaction)
         {
-            SqlCommand cmd = new SqlCommand(Constants.SP_EVENTINSTANCE_ADD, (SqlConnection)connection, (SqlTransaction)transaction);
+            SqlCommand cmd = new SqlCommand(Constants.SP_EVENT_INSTANCE_ADD, (SqlConnection)connection, (SqlTransaction)transaction);
             #region add parameters
             cmd.Parameters.AddWithValue(Constants.PARAM_ACTIVE, entity.Active);
             cmd.Parameters.AddWithValue(Constants.PARAM_CREATE_BY, entity.CreateBy);
@@ -39,7 +39,7 @@ namespace Repo.SQL
 
         public EventInstance Remove(EventInstance entity, object connection, object transaction)
         {
-            SqlCommand cmd = new SqlCommand(Constants.SP_EVENTINSTANCE_REMOVE, (SqlConnection)connection, (SqlTransaction)transaction);
+            SqlCommand cmd = new SqlCommand(Constants.SP_EVENT_INSTANCE_REMOVE, (SqlConnection)connection, (SqlTransaction)transaction);
             #region add parameters
             cmd.Parameters.AddWithValue(Constants.PARAM_ID, entity.Id);
             cmd.Parameters.AddWithValue(Constants.PARAM_TIMESTAMP, entity.TimeStamp);
@@ -52,7 +52,7 @@ namespace Repo.SQL
 
         public EventInstance Edit(EventInstance entity, object connection, object transaction)
         {
-            SqlCommand cmd = new SqlCommand(Constants.SP_EVENTINSTANCE_EDIT, (SqlConnection) connection, (SqlTransaction)transaction);
+            SqlCommand cmd = new SqlCommand(Constants.SP_EVENT_INSTANCE_EDIT, (SqlConnection) connection, (SqlTransaction)transaction);
             #region add parameters
             cmd.Parameters.AddWithValue(Constants.PARAM_ACTIVE, entity.Active);
             cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_DATA, entity.EventData);
@@ -69,7 +69,6 @@ namespace Repo.SQL
 
             cmd.ExecuteNonQuery();
 
-            entity.Id = (long)cmd.Parameters[Constants.PARAM_ID].Value;
             entity.TimeStamp = (byte[])cmd.Parameters[Constants.PARAM_TIMESTAMP].Value;
 
             return entity;
@@ -95,7 +94,7 @@ namespace Repo.SQL
 
         private List<EventInstance> ReadNotProcessed(DateTime runDate, SqlConnection connection)
         {
-            SqlCommand cmd = new SqlCommand(Constants.SP_EVENTINSTANCE_ADD, (SqlConnection) connection);
+            SqlCommand cmd = new SqlCommand(Constants.SP_EVENT_INSTANCE_GET_NOT_PROCESSED, (SqlConnection) connection);
             cmd.Parameters.AddWithValue(Constants.PARAM_DATE, runDate);
 
             var reader = cmd.ExecuteReader();
@@ -113,8 +112,7 @@ namespace Repo.SQL
 
             reader.NextResult();
 
-            List<ListenerInstance> listenerInstances = new List<ListenerInstance>();
-            FillListenerInstancesOnly(reader, listenerInstances);
+            var listenerInstances = ListenerInstanceDataRepo.FillListenerInstances(reader);
 
             OrganizeEventInstances(results, listenerInstances);
 
@@ -186,73 +184,6 @@ namespace Repo.SQL
                             break;
                         case Constants.FIELD_REFERENCE_VALUE:
                             instance.ReferenceValue = (string)reader[counter];
-                            break;
-                    }
-                    #endregion
-
-                    results.Add(instance);
-                    counter++;
-                }
-            }
-        }
-
-        private void FillListenerInstancesOnly(SqlDataReader reader, List<ListenerInstance> results)
-        {
-            while (reader.Read())
-            {
-                ListenerInstance instance = new ListenerInstance();
-
-                int counter = 0;
-
-                while (counter < reader.FieldCount)
-                {
-                    if (reader[counter] == DBNull.Value)
-                    {
-                        counter++;
-                        continue;
-                    }
-
-                    #region read event instance fields
-                    switch (reader.GetName(counter))
-                    {
-                        case Constants.FIELD_ACTIVE:
-                            instance.Active = (bool)reader[counter];
-                            break;
-                        case Constants.FIELD_CREATE_BY:
-                            instance.CreateBy = (string)reader[counter];
-                            break;
-                        case Constants.FIELD_CREATE_DATE:
-                            instance.CreateDate = (DateTime)reader[counter];
-                            break;
-                        case Constants.FIELD_ID:
-                            instance.Id = (long)reader[counter];
-                            break;
-                        case Constants.FIELD_MODIFY_BY:
-                            instance.ModifyBy = (string)reader[counter];
-                            break;
-                        case Constants.FIELD_MODIFY_DATE:
-                            instance.ModifyDate = (DateTime)reader[counter];
-                            break;
-                        case Constants.FIELD_NOTES:
-                            instance.Notes = (string)reader[counter];
-                            break;
-                        case Constants.FIELD_TIMESTAMP:
-                            instance.TimeStamp = (byte[])reader[counter];
-                            break;
-                        case Constants.FIELD_EVENT_INSTANCE_ID:
-                            instance.EventInstanceId = (long)reader[counter];
-                            break;
-                        case Constants.FIELD_LISTENER_DEFINITION_ID:
-                            instance.ListenerDefinitionId = (long)reader[counter];
-                            break;
-                        case Constants.FIELD_LISTENER_INSTANCE_STATUS_ID:
-                            instance.Status = (Enums.ListenerInstanceStatus)reader[counter];
-                            break;
-                        case Constants.FIELD_REMAINING_TRIAL_COUNT:
-                            instance.RemainingTrialCount = (int)reader[counter];
-                            break;
-                        case Constants.FIELD_NEXT_RUN:
-                            instance.NextRun = (DateTime)reader[counter];
                             break;
                     }
                     #endregion

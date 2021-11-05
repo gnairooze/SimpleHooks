@@ -6,10 +6,15 @@ namespace Repo.SQL
 {
     internal class Constants
     {
-        public const string SP_EVENTINSTANCE_ADD = "EventInstance_Add";
-        public const string SP_EVENTINSTANCE_REMOVE = "EventInstance_Remove";
-        public const string SP_EVENTINSTANCE_EDIT = "EventInstance_Edit";
-        public const string SP_EVENTINSTANCE_GET_NOT_PROCESSED = "EventInstance_GetNotProcessed";
+        public const string SP_EVENT_INSTANCE_ADD = "EventInstance_Add";
+        public const string SP_EVENT_INSTANCE_REMOVE = "EventInstance_Remove";
+        public const string SP_EVENT_INSTANCE_EDIT = "EventInstance_Edit";
+        public const string SP_EVENT_INSTANCE_GET_NOT_PROCESSED = "EventInstance_GetNotProcessed";
+
+        public const string SP_LISTENER_INSTANCE_ADD = "ListenerInstance_Add";
+        public const string SP_LISTENER_INSTANCE_REMOVE = "ListenerInstance_Remove";
+        public const string SP_LISTENER_INSTANCE_EDIT = "ListenerInstance_Edit";
+        public const string SP_LISTENER_INSTANCE_GET_BY_EVENT_INSTANCE_ID = "ListenerInstance_GetByEventInstance_Id";
 
         public const string PARAM_ID = "@Id";
         public const string PARAM_ACTIVE = "@Active";
@@ -27,6 +32,12 @@ namespace Repo.SQL
         public const string PARAM_REFERENCE_NAME = "@ReferenceName";
         public const string PARAM_REFERENCE_VALUE = "@ReferenceValue";
         public const string PARAM_EVENT_INSTANCE_STATUS_ID = "@EventInstanceStatus_Id";
+
+        public const string PARAM_EVENT_INSTANCE_ID = "@EventInstance_Id";
+        public const string PARAM_LISTENER_DEFINITION_ID = "@ListenerDefinition_Id";
+        public const string PARAM_LISTENER_INSTANCE_STATUS_ID = "@ListenerInstanceStatus_Id";
+        public const string PARAM_REMAINING_TRIAL_COUNT = "@RemainingTrialCount";
+        public const string PARAM_NEXT_RUN = "@NextRun";
 
         public const string FIELD_ID = "Id";
         public const string FIELD_ACTIVE = "Active";
