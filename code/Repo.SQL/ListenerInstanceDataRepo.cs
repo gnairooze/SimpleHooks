@@ -22,10 +22,9 @@ namespace Repo.SQL
             cmd.Parameters.AddWithValue(Constants.PARAM_MODIFY_BY, entity.ModifyBy);
             cmd.Parameters.AddWithValue(Constants.PARAM_MODIFY_DATE, entity.ModifyDate);
             cmd.Parameters.AddWithValue(Constants.PARAM_NOTES, entity.Notes);
-            cmd.Parameters.AddWithValue(Constants.PARAM_TIMESTAMP, System.Data.SqlDbType.Timestamp).Direction = System.Data.ParameterDirection.InputOutput;
             cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_INSTANCE_ID, entity.EventInstanceId);
             cmd.Parameters.AddWithValue(Constants.PARAM_LISTENER_DEFINITION_ID, entity.ListenerDefinitionId);
-            cmd.Parameters.AddWithValue(Constants.PARAM_LISTENER_INSTANCE_STATUS_ID, entity.Status);
+            cmd.Parameters.AddWithValue(Constants.PARAM_LISTENER_INSTANCE_STATUS_ID, (int)entity.Status);
             cmd.Parameters.AddWithValue(Constants.PARAM_REMAINING_TRIAL_COUNT, entity.RemainingTrialCount);
             cmd.Parameters.AddWithValue(Constants.PARAM_NEXT_RUN, entity.NextRun);
 
@@ -34,11 +33,6 @@ namespace Repo.SQL
             cmd.ExecuteNonQuery();
 
             entity.Id = long.Parse(cmd.Parameters[Constants.PARAM_ID].Value.ToString());
-
-            int intTimestamp = (int)cmd.Parameters[Constants.PARAM_TIMESTAMP].Value;
-            byte[] intBytes = BitConverter.GetBytes(intTimestamp);
-            Array.Reverse(intBytes);
-            entity.TimeStamp = intBytes;
 
             return entity;
         }
@@ -50,22 +44,18 @@ namespace Repo.SQL
 
             #region add parameters
             cmd.Parameters.AddWithValue(Constants.PARAM_ACTIVE, entity.Active);
-            cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_INSTANCE_STATUS_ID, entity.Status);
             cmd.Parameters.AddWithValue(Constants.PARAM_ID, entity.Id);
             cmd.Parameters.AddWithValue(Constants.PARAM_MODIFY_BY, entity.ModifyBy);
             cmd.Parameters.AddWithValue(Constants.PARAM_MODIFY_DATE, entity.ModifyDate);
             cmd.Parameters.AddWithValue(Constants.PARAM_NOTES, entity.Notes);
-            cmd.Parameters.AddWithValue(Constants.PARAM_TIMESTAMP, entity.TimeStamp).Direction = System.Data.ParameterDirection.InputOutput;
             cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_INSTANCE_ID, entity.EventInstanceId);
             cmd.Parameters.AddWithValue(Constants.PARAM_LISTENER_DEFINITION_ID, entity.ListenerDefinitionId);
-            cmd.Parameters.AddWithValue(Constants.PARAM_LISTENER_INSTANCE_STATUS_ID, entity.Status);
+            cmd.Parameters.AddWithValue(Constants.PARAM_LISTENER_INSTANCE_STATUS_ID, (int)entity.Status);
             cmd.Parameters.AddWithValue(Constants.PARAM_REMAINING_TRIAL_COUNT, entity.RemainingTrialCount);
             cmd.Parameters.AddWithValue(Constants.PARAM_NEXT_RUN, entity.NextRun);
             #endregion
 
             cmd.ExecuteNonQuery();
-
-            entity.TimeStamp = (byte[])cmd.Parameters[Constants.PARAM_TIMESTAMP].Value;
 
             return entity;
         }
@@ -182,7 +172,6 @@ namespace Repo.SQL
 
             #region add parameters
             cmd.Parameters.AddWithValue(Constants.PARAM_ID, entity.Id);
-            cmd.Parameters.AddWithValue(Constants.PARAM_TIMESTAMP, entity.TimeStamp);
             #endregion
 
             cmd.ExecuteNonQuery();

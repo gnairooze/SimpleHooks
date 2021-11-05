@@ -13,8 +13,7 @@ create procedure dbo.ListenerInstance_Add
 @ListenerInstanceStatus_Id int,
 @RemainingTrialCount int,
 @NextRun datetime2,
-@Id bigint out,
-@Timestamp timestamp out
+@Id bigint out
 as
 begin
 	insert ListenerInstance
@@ -47,8 +46,6 @@ begin
 	)
 
 	set @Id = SCOPE_IDENTITY()
-
-	select @Timestamp = [TimeStamp] from ListenerInstance where Id = @Id
 end
 
 go

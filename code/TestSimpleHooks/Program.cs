@@ -13,7 +13,9 @@ namespace TestSimpleHooks
 
         static void Start()
         {
-            TestActualOperation.TestAddEventInstance1();
+            //TestSimpleHttpClient.Test1();
+            //TestActualOperation.TestAddEventInstance1();
+            TestActualOperation.TestProcess1();
         }
     }
 }

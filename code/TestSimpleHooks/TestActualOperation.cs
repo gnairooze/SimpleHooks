@@ -39,5 +39,24 @@ namespace TestSimpleHooks
 
             Console.WriteLine(instance.ToString());
         }
+
+        public static void TestProcess1()
+        {
+            string connectionString = "Data Source=.;Initial Catalog=SimpleHooks;Integrated Security=SSPI;";
+
+            Business.InstanceManager manager = new(
+                new Log.Console.Logger() { MinLogType = Log.Interface.LogModel.LogTypes.Debug },
+                new Repo.SQL.SqlConnectionRepo() { ConnectionString = connectionString },
+                new Repo.SQL.EventInstanceDataRepo(),
+                new Repo.SQL.ListenerInstanceDataRepo(),
+                new HttpClient.Simple.SimpleClient(),
+                new Repo.SQL.EventDefinitionDataRepo(),
+                new Repo.SQL.ListenerDefinitionDataRepo(),
+                new Repo.SQL.EventIistenerDefinitionDataRepo(),
+                new Repo.SQL.AppOptionDataRepo());
+
+            var instances = manager.GetEventInstancesToProcess(DateTime.UtcNow);
+            manager.Process(instances);
+        }
     }
 }

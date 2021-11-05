@@ -21,20 +21,18 @@ namespace Repo.SQL
             cmd.Parameters.AddWithValue(Constants.PARAM_CREATE_DATE, entity.CreateDate);
             cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_DATA, entity.EventData);
             cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_DEFINITION_ID, entity.EventDefinitionId);
-            cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_INSTANCE_STATUS_ID, entity.Status);
+            cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_INSTANCE_STATUS_ID, (int)entity.Status);
             cmd.Parameters.Add(Constants.PARAM_ID, System.Data.SqlDbType.BigInt).Direction = System.Data.ParameterDirection.Output;
             cmd.Parameters.AddWithValue(Constants.PARAM_MODIFY_BY, entity.ModifyBy);
             cmd.Parameters.AddWithValue(Constants.PARAM_MODIFY_DATE, entity.ModifyDate);
             cmd.Parameters.AddWithValue(Constants.PARAM_NOTES, entity.Notes);
             cmd.Parameters.AddWithValue(Constants.PARAM_REFERENCE_NAME, entity.ReferenceName);
             cmd.Parameters.AddWithValue(Constants.PARAM_REFERENCE_VALUE, entity.ReferenceValue);
-            cmd.Parameters.Add(Constants.PARAM_TIMESTAMP, System.Data.SqlDbType.Timestamp).Direction = System.Data.ParameterDirection.Output;
             #endregion
 
-              cmd.ExecuteNonQuery();
+            cmd.ExecuteNonQuery();
 
             entity.Id = (long)cmd.Parameters[Constants.PARAM_ID].Value;
-            entity.TimeStamp = (byte[])cmd.Parameters[Constants.PARAM_TIMESTAMP].Value;
 
             return entity;
         }
@@ -46,7 +44,6 @@ namespace Repo.SQL
 
             #region add parameters
             cmd.Parameters.AddWithValue(Constants.PARAM_ID, entity.Id);
-            cmd.Parameters.AddWithValue(Constants.PARAM_TIMESTAMP, entity.TimeStamp);
             #endregion
 
             cmd.ExecuteNonQuery();
@@ -63,19 +60,16 @@ namespace Repo.SQL
             cmd.Parameters.AddWithValue(Constants.PARAM_ACTIVE, entity.Active);
             cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_DATA, entity.EventData);
             cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_DEFINITION_ID, entity.EventDefinitionId);
-            cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_INSTANCE_STATUS_ID, entity.Status);
+            cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_INSTANCE_STATUS_ID, (int)entity.Status);
             cmd.Parameters.AddWithValue(Constants.PARAM_ID, entity.Id);
             cmd.Parameters.AddWithValue(Constants.PARAM_MODIFY_BY, entity.ModifyBy);
             cmd.Parameters.AddWithValue(Constants.PARAM_MODIFY_DATE, entity.ModifyDate);
             cmd.Parameters.AddWithValue(Constants.PARAM_NOTES, entity.Notes);
             cmd.Parameters.AddWithValue(Constants.PARAM_REFERENCE_NAME, entity.ReferenceName);
             cmd.Parameters.AddWithValue(Constants.PARAM_REFERENCE_VALUE, entity.ReferenceValue);
-            cmd.Parameters.AddWithValue(Constants.PARAM_TIMESTAMP, entity.TimeStamp).Direction = System.Data.ParameterDirection.InputOutput;
             #endregion
 
             cmd.ExecuteNonQuery();
-
-            entity.TimeStamp = (byte[])cmd.Parameters[Constants.PARAM_TIMESTAMP].Value;
 
             return entity;
         }

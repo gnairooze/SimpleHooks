@@ -11,8 +11,7 @@ create procedure dbo.EventInstance_Edit
 @ReferenceName nvarchar(50),
 @ReferenceValue nvarchar(100),
 @EventInstanceStatus_Id int,
-@Id bigint,
-@Timestamp timestamp out
+@Id bigint
 as
 begin
 	update EventInstance
@@ -26,9 +25,6 @@ begin
 		ModifyDate = @ModifyDate,
 		Notes = @Notes
 	where Id = @Id
-	and [TimeStamp] = @Timestamp
-
-	select @Timestamp = [TimeStamp] from EventInstance where Id = @Id
 end
 
 go

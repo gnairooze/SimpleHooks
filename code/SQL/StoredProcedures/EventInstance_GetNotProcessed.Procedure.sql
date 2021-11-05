@@ -37,6 +37,7 @@ begin
 	and EventInstance.EventInstanceStatus_Id in (1,2) -- InQueue = 1, Processing = 2,
 	and ListenerInstance.Active = 1
 	and ListenerInstance.ListenerInstanceStatus_Id in (1,64) --InQueue = 1, WaitingForRetrial = 64
+	and ListenerInstance.RemainingTrialCount > 0
 	and ListenerInstance.NextRun <= @Date
 
 	insert @eventInstances

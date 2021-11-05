@@ -13,8 +13,7 @@ create procedure dbo.EventInstance_Add
 @ReferenceName nvarchar(50),
 @ReferenceValue nvarchar(100),
 @EventInstanceStatus_Id int,
-@Id bigint out,
-@Timestamp timestamp out
+@Id bigint out
 as
 begin
 	insert EventInstance
@@ -47,8 +46,6 @@ begin
 	)
 
 	set @Id = SCOPE_IDENTITY()
-
-	select @Timestamp = [TimeStamp] from EventInstance where Id = @Id
 end
 
 go

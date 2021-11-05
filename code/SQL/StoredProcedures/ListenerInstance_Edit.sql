@@ -11,8 +11,7 @@ create procedure dbo.ListenerInstance_Edit
 @ListenerInstanceStatus_Id int,
 @RemainingTrialCount int,
 @NextRun datetime2,
-@Id bigint,
-@Timestamp timestamp out
+@Id bigint
 as
 begin
 	update ListenerInstance
@@ -26,9 +25,6 @@ begin
 		ModifyDate = @ModifyDate,
 		Notes = @Notes
 	where Id = @Id
-	and [TimeStamp] = @Timestamp
-
-	select @Timestamp = [TimeStamp] from EventInstance where Id = @Id
 end
 
 go
