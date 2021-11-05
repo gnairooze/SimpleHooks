@@ -66,7 +66,7 @@ namespace Business
             Models.Instance.EventInstance resultInstance = null;
             
             object trans = null;
-            object conn = this._ConnectionRepo.CreateConnection(); ;
+            object conn = this._ConnectionRepo.CreateConnection();
 
             try
             {

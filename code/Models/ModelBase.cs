@@ -6,6 +6,10 @@ namespace Models
 {
     public abstract class ModelBase
     {
+        public ModelBase()
+        {
+            this.Notes = string.Empty;
+        }
         public long Id { get; set; }
         public string CreateBy { get; set; }
         public DateTime CreateDate { get; set; }

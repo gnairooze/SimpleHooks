@@ -23,10 +23,13 @@ namespace Repo.SQL
         public List<ListenerDefinition> Read(Dictionary<string, string> options, object connection, object transaction)
         {
             SqlCommand cmd = new SqlCommand(Constants.SP_LISTENER_DEFINITION_GET_ALL, (SqlConnection)connection);
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
             var reader = cmd.ExecuteReader();
 
             List<ListenerDefinition> definitons = FillListenerDefinitions(reader);
+
+            reader.Close();
 
             return definitons;
         }

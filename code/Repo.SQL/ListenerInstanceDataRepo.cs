@@ -12,16 +12,17 @@ namespace Repo.SQL
         public ListenerInstance Create(ListenerInstance entity, object connection, object transaction)
         {
             SqlCommand cmd = new SqlCommand(Constants.SP_LISTENER_INSTANCE_ADD, (SqlConnection)connection, (SqlTransaction)transaction);
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
             #region add parameters
             cmd.Parameters.AddWithValue(Constants.PARAM_ACTIVE, entity.Active);
             cmd.Parameters.AddWithValue(Constants.PARAM_CREATE_BY, entity.CreateBy);
             cmd.Parameters.AddWithValue(Constants.PARAM_CREATE_DATE, entity.CreateDate);
-            cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_INSTANCE_STATUS_ID, entity.Status);
-            cmd.Parameters.AddWithValue(Constants.PARAM_ID, entity.Id).Direction = System.Data.ParameterDirection.Output;
+            cmd.Parameters.AddWithValue(Constants.PARAM_ID, System.Data.SqlDbType.BigInt).Direction = System.Data.ParameterDirection.Output;
             cmd.Parameters.AddWithValue(Constants.PARAM_MODIFY_BY, entity.ModifyBy);
             cmd.Parameters.AddWithValue(Constants.PARAM_MODIFY_DATE, entity.ModifyDate);
             cmd.Parameters.AddWithValue(Constants.PARAM_NOTES, entity.Notes);
-            cmd.Parameters.AddWithValue(Constants.PARAM_TIMESTAMP, entity.TimeStamp).Direction = System.Data.ParameterDirection.Output;
+            cmd.Parameters.AddWithValue(Constants.PARAM_TIMESTAMP, System.Data.SqlDbType.Timestamp).Direction = System.Data.ParameterDirection.InputOutput;
             cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_INSTANCE_ID, entity.EventInstanceId);
             cmd.Parameters.AddWithValue(Constants.PARAM_LISTENER_DEFINITION_ID, entity.ListenerDefinitionId);
             cmd.Parameters.AddWithValue(Constants.PARAM_LISTENER_INSTANCE_STATUS_ID, entity.Status);
@@ -32,8 +33,12 @@ namespace Repo.SQL
 
             cmd.ExecuteNonQuery();
 
-            entity.Id = (long)cmd.Parameters[Constants.PARAM_ID].Value;
-            entity.TimeStamp = (byte[])cmd.Parameters[Constants.PARAM_TIMESTAMP].Value;
+            entity.Id = long.Parse(cmd.Parameters[Constants.PARAM_ID].Value.ToString());
+
+            int intTimestamp = (int)cmd.Parameters[Constants.PARAM_TIMESTAMP].Value;
+            byte[] intBytes = BitConverter.GetBytes(intTimestamp);
+            Array.Reverse(intBytes);
+            entity.TimeStamp = intBytes;
 
             return entity;
         }
@@ -41,6 +46,8 @@ namespace Repo.SQL
         public ListenerInstance Edit(ListenerInstance entity, object connection, object transaction)
         {
             SqlCommand cmd = new SqlCommand(Constants.SP_LISTENER_INSTANCE_EDIT, (SqlConnection)connection, (SqlTransaction)transaction);
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
             #region add parameters
             cmd.Parameters.AddWithValue(Constants.PARAM_ACTIVE, entity.Active);
             cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_INSTANCE_STATUS_ID, entity.Status);
@@ -83,11 +90,15 @@ namespace Repo.SQL
         private List<ListenerInstance> ReadByEventInstanceId(long eventInstanceId, SqlConnection connection)
         {
             SqlCommand cmd = new SqlCommand(Constants.SP_LISTENER_INSTANCE_GET_BY_EVENT_INSTANCE_ID, (SqlConnection)connection);
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
             cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_INSTANCE_ID, eventInstanceId);
 
             var reader = cmd.ExecuteReader();
 
             List<ListenerInstance> listenerInstances = ListenerInstanceDataRepo.FillListenerInstances(reader);
+
+            reader.Close();
 
             return listenerInstances;
         }
@@ -167,6 +178,8 @@ namespace Repo.SQL
         public ListenerInstance Remove(ListenerInstance entity, object connection, object transaction)
         {
             SqlCommand cmd = new SqlCommand(Constants.SP_LISTENER_INSTANCE_REMOVE, (SqlConnection)connection, (SqlTransaction)transaction);
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
             #region add parameters
             cmd.Parameters.AddWithValue(Constants.PARAM_ID, entity.Id);
             cmd.Parameters.AddWithValue(Constants.PARAM_TIMESTAMP, entity.TimeStamp);

@@ -48,7 +48,7 @@ begin
 
 	set @Id = SCOPE_IDENTITY()
 
-	select @Timestamp = [TimeStamp] from EventInstance where Id = @Id
+	select @Timestamp = [TimeStamp] from ListenerInstance where Id = @Id
 end
 
 go
