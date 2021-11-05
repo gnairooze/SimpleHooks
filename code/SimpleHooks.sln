@@ -33,10 +33,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tables", "Tables", "{C1323C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StoredProcedures", "StoredProcedures", "{C5C3F890-666D-464C-86ED-ECC2F0748625}"
 	ProjectSection(SolutionItems) = preProject
+		SQL\StoredProcedures\AppOption_GetAll.Procedure.sql = SQL\StoredProcedures\AppOption_GetAll.Procedure.sql
+		SQL\StoredProcedures\EventDefinition_GetAll.Procedure.sql = SQL\StoredProcedures\EventDefinition_GetAll.Procedure.sql
+		SQL\StoredProcedures\EventDefinition_ListenerDefinition_GetAll.Procedure.sql = SQL\StoredProcedures\EventDefinition_ListenerDefinition_GetAll.Procedure.sql
 		SQL\StoredProcedures\EventInstance_Add.Procedure.sql = SQL\StoredProcedures\EventInstance_Add.Procedure.sql
 		SQL\StoredProcedures\EventInstance_Edit.Procedure.sql = SQL\StoredProcedures\EventInstance_Edit.Procedure.sql
 		SQL\StoredProcedures\EventInstance_GetNotProcessed.Procedure.sql = SQL\StoredProcedures\EventInstance_GetNotProcessed.Procedure.sql
 		SQL\StoredProcedures\EventInstance_Remove.Procedure.sql = SQL\StoredProcedures\EventInstance_Remove.Procedure.sql
+		SQL\StoredProcedures\ListenerDefinition_GetAll.Procedure.sql = SQL\StoredProcedures\ListenerDefinition_GetAll.Procedure.sql
 		SQL\StoredProcedures\ListenerInstance_Add.sql = SQL\StoredProcedures\ListenerInstance_Add.sql
 		SQL\StoredProcedures\ListenerInstance_Edit.sql = SQL\StoredProcedures\ListenerInstance_Edit.sql
 		SQL\StoredProcedures\ListenerInstance_GetByEventInstance_Id.Procedure.sql = SQL\StoredProcedures\ListenerInstance_GetByEventInstance_Id.Procedure.sql
