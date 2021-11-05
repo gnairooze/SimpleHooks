@@ -8,10 +8,12 @@
   <ItemGroup>
     <ProjectReference Include="..\Business\Business.csproj" />
     <ProjectReference Include="..\HttpClient.Interface\HttpClient.Interface.csproj" />
+    <ProjectReference Include="..\HttpClient.Simple\HttpClient.Simple.csproj" />
     <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
     <ProjectReference Include="..\Log.Console\Log.Console.csproj" />
     <ProjectReference Include="..\Log.Interface\Log.Interface.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
+    <ProjectReference Include="..\Repo.SQL\Repo.SQL.csproj" />
   </ItemGroup>
 
 </Project>

@@ -6,9 +6,14 @@ namespace TestSimpleHooks
     {
         static void Main()
         {
-            TestBusinessDefinitionManager.TestLoadDefinition1();
+            Start();
             Console.WriteLine("Press any key to exit...");
             Console.Read();
+        }
+
+        static void Start()
+        {
+            TestActualOperation.TestAddEventInstance1();
         }
     }
 }

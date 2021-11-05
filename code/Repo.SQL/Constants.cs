@@ -16,6 +16,10 @@ namespace Repo.SQL
         public const string SP_LISTENER_INSTANCE_EDIT = "ListenerInstance_Edit";
         public const string SP_LISTENER_INSTANCE_GET_BY_EVENT_INSTANCE_ID = "ListenerInstance_GetByEventInstance_Id";
 
+        public const string SP_EVENT_DEFINITION_GET_ALL = "EventDefinition_GetAll";
+        public const string SP_LISTENER_DEFINITION_GET_ALL = "ListenerDefinition_GetAll";
+        public const string SP_EVENT_LISTENER_DEFINITION_GET_ALL = "EventDefinition_ListenerDefinition_GetAll";
+        
         public const string PARAM_ID = "@Id";
         public const string PARAM_ACTIVE = "@Active";
         public const string PARAM_CREATE_BY = "@CreateBy";
@@ -59,5 +63,12 @@ namespace Repo.SQL
         public const string FIELD_LISTENER_INSTANCE_STATUS_ID = "ListenerInstanceStatus_Id";
         public const string FIELD_REMAINING_TRIAL_COUNT = "RemainingTrialCount";
         public const string FIELD_NEXT_RUN = "NextRun";
+
+        public const string FIELD_NAME = "Name";
+        public const string FIELD_URL = "URL";
+        public const string FIELD_HEADERS = "Headers";
+        public const string FIELD_TIMEOUT = "Timeout";
+        public const string FIELD_TRIAL_COUNT = "TrialCount";
+        public const string FIELD_RETRIAL_DELAY = "RetrialDelay";
     }
 }
