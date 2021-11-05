@@ -39,18 +39,18 @@ namespace Business
         public void LoadDefinitions()
         {
             //intialize log and add first log
-            var log = this.GetLogModelMethodStart(MethodBase.GetCurrentMethod().Name);
+            var log = this.GetLogModelMethodStart(MethodBase.GetCurrentMethod().Name, string.Empty, string.Empty);
             this._Logger.Add(log);
 
             //set definitions
             this.AppOptions.Clear();
-            this.AppOptions.AddRange(this._AppOptionRepo.Read(null, null));
+            this.AppOptions.AddRange(this._AppOptionRepo.Read(null, null, null));
             this.EventDefinitions.Clear();
-            this.EventDefinitions.AddRange(this._EventDefRepo.Read(null, null));
+            this.EventDefinitions.AddRange(this._EventDefRepo.Read(null, null, null));
             this.ListenerDefinitions.Clear();
-            this.ListenerDefinitions.AddRange(this._ListenerDefRepo.Read(null, null));
+            this.ListenerDefinitions.AddRange(this._ListenerDefRepo.Read(null, null, null));
             this.EventDefinitionListenerDefinitionRelations.Clear();
-            this.EventDefinitionListenerDefinitionRelations.AddRange(this._EventDefListenerDefRepo.Read(null, null));
+            this.EventDefinitionListenerDefinitionRelations.AddRange(this._EventDefListenerDefRepo.Read(null, null, null));
 
             //add end log
             this._Logger.Add(this.GetLogModelMethodEnd(log));
