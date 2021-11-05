@@ -10,9 +10,9 @@ namespace TestSimpleHooks
     {
         public static void Test1()
         {
-            HttpClient.Simple.SimpleClient client = new HttpClient.Simple.SimpleClient();
+            HttpClient.Simple.SimpleClient client = new();
 
-            List<string> headers = new List<string>
+            List<string> headers = new()
             {
                 "content-type:application/json",
                 "version:1.0"

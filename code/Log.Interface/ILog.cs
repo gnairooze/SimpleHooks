@@ -5,6 +5,7 @@ namespace Log.Interface
     public interface ILog
     {
         LogModel.LogTypes MinLogType { get; set; }
+        string ConnectionString { get; set; }
         LogModel Add(LogModel model);
     }
 }

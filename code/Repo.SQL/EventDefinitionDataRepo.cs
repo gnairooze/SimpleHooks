@@ -21,8 +21,10 @@ namespace Repo.SQL
 
         public List<EventDefinition> Read(Dictionary<string, string> options, object connection, object transaction)
         {
-            SqlCommand cmd = new SqlCommand(Constants.SP_EVENT_DEFINITION_GET_ALL, (SqlConnection)connection);
-            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            SqlCommand cmd = new SqlCommand(Constants.SP_EVENT_DEFINITION_GET_ALL, (SqlConnection)connection)
+            {
+                CommandType = System.Data.CommandType.StoredProcedure
+            };
 
             var reader = cmd.ExecuteReader();
 

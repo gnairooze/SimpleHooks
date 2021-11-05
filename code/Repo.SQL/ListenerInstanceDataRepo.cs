@@ -11,8 +11,10 @@ namespace Repo.SQL
     {
         public ListenerInstance Create(ListenerInstance entity, object connection, object transaction)
         {
-            SqlCommand cmd = new SqlCommand(Constants.SP_LISTENER_INSTANCE_ADD, (SqlConnection)connection, (SqlTransaction)transaction);
-            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            SqlCommand cmd = new SqlCommand(Constants.SP_LISTENER_INSTANCE_ADD, (SqlConnection)connection, (SqlTransaction)transaction)
+            {
+                CommandType = System.Data.CommandType.StoredProcedure
+            };
 
             #region add parameters
             cmd.Parameters.AddWithValue(Constants.PARAM_ACTIVE, entity.Active);
@@ -39,8 +41,10 @@ namespace Repo.SQL
 
         public ListenerInstance Edit(ListenerInstance entity, object connection, object transaction)
         {
-            SqlCommand cmd = new SqlCommand(Constants.SP_LISTENER_INSTANCE_EDIT, (SqlConnection)connection, (SqlTransaction)transaction);
-            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            SqlCommand cmd = new SqlCommand(Constants.SP_LISTENER_INSTANCE_EDIT, (SqlConnection)connection, (SqlTransaction)transaction)
+            {
+                CommandType = System.Data.CommandType.StoredProcedure
+            };
 
             #region add parameters
             cmd.Parameters.AddWithValue(Constants.PARAM_ACTIVE, entity.Active);
@@ -79,8 +83,10 @@ namespace Repo.SQL
 
         private List<ListenerInstance> ReadByEventInstanceId(long eventInstanceId, SqlConnection connection)
         {
-            SqlCommand cmd = new SqlCommand(Constants.SP_LISTENER_INSTANCE_GET_BY_EVENT_INSTANCE_ID, (SqlConnection)connection);
-            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            SqlCommand cmd = new SqlCommand(Constants.SP_LISTENER_INSTANCE_GET_BY_EVENT_INSTANCE_ID, (SqlConnection)connection)
+            {
+                CommandType = System.Data.CommandType.StoredProcedure
+            };
 
             cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_INSTANCE_ID, eventInstanceId);
 
@@ -167,8 +173,10 @@ namespace Repo.SQL
 
         public ListenerInstance Remove(ListenerInstance entity, object connection, object transaction)
         {
-            SqlCommand cmd = new SqlCommand(Constants.SP_LISTENER_INSTANCE_REMOVE, (SqlConnection)connection, (SqlTransaction)transaction);
-            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            SqlCommand cmd = new SqlCommand(Constants.SP_LISTENER_INSTANCE_REMOVE, (SqlConnection)connection, (SqlTransaction)transaction)
+            {
+                CommandType = System.Data.CommandType.StoredProcedure
+            };
 
             #region add parameters
             cmd.Parameters.AddWithValue(Constants.PARAM_ID, entity.Id);
