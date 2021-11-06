@@ -8,6 +8,7 @@ namespace Log.SQL
     {
         public LogModel.LogTypes MinLogType { get; set; }
         public string ConnectionString { get; set; }
+        public string FunctionName { get; set; }
 
         public LogModel Add(LogModel model)
         {
@@ -15,7 +16,7 @@ namespace Log.SQL
 
             var conn = new SqlConnection(this.ConnectionString);
 
-            var cmd = new SqlCommand("SimpleLog_Add", conn)
+            var cmd = new SqlCommand(this.FunctionName, conn)
             {
                 CommandType = System.Data.CommandType.StoredProcedure
             };

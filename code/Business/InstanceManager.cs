@@ -139,6 +139,7 @@ namespace Business
         {
             //intialize log and add first log
             var log = this.GetLogModelMethodStart(MethodBase.GetCurrentMethod().Name, string.Empty, string.Empty);
+            log.NotesA = $"runDate {runDate.ToString("yyyy-MM-dd HH:mm:ss")}";
             this._Logger.Add(log);
 
             List<Models.Instance.EventInstance> results = null;
@@ -172,6 +173,11 @@ namespace Business
             {
                 EnrichListenerDefinition(eventInstance);
             }
+
+            log.Step = "events count";
+            log.NotesA += $"{Environment.NewLine} | {results.Count} events to be processed";
+            log.LogType = LogModel.LogTypes.Information;
+            this._Logger.Add(log);
 
             this._Logger.Add(this.GetLogModelMethodEnd(log));
 

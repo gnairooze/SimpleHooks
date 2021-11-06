@@ -29,6 +29,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tables", "Tables", "{C1323C
 		SQL\Tables\dbo.ListenerDefinition.Table.sql = SQL\Tables\dbo.ListenerDefinition.Table.sql
 		SQL\Tables\dbo.ListenerInstance.Table.sql = SQL\Tables\dbo.ListenerInstance.Table.sql
 		SQL\Tables\dbo.ListenerInstanceStatus.Table.sql = SQL\Tables\dbo.ListenerInstanceStatus.Table.sql
+		SQL\Tables\LogTypes.Table.sql = SQL\Tables\LogTypes.Table.sql
+		SQL\Tables\SimpleHooks_Log.Table.sql = SQL\Tables\SimpleHooks_Log.Table.sql
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StoredProcedures", "StoredProcedures", "{C5C3F890-666D-464C-86ED-ECC2F0748625}"
@@ -45,20 +47,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StoredProcedures", "StoredP
 		SQL\StoredProcedures\ListenerInstance_Edit.sql = SQL\StoredProcedures\ListenerInstance_Edit.sql
 		SQL\StoredProcedures\ListenerInstance_GetByEventInstance_Id.Procedure.sql = SQL\StoredProcedures\ListenerInstance_GetByEventInstance_Id.Procedure.sql
 		SQL\StoredProcedures\ListenerInstance_Remove.sql = SQL\StoredProcedures\ListenerInstance_Remove.sql
+		SQL\StoredProcedures\SimpleHooks_Log_Add.sql = SQL\StoredProcedures\SimpleHooks_Log_Add.sql
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repo.SQL", "Repo.SQL\Repo.SQL.csproj", "{9CD688A3-2F96-46D6-8691-29785CB962F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpClient.Simple", "HttpClient.Simple\HttpClient.Simple.csproj", "{355270E4-F212-4ACF-A3EA-79322D7C9171}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpClient.Simple", "HttpClient.Simple\HttpClient.Simple.csproj", "{355270E4-F212-4ACF-A3EA-79322D7C9171}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{52464637-A9A9-4A94-994D-3C01EA166C72}"
 	ProjectSection(SolutionItems) = preProject
 		SQL\Data\AppOption-Data.sql = SQL\Data\AppOption-Data.sql
 		SQL\Data\EventInstanceStatus-Data.sql = SQL\Data\EventInstanceStatus-Data.sql
 		SQL\Data\ListenerInstanceStatus-Data.sql = SQL\Data\ListenerInstanceStatus-Data.sql
+		SQL\Data\SimpleHooks_Log-Data.sql = SQL\Data\SimpleHooks_Log-Data.sql
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Log.SQL", "Log.SQL\Log.SQL.csproj", "{9908774C-EF95-48FB-BE10-EC74D17A2D31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Log.SQL", "Log.SQL\Log.SQL.csproj", "{9908774C-EF95-48FB-BE10-EC74D17A2D31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

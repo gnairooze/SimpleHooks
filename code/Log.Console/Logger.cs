@@ -7,6 +7,7 @@ namespace Log.Console
     {
         public LogModel.LogTypes MinLogType { get; set; }
         public string ConnectionString { get; set; }
+        public string FunctionName { get; set; }
 
         static int _Counter = 0;
         public LogModel Add(LogModel model)

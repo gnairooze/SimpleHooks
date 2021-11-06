@@ -12,6 +12,7 @@
     <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
     <ProjectReference Include="..\Log.Console\Log.Console.csproj" />
     <ProjectReference Include="..\Log.Interface\Log.Interface.csproj" />
+    <ProjectReference Include="..\Log.SQL\Log.SQL.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
     <ProjectReference Include="..\Repo.SQL\Repo.SQL.csproj" />
   </ItemGroup>

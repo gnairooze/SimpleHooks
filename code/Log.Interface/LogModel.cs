@@ -15,6 +15,13 @@ namespace Log.Interface
             Error = 8
         }
 
+        public LogModel()
+        {
+            this.NotesA = string.Empty;
+            this.NotesB = string.Empty;
+            this.ReferenceName = string.Empty;
+            this.ReferenceValue = string.Empty;
+        }
         public long Id { get; set; }
         public LogTypes LogType { get; set; }
         public string Owner { get; set; }
