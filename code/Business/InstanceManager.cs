@@ -139,7 +139,7 @@ namespace Business
         {
             //intialize log and add first log
             var log = this.GetLogModelMethodStart(MethodBase.GetCurrentMethod().Name, string.Empty, string.Empty);
-            log.NotesA = $"runDate {runDate.ToString("yyyy-MM-dd HH:mm:ss")}";
+            log.NotesA = $"runDate {runDate:yyyy-MM-dd HH:mm:ss}";
             this._Logger.Add(log);
 
             List<Models.Instance.EventInstance> results = null;
