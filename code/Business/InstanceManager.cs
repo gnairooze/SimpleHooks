@@ -172,6 +172,7 @@ namespace Business
             foreach (var eventInstance in results)
             {
                 EnrichListenerDefinition(eventInstance);
+                EnrichEventDefinition(eventInstance);
             }
 
             log.Step = "events count";
@@ -190,6 +191,11 @@ namespace Business
             {
                 listenerInstnace.Definition = this._DefinitionManager.ListenerDefinitions.Single(d => d.Id == listenerInstnace.ListenerDefinitionId);
             }
+        }
+
+        private void EnrichEventDefinition(Models.Instance.EventInstance eventInstance)
+        {
+            eventInstance.Definition = this._DefinitionManager.EventDefinitions.Single(d => d.Id == eventInstance.EventDefinitionId);
         }
 
         public void Process(List<Models.Instance.EventInstance> eventInstances)
@@ -284,6 +290,8 @@ namespace Business
             {
                 var jsonData = JObject.Parse(eventInstance.EventData);
                 jsonData.Add(new JProperty("simpleHooksMetadata", new JObject(
+                    new JProperty("eventDefinitionId", eventInstance.EventDefinitionId),
+                    new JProperty("eventDefinitionName", eventInstance.Definition.Name),
                     new JProperty("eventBusinessId", eventInstance.BusinessId),
                     new JProperty("eventCreateDate", eventInstance.CreateDate),
                     new JProperty("eventReferenceName", eventInstance.ReferenceName),

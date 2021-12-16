@@ -20,6 +20,7 @@ namespace Models.Instance
         public EventInstanceStatus Status { get; set; }
         public byte[] TimeStamp { get; set; }
         public List<ListenerInstance> ListenerInstances { get; }
+        public Definition.EventDefinition Definition { get; set; }
         public override string ToString()
         {
             return Newtonsoft.Json.JsonConvert.SerializeObject(this);
