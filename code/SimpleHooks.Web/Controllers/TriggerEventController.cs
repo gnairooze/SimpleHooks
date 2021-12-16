@@ -43,6 +43,7 @@ namespace SimpleHooks.Web.Controllers
         {
             _Manager.Add(new EventInstance() {
                 Active = true,
+                BusinessId = Guid.NewGuid(),
                 CreateBy = "system.trigger",
                 CreateDate = DateTime.UtcNow,
                 EventData = value.EventData,

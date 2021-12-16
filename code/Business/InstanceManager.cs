@@ -243,9 +243,11 @@ namespace Business
                 this._ConnectionRepo.CloseConnection(conn);
             }
 
+            string enhancedEventData = InjectSimpleHookMetaDataInEventDate(eventInstance);
+
             foreach (var item in eventInstance.ListenerInstances)
             {
-                ExecuteListener(item, eventInstance.EventData);
+                ExecuteListener(item, enhancedEventData);
             }
 
             RefereshListeners(eventInstance);
@@ -274,6 +276,27 @@ namespace Business
             this._ConnectionRepo.DisposeConnection(conn);
 
             this._Logger.Add(this.GetLogModelMethodEnd(log));
+        }
+
+        private string InjectSimpleHookMetaDataInEventDate(Models.Instance.EventInstance eventInstance)
+        {
+            try
+            {
+                var jsonData = JObject.Parse(eventInstance.EventData);
+                jsonData.Add(new JProperty("simpleHooksMetadata", new JObject(
+                    new JProperty("eventBusinessId", eventInstance.BusinessId),
+                    new JProperty("eventCreateDate", eventInstance.CreateDate),
+                    new JProperty("eventReferenceName", eventInstance.ReferenceName),
+                    new JProperty("eventReferenceValue", eventInstance.ReferenceValue)
+                    )));
+
+                return jsonData.ToString();
+            }
+            catch
+            {
+                //todo:log exception
+                return eventInstance.EventData;
+            }
         }
 
         private void RefereshListeners(Models.Instance.EventInstance eventInstance)
@@ -388,18 +411,32 @@ namespace Business
             var result = this._HttpClient.Post(listenerInstance.Definition.URL, listenerInstance.Definition.Headers, eventData, listenerInstance.Definition.Timeout);
 
             #region handle http client result
+            var parameters = new Dictionary<string, string>();
+            parameters.Add("ListenerInstance", listenerInstance.ToString());
+            parameters.Add("eventData", eventData);
+            parameters.Add("result", result.ToString());
+
             //succeeded
             if (result.HttpCode == InstanceConstants.HTTP_CODE_SUCCEEDED)
             {
                 listenerInstance.Status = Models.Instance.Enums.ListenerInstanceStatus.Succeeded;
 
                 UpdateListenerInstanceStatus(listenerInstance, log, conn);
+
+                log.Counter++;
+                log.Step = "At the end of execute listener";
+                log.LogType = LogModel.LogTypes.Information;
+                log.NotesA = Newtonsoft.Json.JsonConvert.SerializeObject(parameters);
             }
             //failed with no remaining retrials
             else if(listenerInstance.RemainingTrialCount <= 0)
             {
                 listenerInstance.Status = Models.Instance.Enums.ListenerInstanceStatus.Failed;
                 UpdateListenerInstanceStatus(listenerInstance, log, conn);
+                log.LogType = LogModel.LogTypes.Error;
+                log.Counter++;
+                log.Step = "At the end of execute listener";
+                log.NotesB = Newtonsoft.Json.JsonConvert.SerializeObject(parameters);
             }
             //failed with remaining retrials
             else
@@ -407,8 +444,15 @@ namespace Business
                 listenerInstance.Status = Models.Instance.Enums.ListenerInstanceStatus.WaitingForRetrial;
                 listenerInstance.NextRun = listenerInstance.ModifyDate.Add(TimeSpan.FromMinutes(listenerInstance.Definition.RetrialDelay));
                 UpdateListenerInstanceStatus(listenerInstance, log, conn);
+
+                log.LogType = LogModel.LogTypes.Error;
+                log.Counter++;
+                log.Step = "At the end of execute listener";
+                log.NotesB = Newtonsoft.Json.JsonConvert.SerializeObject(parameters);
             }
             #endregion
+
+            this._Logger.Add(log);
 
             this._ConnectionRepo.DisposeConnection(conn);
         }

@@ -50,6 +50,7 @@ begin
 	select
 		EventInstance.Id,
 		EventInstance.EventDefinition_Id,
+		EventInstance.BusinessId,
 		EventInstance.EventData,
 		EventInstance.ReferenceName,
 		EventInstance.ReferenceValue,

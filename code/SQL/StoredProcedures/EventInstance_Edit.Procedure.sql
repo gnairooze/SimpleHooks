@@ -3,6 +3,7 @@ go
 
 create procedure dbo.EventInstance_Edit
 @Active bit,
+@BusinessId uniqueidentifier,
 @ModifyBy nvarchar(50),
 @ModifyDate datetime2,
 @Notes nvarchar(1000),
@@ -16,6 +17,7 @@ as
 begin
 	update EventInstance
 	set EventDefinition_Id = @EventDefinition_Id,
+		BusinessId = @BusinessId,
 		[EventData] = @EventData,
 		ReferenceName = @ReferenceName,
 		ReferenceValue = @ReferenceValue,

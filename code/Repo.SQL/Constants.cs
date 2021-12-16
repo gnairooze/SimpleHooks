@@ -23,6 +23,7 @@ namespace Repo.SQL
         
         public const string PARAM_ID = "@Id";
         public const string PARAM_ACTIVE = "@Active";
+        public const string PARAM_BUSINESS_ID = "@BusinessId";
         public const string PARAM_CREATE_BY = "@CreateBy";
         public const string PARAM_CREATE_DATE = "@CreateDate";
         public const string PARAM_MODIFY_BY = "@ModifyBy";
@@ -46,6 +47,7 @@ namespace Repo.SQL
 
         public const string FIELD_ID = "Id";
         public const string FIELD_ACTIVE = "Active";
+        public const string FIELD_BUSINESS_ID = "BusinessId";
         public const string FIELD_CREATE_BY = "CreateBy";
         public const string FIELD_CREATE_DATE = "CreateDate";
         public const string FIELD_MODIFY_BY = "ModifyBy";

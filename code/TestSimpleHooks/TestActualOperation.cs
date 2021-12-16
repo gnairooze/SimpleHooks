@@ -25,9 +25,10 @@ namespace TestSimpleHooks
 
             var instance = manager.Add(new Models.Instance.EventInstance() { 
                 Active = true,
+                BusinessId = Guid.NewGuid(),
                 CreateBy = "test.user",
                 CreateDate = DateTime.UtcNow,
-                EventData = "{ 'test' = 'value' }",
+                EventData = "{ 'test' : 'value' }",
                 EventDefinitionId = 1,
                 ModifyBy = "test.user",
                 ModifyDate = DateTime.UtcNow,
@@ -62,9 +63,10 @@ namespace TestSimpleHooks
             var instance = manager.Add(new Models.Instance.EventInstance()
             {
                 Active = true,
+                BusinessId = Guid.NewGuid(),
                 CreateBy = "test.user",
                 CreateDate = DateTime.UtcNow,
-                EventData = "{ 'test' = 'value2' }",
+                EventData = "{ 'test' : 'value2' }",
                 EventDefinitionId = 1,
                 ModifyBy = "test.user",
                 ModifyDate = DateTime.UtcNow,

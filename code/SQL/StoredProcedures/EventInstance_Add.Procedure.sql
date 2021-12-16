@@ -3,6 +3,7 @@ go
 
 create procedure dbo.EventInstance_Add
 @Active bit,
+@BusinessId uniqueidentifier,
 @CreateBy nvarchar(50),
 @CreateDate datetime2,
 @ModifyBy nvarchar(50),
@@ -19,6 +20,7 @@ begin
 	insert EventInstance
 	(
 		EventDefinition_Id,
+		BusinessId,
 		[EventData],
 		ReferenceName,
 		ReferenceValue,
@@ -33,6 +35,7 @@ begin
 	values
 	(
 		@EventDefinition_Id,
+		@BusinessId,
 		@EventData,
 		@ReferenceName,
 		@ReferenceValue,

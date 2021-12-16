@@ -19,6 +19,7 @@ namespace Repo.SQL
 
             #region add parameters
             cmd.Parameters.AddWithValue(Constants.PARAM_ACTIVE, entity.Active);
+            cmd.Parameters.AddWithValue(Constants.PARAM_BUSINESS_ID, entity.BusinessId);
             cmd.Parameters.AddWithValue(Constants.PARAM_CREATE_BY, entity.CreateBy);
             cmd.Parameters.AddWithValue(Constants.PARAM_CREATE_DATE, entity.CreateDate);
             cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_DATA, entity.EventData);
@@ -64,6 +65,7 @@ namespace Repo.SQL
 
             #region add parameters
             cmd.Parameters.AddWithValue(Constants.PARAM_ACTIVE, entity.Active);
+            cmd.Parameters.AddWithValue(Constants.PARAM_BUSINESS_ID, entity.BusinessId);
             cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_DATA, entity.EventData);
             cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_DEFINITION_ID, entity.EventDefinitionId);
             cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_INSTANCE_STATUS_ID, (int)entity.Status);
@@ -160,6 +162,9 @@ namespace Repo.SQL
                     {
                         case Constants.FIELD_ACTIVE:
                             instance.Active = (bool)reader[counter];
+                            break;
+                        case Constants.FIELD_BUSINESS_ID:
+                            instance.BusinessId = (Guid)reader[counter];
                             break;
                         case Constants.FIELD_CREATE_BY:
                             instance.CreateBy = (string)reader[counter];
