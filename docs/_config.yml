@@ -21,7 +21,7 @@
 title: Simple Hooks - Documentations
 email: gnairooze@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Simple Hooks is a solution to provide events to already created apps. All you need is to trigger different events 
+  Simple Hooks is a solution to provide events to already created apps. All you need to do is to trigger different events 
 baseurl: "SimpleHooks" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: jekyllrb
