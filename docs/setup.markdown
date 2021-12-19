@@ -1,7 +1,6 @@
 ---
 layout: default
 title: How to Setup Simple Hooks
-permalink: /setup/
 ---
 
 ## Prerequistes

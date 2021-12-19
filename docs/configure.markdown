@@ -1,7 +1,6 @@
 ---
 layout: default
 title: How to Configure Simple Hooks
-permalink: /configure/
 ---
 
 ## Steps
