@@ -19,4 +19,4 @@ title: How to Configure Simple-Hooks
 
 ### See also
 
-[Home](/simplehooks/index)
+[Home](/SimpleHooks/index)

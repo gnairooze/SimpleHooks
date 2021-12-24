@@ -17,8 +17,8 @@ Simple-Hooks will call all the subscribers, with the event data and retry on the
 
 ### Links
 
-[How to setup Simple-Hooks](/simplehooks/setup)
+[How to setup Simple-Hooks](/SimpleHooks/setup)
 
-[How to configure Simple-Hooks](/simplehooks/configure)
+[How to configure Simple-Hooks](/SimpleHooks/configure)
 
-[Database Reference](/simplehooks/db-reference)
+[Database Reference](/SimpleHooks/db-reference)

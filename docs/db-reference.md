@@ -130,4 +130,4 @@ This table contains configurations of Simple-Hooks
 
 ### Links
 
-[Home](/simplehooks/index)
+[Home](/SimpleHooks/index)
