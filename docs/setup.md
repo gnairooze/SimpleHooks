@@ -21,4 +21,4 @@ Simple-Hooks contains 2 components:
 
 ### Links
 
-[Home](/index)
+[Home](/simplehooks/index)
