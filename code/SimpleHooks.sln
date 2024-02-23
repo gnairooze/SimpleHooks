@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31729.503
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{42E916B8-4B14-46CA-A630-CFD204BDEBED}"
 EndProject
@@ -21,16 +21,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQL", "SQL", "{00940EB9-7B5
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tables", "Tables", "{C1323CA7-0ACA-4BAA-8CD7-672B7C9974D9}"
 	ProjectSection(SolutionItems) = preProject
-		SQL\Tables\dbo.AppOption.Table.sql = SQL\Tables\dbo.AppOption.Table.sql
-		SQL\Tables\dbo.EventDefinition.Table.sql = SQL\Tables\dbo.EventDefinition.Table.sql
-		SQL\Tables\dbo.EventDefinition_ListenerDefinition.Table.sql = SQL\Tables\dbo.EventDefinition_ListenerDefinition.Table.sql
-		SQL\Tables\dbo.EventInstance.Table.sql = SQL\Tables\dbo.EventInstance.Table.sql
-		SQL\Tables\dbo.EventInstanceStatus.Table.sql = SQL\Tables\dbo.EventInstanceStatus.Table.sql
-		SQL\Tables\dbo.ListenerDefinition.Table.sql = SQL\Tables\dbo.ListenerDefinition.Table.sql
-		SQL\Tables\dbo.ListenerInstance.Table.sql = SQL\Tables\dbo.ListenerInstance.Table.sql
-		SQL\Tables\dbo.ListenerInstanceStatus.Table.sql = SQL\Tables\dbo.ListenerInstanceStatus.Table.sql
-		SQL\Tables\LogTypes.Table.sql = SQL\Tables\LogTypes.Table.sql
-		SQL\Tables\SimpleHooks_Log.Table.sql = SQL\Tables\SimpleHooks_Log.Table.sql
+		SQL\Tables\01-LogTypes.Table.sql = SQL\Tables\01-LogTypes.Table.sql
+		SQL\Tables\02-SimpleHooks_Log.Table.sql = SQL\Tables\02-SimpleHooks_Log.Table.sql
+		SQL\Tables\03-dbo.ListenerInstanceStatus.Table.sql = SQL\Tables\03-dbo.ListenerInstanceStatus.Table.sql
+		SQL\Tables\04-dbo.ListenerDefinition.Table.sql = SQL\Tables\04-dbo.ListenerDefinition.Table.sql
+		SQL\Tables\05-dbo.EventInstanceStatus.Table.sql = SQL\Tables\05-dbo.EventInstanceStatus.Table.sql
+		SQL\Tables\06-dbo.EventDefinition.Table.sql = SQL\Tables\06-dbo.EventDefinition.Table.sql
+		SQL\Tables\07-dbo.EventDefinition_ListenerDefinition.Table.sql = SQL\Tables\07-dbo.EventDefinition_ListenerDefinition.Table.sql
+		SQL\Tables\08-dbo.EventInstance.Table.sql = SQL\Tables\08-dbo.EventInstance.Table.sql
+		SQL\Tables\09-dbo.ListenerInstance.Table.sql = SQL\Tables\09-dbo.ListenerInstance.Table.sql
+		SQL\Tables\10-dbo.AppOption.Table.sql = SQL\Tables\10-dbo.AppOption.Table.sql
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StoredProcedures", "StoredProcedures", "{C5C3F890-666D-464C-86ED-ECC2F0748625}"
@@ -59,14 +59,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{52464637-A
 		SQL\Data\AppOption-Data.sql = SQL\Data\AppOption-Data.sql
 		SQL\Data\EventInstanceStatus-Data.sql = SQL\Data\EventInstanceStatus-Data.sql
 		SQL\Data\ListenerInstanceStatus-Data.sql = SQL\Data\ListenerInstanceStatus-Data.sql
+		sample-data.sql = sample-data.sql
 		SQL\Data\SimpleHooks_Log-Data.sql = SQL\Data\SimpleHooks_Log-Data.sql
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Log.SQL", "Log.SQL\Log.SQL.csproj", "{9908774C-EF95-48FB-BE10-EC74D17A2D31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleHooks.Server", "SimpleHooks.Server\SimpleHooks.Server.csproj", "{DC53C289-33B7-43FE-9891-7B5A90A0B6BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleHooks.Server", "SimpleHooks.Server\SimpleHooks.Server.csproj", "{DC53C289-33B7-43FE-9891-7B5A90A0B6BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleHooks.Web", "SimpleHooks.Web\SimpleHooks.Web.csproj", "{7F30AB38-F329-4C58-8087-A5B08AFEB380}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleHooks.Web", "SimpleHooks.Web\SimpleHooks.Web.csproj", "{7F30AB38-F329-4C58-8087-A5B08AFEB380}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SampleListener", "SampleListener", "{794B3C88-CAF2-476C-B33D-B58E3D89E4C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleListenerAPI", "SampleListener\SampleListenerAPI\SampleListenerAPI.csproj", "{90ED138B-5864-4BA8-A923-D4325CE858CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -122,6 +127,10 @@ Global
 		{7F30AB38-F329-4C58-8087-A5B08AFEB380}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F30AB38-F329-4C58-8087-A5B08AFEB380}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F30AB38-F329-4C58-8087-A5B08AFEB380}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90ED138B-5864-4BA8-A923-D4325CE858CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90ED138B-5864-4BA8-A923-D4325CE858CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90ED138B-5864-4BA8-A923-D4325CE858CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90ED138B-5864-4BA8-A923-D4325CE858CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -130,6 +139,7 @@ Global
 		{C1323CA7-0ACA-4BAA-8CD7-672B7C9974D9} = {00940EB9-7B57-40A8-93D6-CC5FE0646424}
 		{C5C3F890-666D-464C-86ED-ECC2F0748625} = {00940EB9-7B57-40A8-93D6-CC5FE0646424}
 		{52464637-A9A9-4A94-994D-3C01EA166C72} = {00940EB9-7B57-40A8-93D6-CC5FE0646424}
+		{90ED138B-5864-4BA8-A923-D4325CE858CF} = {794B3C88-CAF2-476C-B33D-B58E3D89E4C2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {019C6500-A05E-4917-85BC-0D9BD2CD2D06}

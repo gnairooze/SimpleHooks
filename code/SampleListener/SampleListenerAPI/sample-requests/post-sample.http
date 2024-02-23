@@ -1,0 +1,13 @@
+POST https://localhost:7106/api/sample HTTP/1.1
+Host: example.com
+Content-Type: application/json
+
+{
+  "correlationId": "123456789",
+  "eventName": "exampleEvent",
+  "data": {
+    "key1": "value1",
+    "key2": "value2",
+    "key3": "value3"
+  }
+}
