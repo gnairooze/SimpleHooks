@@ -14,7 +14,7 @@ Simple-Hooks will call all the subscribers, with the event data and retry on the
 ### Prerequistes
 
 1. dot net 8.0 framework
-2. SQL Server with DB for Simple-Hooks storage. Run the scripts in the [repository path](https://github.com/gnairooze/SimpleHooks/tree/main/code/SQL).
+2. SQL Server with DB for Simple-Hooks storage. Run the scripts in the [repository path](/code/SQL).
 
 ### Components
 
@@ -35,7 +35,7 @@ just add a unique name for the event.
 ### Define Listeners (Subscribers)
 define the listener name, the URL to post the event data to, and the headers to be added to the HTTP request. You also define the timeout, the number of retries, and the period between each retry.
 
-you will find a sample implementation of the listener in the [repository path](/SimpleHooks/SampleListener)
+you will find a sample implementation of the listener in the [repository path](/code/SampleListener/SampleListenerAPI)
 
 ### Subscribe Listeners to Events
 associate the listeners to the events. You can have multiple listeners for the same event.
