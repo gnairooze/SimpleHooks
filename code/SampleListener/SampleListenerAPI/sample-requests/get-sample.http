@@ -1,0 +1,1 @@
+GET https://localhost:7106/api/sample HTTP/1.1

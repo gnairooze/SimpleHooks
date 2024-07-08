@@ -115,7 +115,9 @@ namespace Business
         private void FetchListenersForEventInstance(Models.Instance.EventInstance eventInstance)
         {
             eventInstance.ListenerInstances.Clear();
-            var relations = this._DefinitionManager.EventDefinitionListenerDefinitionRelations.Where(r => r.EventDefinitiontId == eventInstance.EventDefinitionId);
+            var relations = this._DefinitionManager.EventDefinitionListenerDefinitionRelations.Where(r => r.EventDefinitiontId == eventInstance.EventDefinitionId
+                && r.Active == true
+                );
             foreach (var relation in relations)
             {
                 var listenerInstance = new Models.Instance.ListenerInstance()
@@ -419,10 +421,12 @@ namespace Business
             var result = this._HttpClient.Post(listenerInstance.Definition.URL, listenerInstance.Definition.Headers, eventData, listenerInstance.Definition.Timeout);
 
             #region handle http client result
-            var parameters = new Dictionary<string, string>();
-            parameters.Add("ListenerInstance", listenerInstance.ToString());
-            parameters.Add("eventData", eventData);
-            parameters.Add("result", result.ToString());
+            var parameters = new Dictionary<string, string>
+            {
+                { "ListenerInstance", listenerInstance.ToString() },
+                { "eventData", eventData },
+                { "result", result.ToString() }
+            };
 
             //succeeded
             if (result.HttpCode == InstanceConstants.HTTP_CODE_SUCCEEDED)

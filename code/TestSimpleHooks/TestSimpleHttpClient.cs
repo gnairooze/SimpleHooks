@@ -12,11 +12,11 @@ namespace TestSimpleHooks
         {
             HttpClient.Simple.SimpleClient client = new();
 
-            List<string> headers = new()
-            {
+            List<string> headers =
+            [
                 "content-type:application/json",
                 "version:1.0"
-            };
+            ];
             var result = client.Post("https://webhook.site/95aa0ef9-d975-4968-b9f6-cf7bf8d15ed5", headers, "{'test':'value'}", 1);
 
             Console.WriteLine(result.HttpCode);

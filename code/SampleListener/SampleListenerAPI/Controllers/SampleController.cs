@@ -19,8 +19,8 @@ namespace SampleListenerAPI.Controllers
         {
             SampleModel sampleModel = new()
             {
-                CorrelationId = jEventData["correlationId"]!.ToString(),
-                EventName = jEventData["eventName"]!.ToString(),
+                CorrelationId = (string) jEventData.SelectToken("simpleHooksMetadata.eventBusinessId")!,
+                EventName = (string) jEventData.SelectToken("simpleHooksMetadata.eventDefinitionName")!,
                 EventData = jEventData.ToString()
             };
 
@@ -28,6 +28,12 @@ namespace SampleListenerAPI.Controllers
             _context.SaveChanges();
             return Ok();
         }
-        
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            return Ok("api is running successfully");
+        }
+
     }
 }
