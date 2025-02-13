@@ -19,6 +19,7 @@ namespace Business
         private readonly IDataRepository<Models.Instance.ListenerInstance> _ListenerInstanceRepo;
         private readonly IHttpClient _HttpClient;
         private readonly DefinitionManager _DefinitionManager;
+        private readonly Guid _LogCorrelation = Guid.NewGuid();
 
         #region constructors
         public InstanceManager(
@@ -61,6 +62,8 @@ namespace Business
         {
             //intialize log and add first log
             var log = this.GetLogModelMethodStart(MethodBase.GetCurrentMethod().Name, "eventInstance.Id", eventInstance.Id.ToString());
+            log.Correlation = _LogCorrelation;
+
             this._Logger.Add(log);
 
             Models.Instance.EventInstance resultInstance = null;
@@ -96,6 +99,7 @@ namespace Business
                 this._ConnectionRepo.RollbackTransaction(trans);
 
                 log = GetLogModelException(log, ex);
+                log.Correlation = _LogCorrelation;
                 this._Logger.Add(log);
             }
             finally
@@ -107,6 +111,7 @@ namespace Business
 
             //add end log
             log.LogType = LogModel.LogTypes.Debug;
+            log.Correlation = this._LogCorrelation;
             this._Logger.Add(this.GetLogModelMethodEnd(log));
 
             return resultInstance;
@@ -141,6 +146,7 @@ namespace Business
         {
             //intialize log and add first log
             var log = this.GetLogModelMethodStart(MethodBase.GetCurrentMethod().Name, string.Empty, string.Empty);
+            log.Correlation = this._LogCorrelation;
             log.NotesA = $"runDate {runDate:yyyy-MM-dd HH:mm:ss}";
             this._Logger.Add(log);
 
@@ -163,6 +169,7 @@ namespace Business
             catch (Exception ex)
             {
                 log = GetLogModelException(log, ex);
+                log.Correlation = this._LogCorrelation;
                 this._Logger.Add(log);
             }
             finally
@@ -180,6 +187,7 @@ namespace Business
             log.Step = "events count";
             log.NotesA += $"{Environment.NewLine} | {results.Count} events to be processed";
             log.LogType = LogModel.LogTypes.Information;
+            log.Correlation = this._LogCorrelation;
             this._Logger.Add(log);
 
             this._Logger.Add(this.GetLogModelMethodEnd(log));
@@ -204,11 +212,22 @@ namespace Business
         {
             //intialize log and add first log
             var log = this.GetLogModelMethodStart(MethodBase.GetCurrentMethod().Name,string.Empty, string.Empty);
+            log.Correlation = this._LogCorrelation;
             this._Logger.Add(log);
 
             foreach (var eventInstance in eventInstances)
             {
-                Process(eventInstance);
+                try
+                {
+                    Process(eventInstance);
+                }
+                catch (Exception ex)
+                {
+                    log = GetLogModelException(log, ex);
+                    log.Correlation = this._LogCorrelation;
+                    this._Logger.Add(log);
+                }
+                
             }
 
             //add end log
@@ -221,6 +240,7 @@ namespace Business
             var log = this.GetLogModelMethodStart(MethodBase.GetCurrentMethod().Name, "eventInstance.Id", eventInstance.Id.ToString());
             log.ReferenceName = "eventInstance.Id";
             log.ReferenceValue = eventInstance.Id.ToString();
+            log.Correlation = this._LogCorrelation;
             this._Logger.Add(log);
 
             //todo: updating the event instance and listener instance should be in the same transaction
@@ -288,6 +308,10 @@ namespace Business
 
         private string InjectSimpleHookMetaDataInEventDate(Models.Instance.EventInstance eventInstance)
         {
+            var log = this.GetLogModelMethodStart(MethodBase.GetCurrentMethod().Name, string.Empty, string.Empty);
+            log.Correlation = this._LogCorrelation;
+            this._Logger.Add(log);
+
             try
             {
                 var jsonData = JObject.Parse(eventInstance.EventData);
@@ -300,11 +324,15 @@ namespace Business
                     new JProperty("eventReferenceValue", eventInstance.ReferenceValue)
                     )));
 
+                this._Logger.Add(this.GetLogModelMethodEnd(log));
+
                 return jsonData.ToString();
             }
-            catch
+            catch (Exception ex)
             {
-                //todo:log exception
+                log = this.GetLogModelException(log, ex);
+                this._Logger.Add(log);
+                
                 return eventInstance.EventData;
             }
         }
@@ -312,6 +340,7 @@ namespace Business
         private void RefereshListeners(Models.Instance.EventInstance eventInstance)
         {
             var log = this.GetLogModelMethodStart(MethodBase.GetCurrentMethod().Name, "eventInstance.Id", eventInstance.Id.ToString());
+            log.Correlation = this._LogCorrelation;
             this._Logger.Add(log);
 
             var readOperation = new Dictionary<string, string>
@@ -402,6 +431,7 @@ namespace Business
         {
             //intialize log and add first log
             var log = this.GetLogModelMethodStart(MethodBase.GetCurrentMethod().Name, "listenerInstance.Id", listenerInstance.Id.ToString());
+            log.Correlation = this._LogCorrelation;
             this._Logger.Add(log);
 
             listenerInstance.ModifyBy = InstanceConstants.USER_SYSTEM_PROCESSOR;
