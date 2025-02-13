@@ -5,18 +5,27 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using SampleListenerAPI.Data;
 using SampleListenerAPI.Models;
+using System.Configuration;
 
 namespace SampleListenerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SampleController(SampleDbContext contextDb) : ControllerBase
+    public class SampleController(SampleDbContext contextDb, IConfiguration configuration) : ControllerBase
     {
         private readonly SampleDbContext _context = contextDb;
+        private readonly IConfiguration _configuration = configuration;
+
 
         [HttpPost]
         public IActionResult Post(JObject jEventData)
         {
+            #region add api name to the event data
+            string? apiName = _configuration.GetSection("ApiName").Value;
+
+            jEventData.Add("ApiName", apiName);
+            #endregion
+
             SampleModel sampleModel = new()
             {
                 CorrelationId = (string) jEventData.SelectToken("simpleHooksMetadata.eventBusinessId")!,

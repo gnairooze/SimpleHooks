@@ -46,18 +46,18 @@ insert ListenerDefinition
 values
 (
 	1,
-	'sample write xml', 
+	'sample api', 
 	1, 
 	'http://test.test.com/api',
 	'content-type: application/json',
-	600,
-	2,
+	60,
 	3,
+	1,
 	'admin', 
 	'2024-02-20', 
 	'admin', 
 	'2024-02-20',
-	'convert json to xml'
+	'save event data'
 );
 
 set identity_insert ListenerDefinition off;
@@ -82,5 +82,5 @@ values
 	'2024-02-20',
 	'admin',
 	'2024-02-20',
-	'sample write xml for test event'
+	'sample json to test event'
 );
