@@ -18,6 +18,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpClient.Interface", "HttpClient.Interface\HttpClient.Interface.csproj", "{29FD3DD8-C9E1-477A-AA7C-CB0C87CD72F9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQL", "SQL", "{00940EB9-7B57-40A8-93D6-CC5FE0646424}"
+	ProjectSection(SolutionItems) = preProject
+		SQL\execute-all-sql.bat = SQL\execute-all-sql.bat
+		SQL\execute-all.sql = SQL\execute-all.sql
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tables", "Tables", "{C1323CA7-0ACA-4BAA-8CD7-672B7C9974D9}"
 	ProjectSection(SolutionItems) = preProject
@@ -56,11 +60,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpClient.Simple", "HttpCl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{52464637-A9A9-4A94-994D-3C01EA166C72}"
 	ProjectSection(SolutionItems) = preProject
-		SQL\Data\AppOption-Data.sql = SQL\Data\AppOption-Data.sql
-		SQL\Data\EventInstanceStatus-Data.sql = SQL\Data\EventInstanceStatus-Data.sql
-		SQL\Data\ListenerInstanceStatus-Data.sql = SQL\Data\ListenerInstanceStatus-Data.sql
-		sample-data.sql = sample-data.sql
-		SQL\Data\SimpleHooks_Log-Data.sql = SQL\Data\SimpleHooks_Log-Data.sql
+		SQL\Data\01-AppOption-Data.sql = SQL\Data\01-AppOption-Data.sql
+		SQL\Data\02-EventInstanceStatus-Data.sql = SQL\Data\02-EventInstanceStatus-Data.sql
+		SQL\Data\03-ListenerInstanceStatus-Data.sql = SQL\Data\03-ListenerInstanceStatus-Data.sql
+		SQL\Data\04-SimpleHooks_Log-Data.sql = SQL\Data\04-SimpleHooks_Log-Data.sql
+		SQL\Data\05-sample-data.sql = SQL\Data\05-sample-data.sql
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Log.SQL", "Log.SQL\Log.SQL.csproj", "{9908774C-EF95-48FB-BE10-EC74D17A2D31}"
@@ -72,6 +76,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SampleListener", "SampleListener", "{794B3C88-CAF2-476C-B33D-B58E3D89E4C2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleListenerAPI", "SampleListener\SampleListenerAPI\SampleListenerAPI.csproj", "{90ED138B-5864-4BA8-A923-D4325CE858CF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "certificates", "certificates", "{78F97D00-706A-4D35-A7AF-7B98393C4EDC}"
+	ProjectSection(SolutionItems) = preProject
+		certificates\dev.local+4-key.pem = certificates\dev.local+4-key.pem
+		certificates\dev.local+4-readme.md = certificates\dev.local+4-readme.md
+		certificates\dev.local+4.pem = certificates\dev.local+4.pem
+		certificates\dev.local+4.pfx = certificates\dev.local+4.pfx
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

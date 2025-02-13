@@ -24,7 +24,7 @@ namespace HttpClient.Simple
             
             PrepareContentTypeHeader(headers);
 
-            var mediaType = headers.Single(t => t.Contains("content-type")).Split(":".ToCharArray())[1];
+            var mediaType = headers.Single(t => t.Contains("content-type")).Split(":".ToCharArray())[1].Trim();
             StringContent data = new StringContent(body, Encoding.UTF8, mediaType);
             client.Timeout = TimeSpan.FromMinutes(timeout);
 
