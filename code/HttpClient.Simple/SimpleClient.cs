@@ -1,14 +1,12 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace HttpClient.Simple
 {
-    public class SimpleClient : HttpClient.Interface.IHttpClient
+    public class SimpleClient : Interface.IHttpClient
     {
         /// <summary>
         /// post the request to listeners
@@ -18,7 +16,7 @@ namespace HttpClient.Simple
         /// <param name="body"></param>
         /// <param name="timeout">in minutes</param>
         /// <returns></returns>
-        public HttpClient.Interface.HttpResult Post(string url, List<string> headers, string body, int timeout)
+        public Interface.HttpResult Post(string url, List<string> headers, string body, int timeout)
         {
             System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
             
@@ -32,11 +30,11 @@ namespace HttpClient.Simple
             {
                 if (string.IsNullOrEmpty(header)) continue;
 
-                var splittedHeader = header.Split(":".ToCharArray());
+                var splitHeader = header.Split(":".ToCharArray());
 
-                if (splittedHeader[0] == "content-type") continue;
+                if (splitHeader[0] == "content-type") continue;
 
-                data.Headers.Add(splittedHeader[0], splittedHeader[1]);
+                data.Headers.Add(splitHeader[0], splitHeader[1]);
             }
 
             var response = client.PostAsync(url, data).GetAwaiter().GetResult();
@@ -48,7 +46,7 @@ namespace HttpClient.Simple
                 responseHeaders.Add($"{header.Key}:{String.Join(",", header.Value)}");
             }
 
-            var result = new HttpClient.Interface.HttpResult()
+            var result = new Interface.HttpResult()
             {
                 Body = responseBody,
                 Headers = responseHeaders,

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Models.Definition
+﻿namespace Models.Definition
 {
     public class EventDefinition: ModelBase
     {

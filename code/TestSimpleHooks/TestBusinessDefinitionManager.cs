@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TestSimpleHooks
 {
@@ -31,7 +27,7 @@ namespace TestSimpleHooks
 
             Console.WriteLine("Event Def Listener Def Relations");
             Console.WriteLine("------------");
-            manager.EventDefinitionListenerDefinitionRelations.ForEach(e => Console.WriteLine($"{e.EventDefinitiontId} -> {e.ListenerDefinitionId}"));
+            manager.EventDefinitionListenerDefinitionRelations.ForEach(e => Console.WriteLine($"{e.EventDefinitionId} -> {e.ListenerDefinitionId}"));
             Console.WriteLine("++++++++++++");
         }
     }

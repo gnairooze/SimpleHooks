@@ -1,12 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Models.Instance;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SimpleHooks.Web.Controllers
 {
@@ -14,20 +9,20 @@ namespace SimpleHooks.Web.Controllers
     [ApiController]
     public class TriggerEventController : ControllerBase
     {
-        private readonly Business.InstanceManager _Manager;
-        private readonly Helper.ConfigurationHelper _Config;
+        private readonly Business.InstanceManager _manager;
+
         public TriggerEventController(IConfiguration config)
         {
-            _Config = new Helper.ConfigurationHelper(config);
+            var config1 = new Helper.ConfigurationHelper(config);
 
-            _Manager = new(
+            _manager = new(
                 new Log.SQL.Logger()
                 {
-                    MinLogType = (Log.Interface.LogModel.LogTypes)Enum.Parse(typeof(Log.Interface.LogModel.LogTypes), _Config.Logger_MinLogLevel, true),
-                    ConnectionString = _Config.ConnectionString_Log,
-                    FunctionName = _Config.Logger_Function
+                    MinLogType = (Log.Interface.LogModel.LogTypes)Enum.Parse(typeof(Log.Interface.LogModel.LogTypes), config1.LoggerMinLogLevel, true),
+                    ConnectionString = config1.ConnectionStringLog,
+                    FunctionName = config1.LoggerFunction
                 },
-                new Repo.SQL.SqlConnectionRepo() { ConnectionString = _Config.ConnectionString_SimpleHooks },
+                new Repo.SQL.SqlConnectionRepo() { ConnectionString = config1.ConnectionStringSimpleHooks },
                 new Repo.SQL.EventInstanceDataRepo(),
                 new Repo.SQL.ListenerInstanceDataRepo(),
                 new HttpClient.Simple.SimpleClient(),
@@ -39,9 +34,9 @@ namespace SimpleHooks.Web.Controllers
         
         // POST api/<TriggerEventController>
         [HttpPost]
-        public void Post([FromBody] Models.EventViewModel value)
+        public OkObjectResult Post([FromBody] Models.EventViewModel value)
         {
-            _Manager.Add(new EventInstance() {
+            var result = _manager.Add(new EventInstance() {
                 Active = true,
                 BusinessId = Guid.NewGuid(),
                 CreateBy = "system.trigger",
@@ -55,6 +50,8 @@ namespace SimpleHooks.Web.Controllers
                 ReferenceValue = value.ReferenceValue,
                 Status = Enums.EventInstanceStatus.InQueue
             });
+
+            return Ok(result);
         }
     }
 }

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Business
+﻿namespace Business
 {
-    internal class LogMeta
+    internal static class LogMeta
     {
-        public const string METHOD_START = "method started";
-        public const string METHOD_END = "method ended";
+        public const string MethodStart = "method started";
+        public const string MethodEnd = "method ended";
     }
 }

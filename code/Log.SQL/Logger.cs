@@ -1,5 +1,4 @@
 ﻿using Log.Interface;
-using System;
 using System.Data.SqlClient;
 
 namespace Log.SQL

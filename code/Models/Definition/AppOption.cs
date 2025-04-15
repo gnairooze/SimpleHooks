@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Models.Definition
+﻿namespace Models.Definition
 {
     public class AppOption: ModelBase
     {

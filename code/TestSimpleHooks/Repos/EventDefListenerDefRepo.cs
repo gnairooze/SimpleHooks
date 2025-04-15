@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TestSimpleHooks.Repos
 {
@@ -20,7 +17,7 @@ namespace TestSimpleHooks.Repos
                     ModifyBy = "test-system-user",
                     ModifyDate = DateTime.UtcNow,
                     Notes = "testing",
-                    EventDefinitiontId = 1,
+                    EventDefinitionId = 1,
                     ListenerDefinitionId = 1
                 },
                 new (){
@@ -31,7 +28,7 @@ namespace TestSimpleHooks.Repos
                     ModifyBy = "test-system-user",
                     ModifyDate = DateTime.UtcNow,
                     Notes = "testing",
-                    EventDefinitiontId = 2,
+                    EventDefinitionId = 2,
                     ListenerDefinitionId = 2
                 }
             });

@@ -1,38 +1,18 @@
 ﻿using Log.Interface;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Business
 {
     public abstract class LogBase
     {
-        public string TypeName
-        {
-            get
-            {
-                return this.GetType().FullName;
-            }
-        }
+        private string TypeName => this.GetType().FullName;
 
-        public string MachineName
-        {
-            get
-            {
-                return Environment.MachineName;
-            }
-        }
+        private string MachineName => Environment.MachineName;
 
-        public string UserName
-        {
-            get
-            {
-                return Environment.UserName;
-            }
-        }
+        private string UserName => Environment.UserName;
 
-        public string CurrentAssemblyLocation
+        private string CurrentAssemblyLocation
         {
             get
             {
@@ -42,14 +22,15 @@ namespace Business
                 return Path.GetDirectoryName(path);
             }
         }
-        public LogModel GetLogModelProtoType(string methodName)
+
+        private LogModel GetLogModelProtoType(string methodName)
         {
             int counter = 1;
 
-            var log = new Log.Interface.LogModel()
+            var log = new LogModel()
             {
                 Correlation = Guid.NewGuid(),
-                Counter = counter++,
+                Counter = counter,
                 CreateDate = DateTime.UtcNow,
                 CodeReference = $"{this.TypeName}|{methodName}",
                 LogType = LogModel.LogTypes.Debug,
@@ -62,28 +43,44 @@ namespace Business
             return log;
         }
 
-        public LogModel GetLogModelMethodStart(string methodName, string referenceName, string referenceValue)
+        protected LogModel GetLogModelMethodStart(string methodName, string referenceName, string referenceValue)
         {
             var log = this.GetLogModelProtoType(methodName);
-            log.Step = LogMeta.METHOD_START;
+            log.Step = LogMeta.MethodStart;
             log.ReferenceName = referenceName;
             log.ReferenceValue = referenceValue;
 
             return log;
         }
-        public LogModel GetLogModelMethodEnd(LogModel log)
+
+        protected LogModel GetLogModelMethodEnd(LogModel log, string referenceName, string referenceValue)
         {
             var timeNow = DateTime.UtcNow;
 
             log.Counter++;
             log.Duration = (timeNow - log.CreateDate).TotalSeconds;
             log.CreateDate = timeNow;
-            log.Step = LogMeta.METHOD_END;
+            log.Step = LogMeta.MethodEnd;
             log.LogType = LogModel.LogTypes.Debug;
+            log.ReferenceName = referenceName;
+            log.ReferenceValue = referenceValue;
             return log;
         }
 
-        public LogModel GetLogModelException(LogModel log, Exception ex)
+        protected LogModel GetLogModelMethodEnd(LogModel log)
+        {
+            var timeNow = DateTime.UtcNow;
+
+            log.Counter++;
+            log.Duration = (timeNow - log.CreateDate).TotalSeconds;
+            log.CreateDate = timeNow;
+            log.Step = LogMeta.MethodEnd;
+            log.LogType = LogModel.LogTypes.Debug;
+
+            return log;
+        }
+
+        protected LogModel GetLogModelException(LogModel log, Exception ex)
         {
             var timeNow = DateTime.UtcNow;
 

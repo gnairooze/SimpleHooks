@@ -21,6 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQL", "SQL", "{00940EB9-7B5
 	ProjectSection(SolutionItems) = preProject
 		SQL\execute-all-sql.bat = SQL\execute-all-sql.bat
 		SQL\execute-all.sql = SQL\execute-all.sql
+		SQL\operation-all.sql = SQL\operation-all.sql
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tables", "Tables", "{C1323CA7-0ACA-4BAA-8CD7-672B7C9974D9}"

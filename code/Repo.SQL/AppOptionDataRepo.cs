@@ -3,7 +3,6 @@ using Models.Definition;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Text;
 
 namespace Repo.SQL
 {
@@ -21,18 +20,18 @@ namespace Repo.SQL
 
         public List<AppOption> Read(Dictionary<string, string> options, object connection, object transaction)
         {
-            SqlCommand cmd = new SqlCommand(Constants.SP_EVENT_APP_OPTION_GET_ALL, (SqlConnection)connection)
+            SqlCommand cmd = new SqlCommand(Constants.SpEventAppOptionGetAll, (SqlConnection)connection)
             {
                 CommandType = System.Data.CommandType.StoredProcedure
             };
 
             var reader = cmd.ExecuteReader();
 
-            List<AppOption> definitons = FillAppOptionDefinitions(reader);
+            List<AppOption> definitions = FillAppOptionDefinitions(reader);
 
             reader.Close();
 
-            return definitons;
+            return definitions;
         }
 
         private List<AppOption> FillAppOptionDefinitions(SqlDataReader reader)
@@ -56,34 +55,34 @@ namespace Repo.SQL
                     #region read event instance fields
                     switch (reader.GetName(counter))
                     {
-                        case Constants.FIELD_ACTIVE:
+                        case Constants.FieldActive:
                             definition.Active = (bool)reader[counter];
                             break;
-                        case Constants.FIELD_CREATE_BY:
+                        case Constants.FieldCreateBy:
                             definition.CreateBy = (string)reader[counter];
                             break;
-                        case Constants.FIELD_CREATE_DATE:
+                        case Constants.FieldCreateDate:
                             definition.CreateDate = (DateTime)reader[counter];
                             break;
-                        case Constants.FIELD_ID:
+                        case Constants.FieldId:
                             definition.Id = (long)reader[counter];
                             break;
-                        case Constants.FIELD_MODIFY_BY:
+                        case Constants.FieldModifyBy:
                             definition.ModifyBy = (string)reader[counter];
                             break;
-                        case Constants.FIELD_MODIFY_DATE:
+                        case Constants.FieldModifyDate:
                             definition.ModifyDate = (DateTime)reader[counter];
                             break;
-                        case Constants.FIELD_NOTES:
+                        case Constants.FieldNotes:
                             definition.Notes = (string)reader[counter];
                             break;
-                        case Constants.FIELD_NAME:
+                        case Constants.FieldName:
                             definition.Name = (string)reader[counter];
                             break;
-                        case Constants.FIELD_CATEGORY:
+                        case Constants.FieldCategory:
                             definition.Category = (string)reader[counter];
                             break;
-                        case Constants.FIELD_VALUE:
+                        case Constants.FieldValue:
                             definition.Value = (string)reader[counter];
                             break;
                     }

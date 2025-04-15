@@ -12,43 +12,43 @@ namespace Repo.SQL
     {
         public EventInstance Create(EventInstance entity, object connection, object transaction)
         {
-            SqlCommand cmd = new SqlCommand(Constants.SP_EVENT_INSTANCE_ADD, (SqlConnection)connection, (SqlTransaction)transaction)
+            SqlCommand cmd = new SqlCommand(Constants.SpEventInstanceAdd, (SqlConnection)connection, (SqlTransaction)transaction)
             {
                 CommandType = System.Data.CommandType.StoredProcedure
             };
 
             #region add parameters
-            cmd.Parameters.AddWithValue(Constants.PARAM_ACTIVE, entity.Active);
-            cmd.Parameters.AddWithValue(Constants.PARAM_BUSINESS_ID, entity.BusinessId);
-            cmd.Parameters.AddWithValue(Constants.PARAM_CREATE_BY, entity.CreateBy);
-            cmd.Parameters.AddWithValue(Constants.PARAM_CREATE_DATE, entity.CreateDate);
-            cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_DATA, entity.EventData);
-            cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_DEFINITION_ID, entity.EventDefinitionId);
-            cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_INSTANCE_STATUS_ID, (int)entity.Status);
-            cmd.Parameters.Add(Constants.PARAM_ID, System.Data.SqlDbType.BigInt).Direction = System.Data.ParameterDirection.Output;
-            cmd.Parameters.AddWithValue(Constants.PARAM_MODIFY_BY, entity.ModifyBy);
-            cmd.Parameters.AddWithValue(Constants.PARAM_MODIFY_DATE, entity.ModifyDate);
-            cmd.Parameters.AddWithValue(Constants.PARAM_NOTES, entity.Notes);
-            cmd.Parameters.AddWithValue(Constants.PARAM_REFERENCE_NAME, entity.ReferenceName);
-            cmd.Parameters.AddWithValue(Constants.PARAM_REFERENCE_VALUE, entity.ReferenceValue);
+            cmd.Parameters.AddWithValue(Constants.ParamActive, entity.Active);
+            cmd.Parameters.AddWithValue(Constants.ParamBusinessId, entity.BusinessId);
+            cmd.Parameters.AddWithValue(Constants.ParamCreateBy, entity.CreateBy);
+            cmd.Parameters.AddWithValue(Constants.ParamCreateDate, entity.CreateDate);
+            cmd.Parameters.AddWithValue(Constants.ParamEventData, entity.EventData);
+            cmd.Parameters.AddWithValue(Constants.ParamEventDefinitionId, entity.EventDefinitionId);
+            cmd.Parameters.AddWithValue(Constants.ParamEventInstanceStatusId, (int)entity.Status);
+            cmd.Parameters.Add(Constants.ParamId, System.Data.SqlDbType.BigInt).Direction = System.Data.ParameterDirection.Output;
+            cmd.Parameters.AddWithValue(Constants.ParamModifyBy, entity.ModifyBy);
+            cmd.Parameters.AddWithValue(Constants.ParamModifyDate, entity.ModifyDate);
+            cmd.Parameters.AddWithValue(Constants.ParamNotes, entity.Notes);
+            cmd.Parameters.AddWithValue(Constants.ParamReferenceName, entity.ReferenceName);
+            cmd.Parameters.AddWithValue(Constants.ParamReferenceValue, entity.ReferenceValue);
             #endregion
 
             cmd.ExecuteNonQuery();
 
-            entity.Id = (long)cmd.Parameters[Constants.PARAM_ID].Value;
+            entity.Id = (long)cmd.Parameters[Constants.ParamId].Value;
 
             return entity;
         }
 
         public EventInstance Remove(EventInstance entity, object connection, object transaction)
         {
-            SqlCommand cmd = new SqlCommand(Constants.SP_EVENT_INSTANCE_REMOVE, (SqlConnection)connection, (SqlTransaction)transaction)
+            SqlCommand cmd = new SqlCommand(Constants.SpEventInstanceRemove, (SqlConnection)connection, (SqlTransaction)transaction)
             {
                 CommandType = System.Data.CommandType.StoredProcedure
             };
 
             #region add parameters
-            cmd.Parameters.AddWithValue(Constants.PARAM_ID, entity.Id);
+            cmd.Parameters.AddWithValue(Constants.ParamId, entity.Id);
             #endregion
 
             cmd.ExecuteNonQuery();
@@ -58,23 +58,23 @@ namespace Repo.SQL
 
         public EventInstance Edit(EventInstance entity, object connection, object transaction)
         {
-            SqlCommand cmd = new SqlCommand(Constants.SP_EVENT_INSTANCE_EDIT, (SqlConnection)connection, (SqlTransaction)transaction)
+            SqlCommand cmd = new SqlCommand(Constants.SpEventInstanceEdit, (SqlConnection)connection, (SqlTransaction)transaction)
             {
                 CommandType = System.Data.CommandType.StoredProcedure
             };
 
             #region add parameters
-            cmd.Parameters.AddWithValue(Constants.PARAM_ACTIVE, entity.Active);
-            cmd.Parameters.AddWithValue(Constants.PARAM_BUSINESS_ID, entity.BusinessId);
-            cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_DATA, entity.EventData);
-            cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_DEFINITION_ID, entity.EventDefinitionId);
-            cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_INSTANCE_STATUS_ID, (int)entity.Status);
-            cmd.Parameters.AddWithValue(Constants.PARAM_ID, entity.Id);
-            cmd.Parameters.AddWithValue(Constants.PARAM_MODIFY_BY, entity.ModifyBy);
-            cmd.Parameters.AddWithValue(Constants.PARAM_MODIFY_DATE, entity.ModifyDate);
-            cmd.Parameters.AddWithValue(Constants.PARAM_NOTES, entity.Notes);
-            cmd.Parameters.AddWithValue(Constants.PARAM_REFERENCE_NAME, entity.ReferenceName);
-            cmd.Parameters.AddWithValue(Constants.PARAM_REFERENCE_VALUE, entity.ReferenceValue);
+            cmd.Parameters.AddWithValue(Constants.ParamActive, entity.Active);
+            cmd.Parameters.AddWithValue(Constants.ParamBusinessId, entity.BusinessId);
+            cmd.Parameters.AddWithValue(Constants.ParamEventData, entity.EventData);
+            cmd.Parameters.AddWithValue(Constants.ParamEventDefinitionId, entity.EventDefinitionId);
+            cmd.Parameters.AddWithValue(Constants.ParamEventInstanceStatusId, (int)entity.Status);
+            cmd.Parameters.AddWithValue(Constants.ParamId, entity.Id);
+            cmd.Parameters.AddWithValue(Constants.ParamModifyBy, entity.ModifyBy);
+            cmd.Parameters.AddWithValue(Constants.ParamModifyDate, entity.ModifyDate);
+            cmd.Parameters.AddWithValue(Constants.ParamNotes, entity.Notes);
+            cmd.Parameters.AddWithValue(Constants.ParamReferenceName, entity.ReferenceName);
+            cmd.Parameters.AddWithValue(Constants.ParamReferenceValue, entity.ReferenceValue);
             #endregion
 
             cmd.ExecuteNonQuery();
@@ -102,12 +102,12 @@ namespace Repo.SQL
 
         private List<EventInstance> ReadNotProcessed(DateTime runDate, SqlConnection connection)
         {
-            SqlCommand cmd = new SqlCommand(Constants.SP_EVENT_INSTANCE_GET_NOT_PROCESSED, (SqlConnection)connection)
+            SqlCommand cmd = new SqlCommand(Constants.SpEventInstanceGetNotProcessed, (SqlConnection)connection)
             {
                 CommandType = System.Data.CommandType.StoredProcedure
             };
 
-            cmd.Parameters.AddWithValue(Constants.PARAM_DATE, runDate);
+            cmd.Parameters.AddWithValue(Constants.ParamDate, runDate);
 
             var reader = cmd.ExecuteReader();
 
@@ -160,46 +160,46 @@ namespace Repo.SQL
                     #region read event instance fields
                     switch (reader.GetName(counter))
                     {
-                        case Constants.FIELD_ACTIVE:
+                        case Constants.FieldActive:
                             instance.Active = (bool)reader[counter];
                             break;
-                        case Constants.FIELD_BUSINESS_ID:
+                        case Constants.FieldBusinessId:
                             instance.BusinessId = (Guid)reader[counter];
                             break;
-                        case Constants.FIELD_CREATE_BY:
+                        case Constants.FieldCreateBy:
                             instance.CreateBy = (string)reader[counter];
                             break;
-                        case Constants.FIELD_CREATE_DATE:
+                        case Constants.FieldCreateDate:
                             instance.CreateDate = (DateTime)reader[counter];
                             break;
-                        case Constants.FIELD_ID:
+                        case Constants.FieldId:
                             instance.Id = (long)reader[counter];
                             break;
-                        case Constants.FIELD_MODIFY_BY:
+                        case Constants.FieldModifyBy:
                             instance.ModifyBy = (string)reader[counter];
                             break;
-                        case Constants.FIELD_MODIFY_DATE:
+                        case Constants.FieldModifyDate:
                             instance.ModifyDate = (DateTime)reader[counter];
                             break;
-                        case Constants.FIELD_NOTES:
+                        case Constants.FieldNotes:
                             instance.Notes = (string)reader[counter];
                             break;
-                        case Constants.FIELD_TIMESTAMP:
+                        case Constants.FieldTimestamp:
                             instance.TimeStamp = (byte[])reader[counter];
                             break;
-                        case Constants.FIELD_EVENT_DATA:
+                        case Constants.FieldEventData:
                             instance.EventData = (string)reader[counter];
                             break;
-                        case Constants.FIELD_EVENT_DEFINITION_ID:
+                        case Constants.FieldEventDefinitionId:
                             instance.EventDefinitionId = (long)reader[counter];
                             break;
-                        case Constants.FIELD_EVENT_INSTANCE_STATUS_ID:
+                        case Constants.FieldEventInstanceStatusId:
                             instance.Status = (Enums.EventInstanceStatus)reader[counter];
                             break;
-                        case Constants.FIELD_REFERENCE_NAME:
+                        case Constants.FieldReferenceName:
                             instance.ReferenceName = (string)reader[counter];
                             break;
-                        case Constants.FIELD_REFERENCE_VALUE:
+                        case Constants.FieldReferenceValue:
                             instance.ReferenceValue = (string)reader[counter];
                             break;
                     }

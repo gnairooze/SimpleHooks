@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Log.Interface
 {
@@ -14,15 +12,9 @@ namespace Log.Interface
             Warning = 4,
             Error = 8
         }
-
-        public LogModel()
-        {
-            this.NotesA = string.Empty;
-            this.NotesB = string.Empty;
-            this.ReferenceName = string.Empty;
-            this.ReferenceValue = string.Empty;
-        }
+        
         public long Id { get; set; }
+
         public LogTypes LogType { get; set; }
         public string Owner { get; set; }
         public string Machine { get; set; }
@@ -32,10 +24,12 @@ namespace Log.Interface
         public int Counter { get; set; }
         public Guid Correlation { get; set; }
         public string CodeReference { get; set; }
-        public string ReferenceName { get; set; }
-        public string ReferenceValue { get; set; }
-        public string NotesA { get; set; }
-        public string NotesB { get; set; }
+        public string ReferenceName { get; set; } = string.Empty;
+        public string ReferenceValue { get; set; } = string.Empty;
+        public string NotesA { get; set; } = string.Empty;
+
+        public string NotesB { get; set; } = string.Empty;
+
         //duration between start and end in seconds
         public double? Duration { get; set; }
         public DateTime CreateDate { get; set; }

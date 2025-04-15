@@ -1,26 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TestSimpleHooks.Repos
 {
     internal class GenericRepo<T> : Interfaces.IDataRepository<T> where T : Models.ModelBase
     {
-        private readonly List<T> _Entities = new();
-        private static long _Counter = 2;
-        public List<T> Entities
-        {
-            get
-            {
-                return this._Entities;
-            }
-        }
+        private static long _counter = 2;
+
+        protected List<T> Entities { get; } = new();
 
         public T Create(T entity, object connection, Object transaction)
         {
-            entity.Id = GenericRepo<T>._Counter++;
+            entity.Id = GenericRepo<T>._counter++;
 
             this.Entities.Add(entity);
 
@@ -29,7 +21,7 @@ namespace TestSimpleHooks.Repos
 
         public T Edit(T entity, object connection, Object transaction)
         {
-            var savedEntity = this.Entities.Where(e => e.Id == entity.Id).Single();
+            var savedEntity = this.Entities.Single(e => e.Id == entity.Id);
             savedEntity = entity;
 
             return savedEntity;

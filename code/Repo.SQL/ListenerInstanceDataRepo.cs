@@ -11,52 +11,52 @@ namespace Repo.SQL
     {
         public ListenerInstance Create(ListenerInstance entity, object connection, object transaction)
         {
-            SqlCommand cmd = new SqlCommand(Constants.SP_LISTENER_INSTANCE_ADD, (SqlConnection)connection, (SqlTransaction)transaction)
+            SqlCommand cmd = new SqlCommand(Constants.SpListenerInstanceAdd, (SqlConnection)connection, (SqlTransaction)transaction)
             {
                 CommandType = System.Data.CommandType.StoredProcedure
             };
 
             #region add parameters
-            cmd.Parameters.AddWithValue(Constants.PARAM_ACTIVE, entity.Active);
-            cmd.Parameters.AddWithValue(Constants.PARAM_CREATE_BY, entity.CreateBy);
-            cmd.Parameters.AddWithValue(Constants.PARAM_CREATE_DATE, entity.CreateDate);
-            cmd.Parameters.AddWithValue(Constants.PARAM_ID, System.Data.SqlDbType.BigInt).Direction = System.Data.ParameterDirection.Output;
-            cmd.Parameters.AddWithValue(Constants.PARAM_MODIFY_BY, entity.ModifyBy);
-            cmd.Parameters.AddWithValue(Constants.PARAM_MODIFY_DATE, entity.ModifyDate);
-            cmd.Parameters.AddWithValue(Constants.PARAM_NOTES, entity.Notes);
-            cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_INSTANCE_ID, entity.EventInstanceId);
-            cmd.Parameters.AddWithValue(Constants.PARAM_LISTENER_DEFINITION_ID, entity.ListenerDefinitionId);
-            cmd.Parameters.AddWithValue(Constants.PARAM_LISTENER_INSTANCE_STATUS_ID, (int)entity.Status);
-            cmd.Parameters.AddWithValue(Constants.PARAM_REMAINING_TRIAL_COUNT, entity.RemainingTrialCount);
-            cmd.Parameters.AddWithValue(Constants.PARAM_NEXT_RUN, entity.NextRun);
+            cmd.Parameters.AddWithValue(Constants.ParamActive, entity.Active);
+            cmd.Parameters.AddWithValue(Constants.ParamCreateBy, entity.CreateBy);
+            cmd.Parameters.AddWithValue(Constants.ParamCreateDate, entity.CreateDate);
+            cmd.Parameters.AddWithValue(Constants.ParamId, System.Data.SqlDbType.BigInt).Direction = System.Data.ParameterDirection.Output;
+            cmd.Parameters.AddWithValue(Constants.ParamModifyBy, entity.ModifyBy);
+            cmd.Parameters.AddWithValue(Constants.ParamModifyDate, entity.ModifyDate);
+            cmd.Parameters.AddWithValue(Constants.ParamNotes, entity.Notes);
+            cmd.Parameters.AddWithValue(Constants.ParamEventInstanceId, entity.EventInstanceId);
+            cmd.Parameters.AddWithValue(Constants.ParamListenerDefinitionId, entity.ListenerDefinitionId);
+            cmd.Parameters.AddWithValue(Constants.ParamListenerInstanceStatusId, (int)entity.Status);
+            cmd.Parameters.AddWithValue(Constants.ParamRemainingTrialCount, entity.RemainingTrialCount);
+            cmd.Parameters.AddWithValue(Constants.ParamNextRun, entity.NextRun);
 
             #endregion
 
             cmd.ExecuteNonQuery();
 
-            entity.Id = long.Parse(cmd.Parameters[Constants.PARAM_ID].Value.ToString());
+            entity.Id = long.Parse(cmd.Parameters[Constants.ParamId].Value.ToString());
 
             return entity;
         }
 
         public ListenerInstance Edit(ListenerInstance entity, object connection, object transaction)
         {
-            SqlCommand cmd = new SqlCommand(Constants.SP_LISTENER_INSTANCE_EDIT, (SqlConnection)connection, (SqlTransaction)transaction)
+            SqlCommand cmd = new SqlCommand(Constants.SpListenerInstanceEdit, (SqlConnection)connection, (SqlTransaction)transaction)
             {
                 CommandType = System.Data.CommandType.StoredProcedure
             };
 
             #region add parameters
-            cmd.Parameters.AddWithValue(Constants.PARAM_ACTIVE, entity.Active);
-            cmd.Parameters.AddWithValue(Constants.PARAM_ID, entity.Id);
-            cmd.Parameters.AddWithValue(Constants.PARAM_MODIFY_BY, entity.ModifyBy);
-            cmd.Parameters.AddWithValue(Constants.PARAM_MODIFY_DATE, entity.ModifyDate);
-            cmd.Parameters.AddWithValue(Constants.PARAM_NOTES, entity.Notes);
-            cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_INSTANCE_ID, entity.EventInstanceId);
-            cmd.Parameters.AddWithValue(Constants.PARAM_LISTENER_DEFINITION_ID, entity.ListenerDefinitionId);
-            cmd.Parameters.AddWithValue(Constants.PARAM_LISTENER_INSTANCE_STATUS_ID, (int)entity.Status);
-            cmd.Parameters.AddWithValue(Constants.PARAM_REMAINING_TRIAL_COUNT, entity.RemainingTrialCount);
-            cmd.Parameters.AddWithValue(Constants.PARAM_NEXT_RUN, entity.NextRun);
+            cmd.Parameters.AddWithValue(Constants.ParamActive, entity.Active);
+            cmd.Parameters.AddWithValue(Constants.ParamId, entity.Id);
+            cmd.Parameters.AddWithValue(Constants.ParamModifyBy, entity.ModifyBy);
+            cmd.Parameters.AddWithValue(Constants.ParamModifyDate, entity.ModifyDate);
+            cmd.Parameters.AddWithValue(Constants.ParamNotes, entity.Notes);
+            cmd.Parameters.AddWithValue(Constants.ParamEventInstanceId, entity.EventInstanceId);
+            cmd.Parameters.AddWithValue(Constants.ParamListenerDefinitionId, entity.ListenerDefinitionId);
+            cmd.Parameters.AddWithValue(Constants.ParamListenerInstanceStatusId, (int)entity.Status);
+            cmd.Parameters.AddWithValue(Constants.ParamRemainingTrialCount, entity.RemainingTrialCount);
+            cmd.Parameters.AddWithValue(Constants.ParamNextRun, entity.NextRun);
             #endregion
 
             cmd.ExecuteNonQuery();
@@ -83,12 +83,12 @@ namespace Repo.SQL
 
         private List<ListenerInstance> ReadByEventInstanceId(long eventInstanceId, SqlConnection connection)
         {
-            SqlCommand cmd = new SqlCommand(Constants.SP_LISTENER_INSTANCE_GET_BY_EVENT_INSTANCE_ID, (SqlConnection)connection)
+            SqlCommand cmd = new SqlCommand(Constants.SpListenerInstanceGetByEventInstanceId, (SqlConnection)connection)
             {
                 CommandType = System.Data.CommandType.StoredProcedure
             };
 
-            cmd.Parameters.AddWithValue(Constants.PARAM_EVENT_INSTANCE_ID, eventInstanceId);
+            cmd.Parameters.AddWithValue(Constants.ParamEventInstanceId, eventInstanceId);
 
             var reader = cmd.ExecuteReader();
 
@@ -120,43 +120,43 @@ namespace Repo.SQL
                     #region read event instance fields
                     switch (reader.GetName(counter))
                     {
-                        case Constants.FIELD_ACTIVE:
+                        case Constants.FieldActive:
                             instance.Active = (bool)reader[counter];
                             break;
-                        case Constants.FIELD_CREATE_BY:
+                        case Constants.FieldCreateBy:
                             instance.CreateBy = (string)reader[counter];
                             break;
-                        case Constants.FIELD_CREATE_DATE:
+                        case Constants.FieldCreateDate:
                             instance.CreateDate = (DateTime)reader[counter];
                             break;
-                        case Constants.FIELD_ID:
+                        case Constants.FieldId:
                             instance.Id = (long)reader[counter];
                             break;
-                        case Constants.FIELD_MODIFY_BY:
+                        case Constants.FieldModifyBy:
                             instance.ModifyBy = (string)reader[counter];
                             break;
-                        case Constants.FIELD_MODIFY_DATE:
+                        case Constants.FieldModifyDate:
                             instance.ModifyDate = (DateTime)reader[counter];
                             break;
-                        case Constants.FIELD_NOTES:
+                        case Constants.FieldNotes:
                             instance.Notes = (string)reader[counter];
                             break;
-                        case Constants.FIELD_TIMESTAMP:
+                        case Constants.FieldTimestamp:
                             instance.TimeStamp = (byte[])reader[counter];
                             break;
-                        case Constants.FIELD_EVENT_INSTANCE_ID:
+                        case Constants.FieldEventInstanceId:
                             instance.EventInstanceId = (long)reader[counter];
                             break;
-                        case Constants.FIELD_LISTENER_DEFINITION_ID:
+                        case Constants.FieldListenerDefinitionId:
                             instance.ListenerDefinitionId = (long)reader[counter];
                             break;
-                        case Constants.FIELD_LISTENER_INSTANCE_STATUS_ID:
+                        case Constants.FieldListenerInstanceStatusId:
                             instance.Status = (Enums.ListenerInstanceStatus)reader[counter];
                             break;
-                        case Constants.FIELD_REMAINING_TRIAL_COUNT:
+                        case Constants.FieldRemainingTrialCount:
                             instance.RemainingTrialCount = (int)reader[counter];
                             break;
-                        case Constants.FIELD_NEXT_RUN:
+                        case Constants.FieldNextRun:
                             instance.NextRun = (DateTime)reader[counter];
                             break;
                     }
@@ -173,13 +173,13 @@ namespace Repo.SQL
 
         public ListenerInstance Remove(ListenerInstance entity, object connection, object transaction)
         {
-            SqlCommand cmd = new SqlCommand(Constants.SP_LISTENER_INSTANCE_REMOVE, (SqlConnection)connection, (SqlTransaction)transaction)
+            SqlCommand cmd = new SqlCommand(Constants.SpListenerInstanceRemove, (SqlConnection)connection, (SqlTransaction)transaction)
             {
                 CommandType = System.Data.CommandType.StoredProcedure
             };
 
             #region add parameters
-            cmd.Parameters.AddWithValue(Constants.PARAM_ID, entity.Id);
+            cmd.Parameters.AddWithValue(Constants.ParamId, entity.Id);
             #endregion
 
             cmd.ExecuteNonQuery();

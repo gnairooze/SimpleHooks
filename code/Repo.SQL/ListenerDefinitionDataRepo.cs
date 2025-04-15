@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
 
 namespace Repo.SQL
 {
@@ -22,18 +21,18 @@ namespace Repo.SQL
 
         public List<ListenerDefinition> Read(Dictionary<string, string> options, object connection, object transaction)
         {
-            SqlCommand cmd = new SqlCommand(Constants.SP_LISTENER_DEFINITION_GET_ALL, (SqlConnection)connection)
+            SqlCommand cmd = new SqlCommand(Constants.SpListenerDefinitionGetAll, (SqlConnection)connection)
             {
                 CommandType = System.Data.CommandType.StoredProcedure
             };
 
             var reader = cmd.ExecuteReader();
 
-            List<ListenerDefinition> definitons = FillListenerDefinitions(reader);
+            List<ListenerDefinition> definitions = FillListenerDefinitions(reader);
 
             reader.Close();
 
-            return definitons;
+            return definitions;
         }
 
         private List<ListenerDefinition> FillListenerDefinitions(SqlDataReader reader)
@@ -57,43 +56,43 @@ namespace Repo.SQL
                     #region read event instance fields
                     switch (reader.GetName(counter))
                     {
-                        case Constants.FIELD_ACTIVE:
+                        case Constants.FieldActive:
                             definition.Active = (bool)reader[counter];
                             break;
-                        case Constants.FIELD_CREATE_BY:
+                        case Constants.FieldCreateBy:
                             definition.CreateBy = (string)reader[counter];
                             break;
-                        case Constants.FIELD_CREATE_DATE:
+                        case Constants.FieldCreateDate:
                             definition.CreateDate = (DateTime)reader[counter];
                             break;
-                        case Constants.FIELD_ID:
+                        case Constants.FieldId:
                             definition.Id = (long)reader[counter];
                             break;
-                        case Constants.FIELD_MODIFY_BY:
+                        case Constants.FieldModifyBy:
                             definition.ModifyBy = (string)reader[counter];
                             break;
-                        case Constants.FIELD_MODIFY_DATE:
+                        case Constants.FieldModifyDate:
                             definition.ModifyDate = (DateTime)reader[counter];
                             break;
-                        case Constants.FIELD_NOTES:
+                        case Constants.FieldNotes:
                             definition.Notes = (string)reader[counter];
                             break;
-                        case Constants.FIELD_NAME:
+                        case Constants.FieldName:
                             definition.Name = (string)reader[counter];
                             break;
-                        case Constants.FIELD_HEADERS:
+                        case Constants.FieldHeaders:
                             definition.Headers.AddRange(ConvertToHeaders((string)reader[counter]));
                             break;
-                        case Constants.FIELD_URL:
-                            definition.URL = (string)reader[counter];
+                        case Constants.FieldUrl:
+                            definition.Url = (string)reader[counter];
                             break;
-                        case Constants.FIELD_RETRIAL_DELAY:
+                        case Constants.FieldRetrialDelay:
                             definition.RetrialDelay = (int)reader[counter];
                             break;
-                        case Constants.FIELD_TIMEOUT:
+                        case Constants.FieldTimeout:
                             definition.Timeout = (int)reader[counter];
                             break;
-                        case Constants.FIELD_TRIAL_COUNT:
+                        case Constants.FieldTrialCount:
                             definition.TrialCount = (int)reader[counter];
                             break;
                     }

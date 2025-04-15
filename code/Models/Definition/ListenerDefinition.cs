@@ -1,21 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Models.Definition
 {
     public class ListenerDefinition:ModelBase
     {
-        protected List<string> _Headers = new List<string>();
         public string Name { get; set; }
-        public string URL { get; set; }
-        public List<String> Headers 
-        {
-            get
-            {
-                return this._Headers;
-            }
-        }
+        public string Url { get; set; }
+
+        public List<string> Headers { get; } = new List<string>();
+
         /// <summary>
         /// timeout in minutes
         /// </summary>

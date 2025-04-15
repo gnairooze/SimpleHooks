@@ -1,37 +1,32 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using SimpleHooks.Web.Helper;
 
 namespace SimpleHooks.Web
 {
     public class Startup
     {
-        private readonly Helper.ConfigurationHelper _Config;
-        private readonly Log.SQL.Logger _Logger;
-        private readonly Guid Log_CorrelationId = Guid.NewGuid();
+        private readonly Log.SQL.Logger _logger;
+        private readonly Guid _logCorrelationId = Guid.NewGuid();
 
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
-            _Config = new Helper.ConfigurationHelper(configuration);
-            _Logger = new Log.SQL.Logger()
+            var config = new ConfigurationHelper(configuration);
+            _logger = new Log.SQL.Logger()
             {
-                MinLogType = (Log.Interface.LogModel.LogTypes)Enum.Parse(typeof(Log.Interface.LogModel.LogTypes), _Config.Logger_MinLogLevel, true),
-                ConnectionString = _Config.ConnectionString_Log,
-                FunctionName = _Config.Logger_Function
+                MinLogType = (Log.Interface.LogModel.LogTypes)Enum.Parse(typeof(Log.Interface.LogModel.LogTypes), config.LoggerMinLogLevel, true),
+                ConnectionString = config.ConnectionStringLog,
+                FunctionName = config.LoggerFunction
             };
 
-            _Logger.Add(new Log.Interface.LogModel()
+            _logger.Add(new Log.Interface.LogModel()
             {
                 CodeReference = "SimpleHooks.Web.Startup",
-                Correlation = Log_CorrelationId,
+                Correlation = _logCorrelationId,
                 Counter = 1,
                 CreateDate = DateTime.UtcNow,
                 Duration = 0,
@@ -48,15 +43,13 @@ namespace SimpleHooks.Web
             });
         }
 
-        public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            _Logger.Add(_Logger.Add(new Log.Interface.LogModel()
+            _logger.Add(_logger.Add(new Log.Interface.LogModel()
             {
                 CodeReference = "SimpleHooks.Web.Startup",
-                Correlation = Log_CorrelationId,
+                Correlation = _logCorrelationId,
                 Counter = 1,
                 CreateDate = DateTime.UtcNow,
                 Duration = 0,
@@ -78,10 +71,10 @@ namespace SimpleHooks.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            _Logger.Add(new Log.Interface.LogModel()
+            _logger.Add(new Log.Interface.LogModel()
             {
                 CodeReference = "SimpleHooks.Web.Startup",
-                Correlation = Log_CorrelationId,
+                Correlation = _logCorrelationId,
                 Counter = 1,
                 CreateDate = DateTime.UtcNow,
                 Duration = 0,
@@ -101,10 +94,10 @@ namespace SimpleHooks.Web
             {
                 if (env.IsDevelopment())
                 {
-                    _Logger.Add(new Log.Interface.LogModel()
+                    _logger.Add(new Log.Interface.LogModel()
                     {
                         CodeReference = "SimpleHooks.Web.Startup",
-                        Correlation = Log_CorrelationId,
+                        Correlation = _logCorrelationId,
                         Counter = 2,
                         CreateDate = DateTime.UtcNow,
                         Duration = 0,
@@ -123,10 +116,10 @@ namespace SimpleHooks.Web
                 }
                 else
                 {
-                    _Logger.Add(new Log.Interface.LogModel()
+                    _logger.Add(new Log.Interface.LogModel()
                     {
                         CodeReference = "SimpleHooks.Web.Startup",
-                        Correlation = Log_CorrelationId,
+                        Correlation = _logCorrelationId,
                         Counter = 2,
                         CreateDate = DateTime.UtcNow,
                         Duration = 0,
@@ -163,10 +156,10 @@ namespace SimpleHooks.Web
             }
             catch (Exception ex)
             {
-                _Logger.Add(new Log.Interface.LogModel() 
+                _logger.Add(new Log.Interface.LogModel() 
                 {
                     CodeReference = "SimpleHooks.Web.Startup",
-                    Correlation = Log_CorrelationId,
+                    Correlation = _logCorrelationId,
                     Counter = 3,
                     CreateDate = DateTime.UtcNow,
                     Duration = 0,
@@ -184,10 +177,10 @@ namespace SimpleHooks.Web
                 throw;
             }
 
-            _Logger.Add(new Log.Interface.LogModel()
+            _logger.Add(new Log.Interface.LogModel()
             {
                 CodeReference = "SimpleHooks.Web.Startup",
-                Correlation = Log_CorrelationId,
+                Correlation = _logCorrelationId,
                 Counter = 3,
                 CreateDate = DateTime.UtcNow,
                 Duration = 0,

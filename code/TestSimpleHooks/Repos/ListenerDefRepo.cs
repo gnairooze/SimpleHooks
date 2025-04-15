@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TestSimpleHooks.Repos
 {
@@ -24,7 +21,7 @@ namespace TestSimpleHooks.Repos
                     TrialCount = 3,
                     RetrialDelay = 1,
                     Timeout = 2,
-                    URL = "http://test1.test.test"
+                    Url = "http://test1.test.test"
 
                 },
                 new (){
@@ -39,7 +36,7 @@ namespace TestSimpleHooks.Repos
                     TrialCount = 3,
                     RetrialDelay = 1,
                     Timeout = 2,
-                    URL = "http://test2.test.test"
+                    Url = "http://test2.test.test"
                 }
             });
 
