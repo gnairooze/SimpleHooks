@@ -1,0 +1,287 @@
+{
+	"info": {
+		"_postman_id": "6e9c3825-cd4e-470a-b7fe-a7474581a7a8",
+		"name": "SimpleHooks",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6481470",
+		"_collection_link": "https://lively-trinity-995999.postman.co/workspace/LearnWebLocal~ca53f372-52d1-4ab9-8806-b68a9d2a4592/collection/6481470-6e9c3825-cd4e-470a-b7fe-a7474581a7a8?action=share&source=collection_link&creator=6481470"
+	},
+	"item": [
+		{
+			"name": "Trigger event",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"EventDefinitionId\": \"1\",\r\n    \"EventData\": \"{'name': 'test.user8'}\",\r\n    \"ReferenceName\": \"sale.id\",\r\n    \"ReferenceValue\": \"abd1238\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/simplehooks.web/api/triggerevent",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"simplehooks.web",
+						"api",
+						"triggerevent"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Trigger event from debug",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"EventDefinitionId\": \"1\",\r\n    \"EventData\": \"{'name': 'test.user'}\",\r\n    \"ReferenceName\": \"sale.id\",\r\n    \"ReferenceValue\": \"abd123\"\r\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44371/api/triggerevent",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44371",
+					"path": [
+						"api",
+						"triggerevent"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "check-listener-1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/sample-listener-api/api/sample",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"sample-listener-api",
+						"api",
+						"sample"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post-event-to-listener-1",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"data\": {\r\n    \"key1\": \"value1\",\r\n    \"key2\": \"value2\",\r\n    \"key3\": \"value3\"\r\n  },\r\n  \"simpleHooksMetadata\": { \r\n      \"eventBusinessId\": \"123456789\",\r\n      \"eventDefinitionName\": \"exampleEvent\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/sample-listener-api/api/sample",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"sample-listener-api",
+						"api",
+						"sample"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "check-listener-2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/sample-listener-api2/api/sample",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"sample-listener-api2",
+						"api",
+						"sample"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post-event-to-listener-2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"data\": {\r\n    \"key1\": \"value1\",\r\n    \"key2\": \"value2\",\r\n    \"key3\": \"value3\"\r\n  },\r\n  \"simpleHooksMetadata\": { \r\n      \"eventBusinessId\": \"123456789\",\r\n      \"eventDefinitionName\": \"exampleEvent\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/sample-listener-api2/api/sample",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"sample-listener-api2",
+						"api",
+						"sample"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "check-listener-3",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/sample-listener-api3/api/sample",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"sample-listener-api3",
+						"api",
+						"sample"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post-event-to-listener-3",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"data\": {\r\n    \"key1\": \"value1\",\r\n    \"key2\": \"value2\",\r\n    \"key3\": \"value3\"\r\n  },\r\n  \"simpleHooksMetadata\": { \r\n      \"eventBusinessId\": \"123456789\",\r\n      \"eventDefinitionName\": \"exampleEvent\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/sample-listener-api3/api/sample",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"sample-listener-api3",
+						"api",
+						"sample"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "debug-post-event-to-sample-listener-1",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"data\": {\r\n    \"key1\": \"value1\",\r\n    \"key2\": \"value2\",\r\n    \"key3\": \"value3\"\r\n  },\r\n  \"simpleHooksMetadata\": { \r\n      \"eventBusinessId\": \"123456789\",\r\n      \"eventDefinitionName\": \"exampleEvent\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://simplehookssamplelistener.dev.local:5011/api/sample",
+					"protocol": "https",
+					"host": [
+						"simplehookssamplelistener",
+						"dev",
+						"local"
+					],
+					"port": "5011",
+					"path": [
+						"api",
+						"sample"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "debug-post-event-to-sample-listener-2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"data\": {\r\n    \"key1\": \"value1\",\r\n    \"key2\": \"value2\",\r\n    \"key3\": \"value3\"\r\n  },\r\n  \"simpleHooksMetadata\": { \r\n      \"eventBusinessId\": \"a600192f-815D-40DE-A928-3B1FE2B3E547\",\r\n      \"eventDefinitionName\": \"exampleEvent\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://simplehookssamplelistener.dev.local:5011/api/sample",
+					"protocol": "https",
+					"host": [
+						"simplehookssamplelistener",
+						"dev",
+						"local"
+					],
+					"port": "5011",
+					"path": [
+						"api",
+						"sample"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
