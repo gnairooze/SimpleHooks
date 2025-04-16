@@ -1,3 +1,7 @@
+# Simple-Hooks
+
+![high level diagram](simple-hooks-system-context.svg)
+
 ## Description
 
 Simple-Hooks is a solution to empower your app with events, and let other APIs to subscribe to various events.
@@ -11,7 +15,7 @@ Simple-Hooks will call all the subscribers, with the event data and retry on the
 
 ## How to Setup Simple-Hooks
 
-### Prerequistes
+### Prerequisites
 
 1. dot net 8.0 framework
 2. SQL Server with DB for Simple-Hooks storage. Run the scripts in the [repository path](/code/SQL).
@@ -23,27 +27,31 @@ Simple-Hooks contains 2 components:
 1. Web API to trigger events. You need to host it under web server that support dot net 8.0 (IIS, Apache2, Nginx ...)
 2. Console Application to run in a scheduler (windows task scheduler or cron demon).
 
---------
+---
 
 ## Configuration Steps
 
-> The setup is currently using SQL server scipts to DB. It is planned in the future to have web site for configuration.
+> The setup is currently using SQL server scripts to DB. It is planned in the future to have web site for configuration.
 
 ### Define Events
+
 just add a unique name for the event.
 
 ### Define Listeners (Subscribers)
+
 define the listener name, the URL to post the event data to, and the headers to be added to the HTTP request. You also define the timeout, the number of retries, and the period between each retry.
 
 you will find a sample implementation of the listener in the [repository path](/code/SampleListener/SampleListenerAPI)
 
 ### Subscribe Listeners to Events
+
 associate the listeners to the events. You can have multiple listeners for the same event.
 
----------------
+---
 
 ## How to Trigger Events
-you need to include the event definition id, the event data, refernce name and reference value in the request body.
+
+you need to include the event definition id, the event data, reference name and reference value in the request body.
 note that the event data should be a string. in the string, you will add the data in json format.
 
 ```json
@@ -55,9 +63,10 @@ note that the event data should be a string. in the string, you will add the dat
 }
 ```
 
----------------
+---
 
 ## What JSON Data will be Posted to the Listener
+
 simple hooks will post the listener definition headers and the event data along with the metadata of the event to the listener url respecting the listener definition timeout. and in case of failure, it will retry respecting the listener definition retries and retries delay.
 
 ```json
@@ -76,7 +85,7 @@ simple hooks will post the listener definition headers and the event data along 
 }
 ```
 
----------------
+---
 
 ## Database Documentation
 
@@ -84,7 +93,7 @@ simple hooks will post the listener definition headers and the event data along 
 
 Metadata columns exist in every table for support purposes.
 
-1. Id: the identitiy of the row.
+1. Id: the identity of the row.
 2. CreateBy: the user who created the row.
 3. CreateDate: when the row was created.
 4. ModifyBy: the user last modified the row.
@@ -105,10 +114,10 @@ Metadata columns exist in every table for support purposes.
 3. URL: the url of the listener to be called when processing the event.
 4. Headers: the headers that will be added to the HTTP request when posting to the URL. multiple headers allowed. Each header on separate line. as the following sample:
 
-```headers
-content-type:application/json
-token:65yrbwiw752342kjhjljwhlsf
-```
+	```headers
+	content-type:application/json
+	token:65yrbwiw752342kjhjljwhlsf
+	```
 
 5. Timeout: when the HTTP request will timeout. In minutes.
 6. TrialCount: the max number of retries on the request if not succeeded to decalre its failure.
@@ -130,16 +139,16 @@ token:65yrbwiw752342kjhjljwhlsf
 4. ReferenceName: name of the reference for that particular event instance. (example: "ClientId" in case the event definition is "Client Added").
 5. ReferenceValue: value of the reference for that particular event instance. (example: "34544433" which is the value of the Client Id being added in "Client Added" event).
 6. EventInstanceStatus_Id: Id of the status of the event instance.
-7. Active: marks if the event instance is active. Only active event intance will be processed.
+7. Active: marks if the event instance is active. Only active event instance will be processed.
 
 #### E. ListenerInstance
 
 1. EventInstance_Id: the Id of the related event instance.
-2. ListenerDefinition_Id: the Id of the lsitener definition.
+2. ListenerDefinition_Id: the Id of the listener definition.
 3. ListenerInstanceStatus_Id: Id of the status of the listener instance.
 4. RemainingTrialCount: the remaining number of retrials that can be executed on this listener instance.
 5. NextRun: when the next time this listener instance will be used in the post request.
-6. Acitve: marks if the listener instance is active. Only active listeners are processed.
+6. Active: marks if the listener instance is active. Only active listeners are processed.
 
 #### F. EventInstanceStatus
 
@@ -175,7 +184,7 @@ This table contains configurations of Simple-Hooks
 
 ##### _Simple-Hooks Options_
 
-1. TopCount of the GetNotProcessed operation. It determines the number of event instance rows returns every time the opertation of processing events started.
+1. TopCount of the GetNotProcessed operation. It determines the number of event instance rows returns every time the operation of processing events started.
 
 #### I. SimpleHooks_Log
 
@@ -186,7 +195,7 @@ This table contains configurations of Simple-Hooks
 5. Operation: name of the operation.
 6. Step: name of the step in the operation.
 7. Counter: the number of the log in the same step in the same operation. Used for ordering the logs in the same step or different steps.
-8. Correlation: Id to unidfy different logs in the same step or the same operations.
+8. Correlation: Id to unify different logs in the same step or the same operations.
 9. CodeReference: Namespace, class name, method name,...
 10. ReferenceName: name of a key reference related to the log.
 11. ReferenceValue: value of the key reference related to the log.
