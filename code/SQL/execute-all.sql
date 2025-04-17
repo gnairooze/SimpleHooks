@@ -41,6 +41,7 @@ values
 ('StoredProcedures/ListenerInstance_GetByEventInstance_Id.Procedure.sql'),
 ('StoredProcedures/ListenerInstance_Remove.sql'),
 ('StoredProcedures/SimpleHooks_Log_Add.sql'),
+('StoredProcedures/Support_RetryFailedEvent.sql'),
 ('Data/AppOption-Data.sql'),
 ('Data/EventInstanceStatus-Data.sql'),
 ('Data/ListenerInstanceStatus-Data.sql'),
