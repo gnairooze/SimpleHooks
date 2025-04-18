@@ -19,55 +19,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpClient.Interface", "Htt
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQL", "SQL", "{00940EB9-7B57-40A8-93D6-CC5FE0646424}"
 	ProjectSection(SolutionItems) = preProject
-		SQL\execute-all-sql.bat = SQL\execute-all-sql.bat
-		SQL\execute-all.sql = SQL\execute-all.sql
 		SQL\operation-all.sql = SQL\operation-all.sql
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tables", "Tables", "{C1323CA7-0ACA-4BAA-8CD7-672B7C9974D9}"
-	ProjectSection(SolutionItems) = preProject
-		SQL\Tables\01-LogTypes.Table.sql = SQL\Tables\01-LogTypes.Table.sql
-		SQL\Tables\02-SimpleHooks_Log.Table.sql = SQL\Tables\02-SimpleHooks_Log.Table.sql
-		SQL\Tables\03-dbo.ListenerInstanceStatus.Table.sql = SQL\Tables\03-dbo.ListenerInstanceStatus.Table.sql
-		SQL\Tables\04-dbo.ListenerDefinition.Table.sql = SQL\Tables\04-dbo.ListenerDefinition.Table.sql
-		SQL\Tables\05-dbo.EventInstanceStatus.Table.sql = SQL\Tables\05-dbo.EventInstanceStatus.Table.sql
-		SQL\Tables\06-dbo.EventDefinition.Table.sql = SQL\Tables\06-dbo.EventDefinition.Table.sql
-		SQL\Tables\07-dbo.EventDefinition_ListenerDefinition.Table.sql = SQL\Tables\07-dbo.EventDefinition_ListenerDefinition.Table.sql
-		SQL\Tables\08-dbo.EventInstance.Table.sql = SQL\Tables\08-dbo.EventInstance.Table.sql
-		SQL\Tables\09-dbo.ListenerInstance.Table.sql = SQL\Tables\09-dbo.ListenerInstance.Table.sql
-		SQL\Tables\10-dbo.AppOption.Table.sql = SQL\Tables\10-dbo.AppOption.Table.sql
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StoredProcedures", "StoredProcedures", "{C5C3F890-666D-464C-86ED-ECC2F0748625}"
-	ProjectSection(SolutionItems) = preProject
-		SQL\StoredProcedures\AppOption_GetAll.Procedure.sql = SQL\StoredProcedures\AppOption_GetAll.Procedure.sql
-		SQL\StoredProcedures\EventDefinition_GetAll.Procedure.sql = SQL\StoredProcedures\EventDefinition_GetAll.Procedure.sql
-		SQL\StoredProcedures\EventDefinition_ListenerDefinition_GetAll.Procedure.sql = SQL\StoredProcedures\EventDefinition_ListenerDefinition_GetAll.Procedure.sql
-		SQL\StoredProcedures\EventInstance_Add.Procedure.sql = SQL\StoredProcedures\EventInstance_Add.Procedure.sql
-		SQL\StoredProcedures\EventInstance_Edit.Procedure.sql = SQL\StoredProcedures\EventInstance_Edit.Procedure.sql
-		SQL\StoredProcedures\EventInstance_GetNotProcessed.Procedure.sql = SQL\StoredProcedures\EventInstance_GetNotProcessed.Procedure.sql
-		SQL\StoredProcedures\EventInstance_Remove.Procedure.sql = SQL\StoredProcedures\EventInstance_Remove.Procedure.sql
-		SQL\StoredProcedures\ListenerDefinition_GetAll.Procedure.sql = SQL\StoredProcedures\ListenerDefinition_GetAll.Procedure.sql
-		SQL\StoredProcedures\ListenerInstance_Add.sql = SQL\StoredProcedures\ListenerInstance_Add.sql
-		SQL\StoredProcedures\ListenerInstance_Edit.sql = SQL\StoredProcedures\ListenerInstance_Edit.sql
-		SQL\StoredProcedures\ListenerInstance_GetByEventInstance_Id.Procedure.sql = SQL\StoredProcedures\ListenerInstance_GetByEventInstance_Id.Procedure.sql
-		SQL\StoredProcedures\ListenerInstance_Remove.sql = SQL\StoredProcedures\ListenerInstance_Remove.sql
-		SQL\StoredProcedures\SimpleHooks_Log_Add.sql = SQL\StoredProcedures\SimpleHooks_Log_Add.sql
-		SQL\StoredProcedures\Support_RetryFailedEvent.sql = SQL\StoredProcedures\Support_RetryFailedEvent.sql
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repo.SQL", "Repo.SQL\Repo.SQL.csproj", "{9CD688A3-2F96-46D6-8691-29785CB962F5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpClient.Simple", "HttpClient.Simple\HttpClient.Simple.csproj", "{355270E4-F212-4ACF-A3EA-79322D7C9171}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{52464637-A9A9-4A94-994D-3C01EA166C72}"
-	ProjectSection(SolutionItems) = preProject
-		SQL\Data\01-AppOption-Data.sql = SQL\Data\01-AppOption-Data.sql
-		SQL\Data\02-EventInstanceStatus-Data.sql = SQL\Data\02-EventInstanceStatus-Data.sql
-		SQL\Data\03-ListenerInstanceStatus-Data.sql = SQL\Data\03-ListenerInstanceStatus-Data.sql
-		SQL\Data\04-SimpleHooks_Log-Data.sql = SQL\Data\04-SimpleHooks_Log-Data.sql
-		SQL\Data\05-sample-data.sql = SQL\Data\05-sample-data.sql
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Log.SQL", "Log.SQL\Log.SQL.csproj", "{9908774C-EF95-48FB-BE10-EC74D17A2D31}"
 EndProject
@@ -85,6 +42,71 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "certificates", "certificate
 		certificates\dev.local+4-readme.md = certificates\dev.local+4-readme.md
 		certificates\dev.local+4.pem = certificates\dev.local+4.pem
 		certificates\dev.local+4.pfx = certificates\dev.local+4.pfx
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "log-db", "log-db", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		SQL\log-db\execute-log-schema-data-sql.bat = SQL\log-db\execute-log-schema-data-sql.bat
+		SQL\log-db\execute-log-schema-data.sql = SQL\log-db\execute-log-schema-data.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "operation-db", "operation-db", "{A92EC21D-CB49-4F8D-A19B-F10A1B24571A}"
+	ProjectSection(SolutionItems) = preProject
+		SQL\operation-db\execute-operation-schema-data-sql.bat = SQL\operation-db\execute-operation-schema-data-sql.bat
+		SQL\operation-db\execute-operation-schema-data.sql = SQL\operation-db\execute-operation-schema-data.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{DC1C82E8-E8C2-42C8-A6F8-3A9FAB48881A}"
+	ProjectSection(SolutionItems) = preProject
+		SQL\log-db\Data\04-SimpleHooks_Log-Data.sql = SQL\log-db\Data\04-SimpleHooks_Log-Data.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StoredProcedures", "StoredProcedures", "{C7472C5F-696F-4D2A-8C73-D908FA2E1E72}"
+	ProjectSection(SolutionItems) = preProject
+		SQL\log-db\StoredProcedures\SimpleHooks_Log_Add.sql = SQL\log-db\StoredProcedures\SimpleHooks_Log_Add.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StoredProcedures", "StoredProcedures", "{4638AD46-974F-41D1-BF75-94C4A86836A0}"
+	ProjectSection(SolutionItems) = preProject
+		SQL\operation-db\StoredProcedures\AppOption_GetAll.Procedure.sql = SQL\operation-db\StoredProcedures\AppOption_GetAll.Procedure.sql
+		SQL\operation-db\StoredProcedures\EventDefinition_GetAll.Procedure.sql = SQL\operation-db\StoredProcedures\EventDefinition_GetAll.Procedure.sql
+		SQL\operation-db\StoredProcedures\EventDefinition_ListenerDefinition_GetAll.Procedure.sql = SQL\operation-db\StoredProcedures\EventDefinition_ListenerDefinition_GetAll.Procedure.sql
+		SQL\operation-db\StoredProcedures\EventInstance_Add.Procedure.sql = SQL\operation-db\StoredProcedures\EventInstance_Add.Procedure.sql
+		SQL\operation-db\StoredProcedures\EventInstance_Edit.Procedure.sql = SQL\operation-db\StoredProcedures\EventInstance_Edit.Procedure.sql
+		SQL\operation-db\StoredProcedures\EventInstance_GetNotProcessed.Procedure.sql = SQL\operation-db\StoredProcedures\EventInstance_GetNotProcessed.Procedure.sql
+		SQL\operation-db\StoredProcedures\EventInstance_Remove.Procedure.sql = SQL\operation-db\StoredProcedures\EventInstance_Remove.Procedure.sql
+		SQL\operation-db\StoredProcedures\ListenerDefinition_GetAll.Procedure.sql = SQL\operation-db\StoredProcedures\ListenerDefinition_GetAll.Procedure.sql
+		SQL\operation-db\StoredProcedures\ListenerInstance_Add.sql = SQL\operation-db\StoredProcedures\ListenerInstance_Add.sql
+		SQL\operation-db\StoredProcedures\ListenerInstance_Edit.sql = SQL\operation-db\StoredProcedures\ListenerInstance_Edit.sql
+		SQL\operation-db\StoredProcedures\ListenerInstance_GetByEventInstance_Id.Procedure.sql = SQL\operation-db\StoredProcedures\ListenerInstance_GetByEventInstance_Id.Procedure.sql
+		SQL\operation-db\StoredProcedures\ListenerInstance_Remove.sql = SQL\operation-db\StoredProcedures\ListenerInstance_Remove.sql
+		SQL\operation-db\StoredProcedures\Support_RetryFailedEvent.sql = SQL\operation-db\StoredProcedures\Support_RetryFailedEvent.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{94F0E907-C062-432E-9528-0F8DCE07518C}"
+	ProjectSection(SolutionItems) = preProject
+		SQL\operation-db\Data\01-AppOption-Data.sql = SQL\operation-db\Data\01-AppOption-Data.sql
+		SQL\operation-db\Data\02-EventInstanceStatus-Data.sql = SQL\operation-db\Data\02-EventInstanceStatus-Data.sql
+		SQL\operation-db\Data\03-ListenerInstanceStatus-Data.sql = SQL\operation-db\Data\03-ListenerInstanceStatus-Data.sql
+		SQL\operation-db\Data\05-sample-data.sql = SQL\operation-db\Data\05-sample-data.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tables", "Tables", "{92118DE2-EDB8-4714-B20A-733192F9CE9B}"
+	ProjectSection(SolutionItems) = preProject
+		SQL\operation-db\Tables\03-dbo.ListenerInstanceStatus.Table.sql = SQL\operation-db\Tables\03-dbo.ListenerInstanceStatus.Table.sql
+		SQL\operation-db\Tables\04-dbo.ListenerDefinition.Table.sql = SQL\operation-db\Tables\04-dbo.ListenerDefinition.Table.sql
+		SQL\operation-db\Tables\05-dbo.EventInstanceStatus.Table.sql = SQL\operation-db\Tables\05-dbo.EventInstanceStatus.Table.sql
+		SQL\operation-db\Tables\06-dbo.EventDefinition.Table.sql = SQL\operation-db\Tables\06-dbo.EventDefinition.Table.sql
+		SQL\operation-db\Tables\07-dbo.EventDefinition_ListenerDefinition.Table.sql = SQL\operation-db\Tables\07-dbo.EventDefinition_ListenerDefinition.Table.sql
+		SQL\operation-db\Tables\08-dbo.EventInstance.Table.sql = SQL\operation-db\Tables\08-dbo.EventInstance.Table.sql
+		SQL\operation-db\Tables\09-dbo.ListenerInstance.Table.sql = SQL\operation-db\Tables\09-dbo.ListenerInstance.Table.sql
+		SQL\operation-db\Tables\10-dbo.AppOption.Table.sql = SQL\operation-db\Tables\10-dbo.AppOption.Table.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tables", "Tables", "{26A32D69-D5FD-4CD3-9411-E419DAA1781A}"
+	ProjectSection(SolutionItems) = preProject
+		SQL\log-db\Tables\01-LogTypes.Table.sql = SQL\log-db\Tables\01-LogTypes.Table.sql
+		SQL\log-db\Tables\02-SimpleHooks_Log.Table.sql = SQL\log-db\Tables\02-SimpleHooks_Log.Table.sql
 	EndProjectSection
 EndProject
 Global
@@ -150,10 +172,15 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{C1323CA7-0ACA-4BAA-8CD7-672B7C9974D9} = {00940EB9-7B57-40A8-93D6-CC5FE0646424}
-		{C5C3F890-666D-464C-86ED-ECC2F0748625} = {00940EB9-7B57-40A8-93D6-CC5FE0646424}
-		{52464637-A9A9-4A94-994D-3C01EA166C72} = {00940EB9-7B57-40A8-93D6-CC5FE0646424}
 		{90ED138B-5864-4BA8-A923-D4325CE858CF} = {794B3C88-CAF2-476C-B33D-B58E3D89E4C2}
+		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {00940EB9-7B57-40A8-93D6-CC5FE0646424}
+		{A92EC21D-CB49-4F8D-A19B-F10A1B24571A} = {00940EB9-7B57-40A8-93D6-CC5FE0646424}
+		{DC1C82E8-E8C2-42C8-A6F8-3A9FAB48881A} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{C7472C5F-696F-4D2A-8C73-D908FA2E1E72} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{4638AD46-974F-41D1-BF75-94C4A86836A0} = {A92EC21D-CB49-4F8D-A19B-F10A1B24571A}
+		{94F0E907-C062-432E-9528-0F8DCE07518C} = {A92EC21D-CB49-4F8D-A19B-F10A1B24571A}
+		{92118DE2-EDB8-4714-B20A-733192F9CE9B} = {A92EC21D-CB49-4F8D-A19B-F10A1B24571A}
+		{26A32D69-D5FD-4CD3-9411-E419DAA1781A} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {019C6500-A05E-4917-85BC-0D9BD2CD2D06}

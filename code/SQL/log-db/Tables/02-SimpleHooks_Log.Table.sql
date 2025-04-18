@@ -1,4 +1,4 @@
-USE [SimpleHooks]
+USE [SimpleHooks_Log_DB]
 GO
 
 /****** Object:  Table [dbo].[SimpleHooks_Log]    Script Date: 2021-11-06 10:17:42 AM ******/

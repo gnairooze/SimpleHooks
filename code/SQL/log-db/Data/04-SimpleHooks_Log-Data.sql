@@ -1,4 +1,4 @@
-use SimpleHooks
+use SimpleHooks_Log_DB
 go
 
 insert LogTypes(Id, Name) values (1, 'Debug')

@@ -73,7 +73,7 @@ where id = 1
 
 select
 	*
-from SimpleHooks_Log
+from SimpleHooks_Log_DB.dbo.SimpleHooks_Log
 where 1=1
 and 1=1
 and CreateDate > '2025-04-14'

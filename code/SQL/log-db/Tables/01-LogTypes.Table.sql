@@ -1,4 +1,4 @@
-USE [SimpleHooks]
+USE [SimpleHooks_Log_DB]
 GO
 
 CREATE TABLE [dbo].[LogTypes](
