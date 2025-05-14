@@ -37,12 +37,17 @@ namespace SimpleHooks.Web.Controllers
         [HttpPost]
         public OkObjectResult Post([FromBody] Models.EventViewModel value)
         {
+            // Extract the EventData node from the request
+            var eventDataJson = value.EventData.TryGetValue("EventData", out var eventDataNode) 
+                ? eventDataNode.GetRawText() 
+                : "{}";
+
             var result = _manager.Add(new EventInstance() {
                 Active = true,
                 BusinessId = Guid.NewGuid(),
                 CreateBy = "system.trigger",
                 CreateDate = DateTime.UtcNow,
-                EventData = value.EventData != null ? JsonSerializer.Serialize(value.EventData) : "{}",
+                EventData = eventDataJson,
                 EventDefinitionId = value.EventDefinitionId,
                 ModifyBy = "system.trigger",
                 ModifyDate = DateTime.UtcNow,
