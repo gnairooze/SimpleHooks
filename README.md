@@ -57,7 +57,7 @@ note that the event data should be a string. in the string, you will add the dat
 ```json
 {
 	"EventDefinitionId": "1",
-	"EventData": "{ 'ClientId': '34544433', 'ClientName': 'John Doe', 'ClientEmail': 'john.doe@email.com' }",
+	"EventData": { "ClientId": "34544433", "ClientName": "John Doe", "ClientEmail": "john.doe@email.com" },
 	"ReferenceName": "client.techId",
 	"ReferenceValue": "abd123-1001"
 }

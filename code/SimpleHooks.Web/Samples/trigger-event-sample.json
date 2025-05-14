@@ -1,6 +1,6 @@
 {
   "EventDefinitionId": "1",
-  "EventData": "{'name': 'test.user'}",
+  "EventData": { "name": "test.user" },
   "ReferenceName": "sale.id",
   "ReferenceValue": "abd123"
 }
