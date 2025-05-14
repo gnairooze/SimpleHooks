@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Text.Json;
 using Models.Instance;
 
 namespace SimpleHooks.Web.Controllers
@@ -41,7 +42,7 @@ namespace SimpleHooks.Web.Controllers
                 BusinessId = Guid.NewGuid(),
                 CreateBy = "system.trigger",
                 CreateDate = DateTime.UtcNow,
-                EventData = value.EventData,
+                EventData = value.EventData != null ? JsonSerializer.Serialize(value.EventData) : "{}",
                 EventDefinitionId = value.EventDefinitionId,
                 ModifyBy = "system.trigger",
                 ModifyDate = DateTime.UtcNow,
