@@ -4,17 +4,21 @@ using System.Text.Json.Serialization;
 
 namespace SimpleHooks.Web.Models
 {
-    public class EventViewModel(
-        long eventDefinitionId,
-        string referenceName,
-        string referenceValue,
-        Dictionary<string, JsonElement> eventData)
+    public class EventViewModel
     {
-        public long EventDefinitionId { get; } = eventDefinitionId;
-        public string ReferenceName { get; } = referenceName;
-        public string ReferenceValue { get; } = referenceValue;
+        [JsonConstructor]
+        public EventViewModel(long eventDefinitionId, string referenceName, string referenceValue)
+        {
+            EventDefinitionId = eventDefinitionId;
+            ReferenceName = referenceName;
+            ReferenceValue = referenceValue;
+        }
+
+        public long EventDefinitionId { get; }
+        public string ReferenceName { get; }
+        public string ReferenceValue { get; }
 
         [JsonExtensionData]
-        public Dictionary<string, JsonElement> EventData { get; } = eventData;
+        public Dictionary<string, JsonElement> EventData { get; set; } = new();
     }
 }
