@@ -1,3 +1,5 @@
+USE SimpleHooks;
+
 set identity_insert EventDefinition on;
 
 insert EventDefinition 
