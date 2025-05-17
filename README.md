@@ -214,3 +214,55 @@ _Log Types_
 2. Information | 2
 3. Warning | 4
 4. Error | 8
+
+## TriggerEventHelper Library
+
+`TriggerEventHelper` is a .NET Standard 2.0 class library that provides a simple way to trigger events in the SimpleHooks.Web API by calling the `TriggerEventController` POST action.
+
+### Features
+- Easy integration with any .NET project (Standard 2.0 compatible)
+- Async methods for non-blocking event triggering
+- Supports sending event data as either an object or a JSON string
+
+### Installation
+1. Reference the `TriggerEventHelper` project or its compiled DLL in your .NET solution.
+2. Add `using TriggerEventHelper;` to your code.
+
+### Usage Example
+
+```csharp
+using TriggerEventHelper;
+
+// Initialize the client with the full URL to the TriggerEventController POST endpoint
+var client = new TriggerEventClient("https://your-simplehooks-url/api/TriggerEvent");
+
+// Example event data as an object
+var eventData = new {
+    foo = "bar",
+    nested = new { key = "value" }
+};
+
+// Trigger the event (async)
+var response = await client.TriggerEventAsync(
+    eventDefinitionId: 1,
+    referenceName: "refName",
+    referenceValue: "refValue",
+    eventData: eventData
+);
+
+// Or trigger the event with a JSON string
+var jsonEventData = @"{ \"foo\": \"bar\", \"nested\": { \"key\": \"value\" } }";
+var response2 = await client.TriggerEventAsync(
+    eventDefinitionId: 1,
+    referenceName: "refName",
+    referenceValue: "refValue",
+    eventData: jsonEventData
+);
+```
+
+### Notes
+- The URL passed to the constructor should be the full endpoint for the POST action, e.g. `https://your-simplehooks-url/api/TriggerEvent`.
+- The library uses `System.Text.Json` for serialization.
+- The response is returned as a string (the raw HTTP response body).
+
+---
