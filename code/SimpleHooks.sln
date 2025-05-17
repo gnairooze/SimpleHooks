@@ -109,6 +109,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tables", "Tables", "{26A32D
 		SQL\log-db\Tables\02-SimpleHooks_Log.Table.sql = SQL\log-db\Tables\02-SimpleHooks_Log.Table.sql
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TriggerEventHelper", "TriggerEventHelper\TriggerEventHelper.csproj", "{2D3EEA0A-0789-893C-6136-A2B6E917B749}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -167,6 +169,10 @@ Global
 		{90ED138B-5864-4BA8-A923-D4325CE858CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90ED138B-5864-4BA8-A923-D4325CE858CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90ED138B-5864-4BA8-A923-D4325CE858CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D3EEA0A-0789-893C-6136-A2B6E917B749}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D3EEA0A-0789-893C-6136-A2B6E917B749}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D3EEA0A-0789-893C-6136-A2B6E917B749}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D3EEA0A-0789-893C-6136-A2B6E917B749}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
