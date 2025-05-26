@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Text.Json;
-using Models.Instance;
 
 namespace SimpleHooks.Web.Controllers
 {
@@ -12,25 +11,28 @@ namespace SimpleHooks.Web.Controllers
     {
         private readonly Business.InstanceManager _manager;
 
-        public TriggerEventController(IConfiguration config)
+        public TriggerEventController(
+            Log.Interface.ILog logger,
+            Interfaces.IConnectionRepository connectionRepo,
+            Interfaces.IDataRepository<global::Models.Instance.EventInstance> eventInstanceRepo,
+            Interfaces.IDataRepository<global::Models.Instance.ListenerInstance> listenerInstanceRepo,
+            HttpClient.Interface.IHttpClient httpClient,
+            Interfaces.IDataRepository<global::Models.Definition.EventDefinition> eventDefRepo,
+            Interfaces.IDataRepository<global::Models.Definition.ListenerDefinition> listenerDefRepo,
+            Interfaces.IDataRepository<global::Models.Definition.EventDefinitionListenerDefinition> eventDefListenerDefRepo,
+            Interfaces.IDataRepository<global::Models.Definition.AppOption> appOptionRepo)
         {
-            var config1 = new Helper.ConfigurationHelper(config);
-
-            _manager = new(
-                new Log.SQL.Logger()
-                {
-                    MinLogType = (Log.Interface.LogModel.LogTypes)Enum.Parse(typeof(Log.Interface.LogModel.LogTypes), config1.LoggerMinLogLevel, true),
-                    ConnectionString = config1.ConnectionStringLog,
-                    FunctionName = config1.LoggerFunction
-                },
-                new Repo.SQL.SqlConnectionRepo() { ConnectionString = config1.ConnectionStringSimpleHooks },
-                new Repo.SQL.EventInstanceDataRepo(),
-                new Repo.SQL.ListenerInstanceDataRepo(),
-                new HttpClient.Simple.SimpleClient(),
-                new Repo.SQL.EventDefinitionDataRepo(),
-                new Repo.SQL.ListenerDefinitionDataRepo(),
-                new Repo.SQL.EventIistenerDefinitionDataRepo(),
-                new Repo.SQL.AppOptionDataRepo());
+            _manager = new Business.InstanceManager(
+                logger,
+                connectionRepo,
+                eventInstanceRepo,
+                listenerInstanceRepo,
+                httpClient,
+                eventDefRepo,
+                listenerDefRepo,
+                eventDefListenerDefRepo,
+                appOptionRepo
+            );
         }
         
         // POST api/<TriggerEventController>
@@ -42,7 +44,7 @@ namespace SimpleHooks.Web.Controllers
                 ? eventDataNode.GetRawText() 
                 : "{}";
 
-            var result = _manager.Add(new EventInstance() {
+            var result = _manager.Add(new global::Models.Instance.EventInstance() {
                 Active = true,
                 BusinessId = Guid.NewGuid(),
                 CreateBy = "system.trigger",
@@ -54,7 +56,7 @@ namespace SimpleHooks.Web.Controllers
                 Notes = string.Empty,
                 ReferenceName = value.ReferenceName,
                 ReferenceValue = value.ReferenceValue,
-                Status = Enums.EventInstanceStatus.InQueue
+                Status = global::Models.Instance.Enums.EventInstanceStatus.InQueue
             });
 
             return Ok(result);

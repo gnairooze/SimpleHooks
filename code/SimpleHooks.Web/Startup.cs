@@ -12,9 +12,11 @@ namespace SimpleHooks.Web
     {
         private readonly Log.SQL.Logger _logger;
         private readonly Guid _logCorrelationId = Guid.NewGuid();
+        private readonly IConfiguration Configuration;
 
         public Startup(IConfiguration configuration)
         {
+            Configuration = configuration;
             var config = new ConfigurationHelper(configuration);
             _logger = new Log.SQL.Logger()
             {
@@ -64,6 +66,26 @@ namespace SimpleHooks.Web
                 ReferenceValue = "SimpleHooks.Web",
                 Step = "ConfigureServices"
             }));
+
+            var config = new ConfigurationHelper(this.Configuration);
+
+            services.AddSingleton<Log.Interface.ILog>(provider => new Log.SQL.Logger()
+            {
+                MinLogType = (Log.Interface.LogModel.LogTypes)Enum.Parse(typeof(Log.Interface.LogModel.LogTypes), config.LoggerMinLogLevel, true),
+                ConnectionString = config.ConnectionStringLog,
+                FunctionName = config.LoggerFunction
+            });
+            services.AddSingleton<Interfaces.IConnectionRepository>(provider => new Repo.SQL.SqlConnectionRepo()
+            {
+                ConnectionString = config.ConnectionStringSimpleHooks
+            });
+            services.AddSingleton<Interfaces.IDataRepository<global::Models.Instance.EventInstance>, Repo.SQL.EventInstanceDataRepo>();
+            services.AddSingleton<Interfaces.IDataRepository<global::Models.Instance.ListenerInstance>, Repo.SQL.ListenerInstanceDataRepo>();
+            services.AddSingleton<HttpClient.Interface.IHttpClient, HttpClient.Simple.SimpleClient>();
+            services.AddSingleton<Interfaces.IDataRepository<global::Models.Definition.EventDefinition>, Repo.SQL.EventDefinitionDataRepo>();
+            services.AddSingleton<Interfaces.IDataRepository<global::Models.Definition.ListenerDefinition>, Repo.SQL.ListenerDefinitionDataRepo>();
+            services.AddSingleton<Interfaces.IDataRepository<global::Models.Definition.EventDefinitionListenerDefinition>, Repo.SQL.EventIistenerDefinitionDataRepo>();
+            services.AddSingleton<Interfaces.IDataRepository<global::Models.Definition.AppOption>, Repo.SQL.AppOptionDataRepo>();
 
             services.AddControllersWithViews();
         }
