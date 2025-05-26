@@ -59,5 +59,18 @@ namespace SimpleHooks.Web.Controllers
 
             return Ok(result);
         }
+        [Route("load-definitions")]
+        [HttpPost]
+        public OkObjectResult LoadDefinitions()
+        {
+            bool succeeded = _manager.DefinitionMgr.LoadDefinitions();
+
+            if (!succeeded)
+            {
+                throw new InvalidOperationException("could not load definitions");
+            }
+
+            return Ok(_manager.DefinitionMgr.AppOptions);
+        }
     }
 }

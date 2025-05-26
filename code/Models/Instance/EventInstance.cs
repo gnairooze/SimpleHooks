@@ -19,6 +19,7 @@ namespace Models.Instance
         public string ReferenceValue { get; set; }
         public EventInstanceStatus Status { get; set; }
         public byte[] TimeStamp { get; set; }
+        public int GroupId { get; set; } = 1;
         public List<ListenerInstance> ListenerInstances { get; }
         public Definition.EventDefinition Definition { get; set; }
         public override string ToString()

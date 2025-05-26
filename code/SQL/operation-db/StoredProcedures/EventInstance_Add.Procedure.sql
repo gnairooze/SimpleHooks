@@ -14,6 +14,7 @@ create procedure dbo.EventInstance_Add
 @ReferenceName nvarchar(50),
 @ReferenceValue nvarchar(100),
 @EventInstanceStatus_Id int,
+@GroupId int = 1,
 @Id bigint out
 as
 begin
@@ -30,7 +31,8 @@ begin
 		CreateDate,
 		ModifyBy,
 		ModifyDate,
-		Notes
+		Notes,
+		GroupId
 	)
 	values
 	(
@@ -45,7 +47,8 @@ begin
 		@CreateDate,
 		@ModifyBy,
 		@ModifyDate,
-		@Notes
+		@Notes,
+		@GroupId
 	)
 
 	set @Id = SCOPE_IDENTITY()

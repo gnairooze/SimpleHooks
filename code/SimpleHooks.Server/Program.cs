@@ -30,7 +30,7 @@ namespace SimpleHooks.Server
                 new Repo.SQL.EventIistenerDefinitionDataRepo(),
                 new Repo.SQL.AppOptionDataRepo());
 
-            var instances = manager.GetEventInstancesToProcess(DateTime.UtcNow);
+            var instances = manager.GetEventInstancesToProcess(DateTime.UtcNow, _config.GroupId);
             manager.Process(instances);
         }
     }

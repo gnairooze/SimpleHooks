@@ -2,7 +2,8 @@ use SimpleHooks
 go
 
 create procedure dbo.EventInstance_GetNotProcessed
-@Date Datetime2
+@Date Datetime2,
+@GroupId int = 1
 as
 begin
 	declare @top_count int
@@ -35,6 +36,7 @@ begin
 	where 1=1
 	and EventInstance.Active = 1
 	and EventInstance.EventInstanceStatus_Id in (1, 2) -- InQueue = 1, Processing = 2,
+	and EventInstance.GroupId = @GroupId
 	and ListenerInstance.Active = 1
 	and ListenerInstance.ListenerInstanceStatus_Id in (1, 2, 64) --InQueue = 1, Processing = 2, WaitingForRetrial = 64
 	and ListenerInstance.RemainingTrialCount > 0
@@ -61,6 +63,7 @@ begin
 		EventInstance.ModifyBy,
 		EventInstance.ModifyDate,
 		EventInstance.Notes,
+		EventInstance.GroupId,
 		EventInstance.TimeStamp
 	from EventInstance with (nolock)
 	inner join @eventInstances eventInstanceIds

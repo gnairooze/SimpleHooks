@@ -24,6 +24,8 @@ namespace Business
         
         public List<Models.Definition.EventDefinitionListenerDefinition> EventDefinitionListenerDefinitionRelations { get; }
 
+        public EventHandler DefitionsLoaded;
+
         public DefinitionManager(
             ILog logger, 
             IDataRepository<Models.Definition.EventDefinition> eventDefRepo, 
@@ -68,6 +70,9 @@ namespace Business
                 this.ListenerDefinitions.AddRange(this._listenerDefRepo.Read(null, conn, null));
                 this.EventDefinitionListenerDefinitionRelations.Clear();
                 this.EventDefinitionListenerDefinitionRelations.AddRange(this._eventDefListenerDefRepo.Read(null, conn, null));
+
+                //trigger event for definitions loaded
+                this.DefitionsLoaded?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception ex)
             {

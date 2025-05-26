@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 
 namespace Business
 {
@@ -20,6 +21,11 @@ namespace Business
         private readonly IHttpClient _httpClient;
         private readonly DefinitionManager _definitionManager;
         private readonly Guid _logCorrelation = Guid.NewGuid();
+
+        private static int _groupId = 1; // default value
+        private int _maxGroups;
+
+        public DefinitionManager DefinitionMgr => _definitionManager;
 
         #region constructors
         public InstanceManager(
@@ -45,13 +51,37 @@ namespace Business
 
             this._definitionManager = new DefinitionManager(logger, eventDefRepo, listenerDefRepo, eventDefListenerDefRepo, appOptionRepo, connectionRepo);
             
+            _definitionManager.DefitionsLoaded += OnDefinitionsLoaded;
+
             var succeeded = this._definitionManager.LoadDefinitions();
-            if(!succeeded)
+            if (!succeeded)
             {
                 throw new InvalidOperationException("definitions failed to load");
             }
         }
+
+        private void OnDefinitionsLoaded(object sender, EventArgs e)
+        {
+            SetMaxGroups();
+        }
         #endregion
+
+        private void SetMaxGroups()
+        {
+            var maxGroupsOption = _definitionManager.AppOptions.SingleOrDefault(o =>
+                o.Name == Constants.AppOptionNameMaxGroups
+                && o.Category == Constants.AppOptionCategoryGetNotProcessed);
+
+            if (maxGroupsOption != null && !string.IsNullOrEmpty(maxGroupsOption.Value))
+            {
+                _maxGroups = int.Parse(maxGroupsOption.Value);
+            }
+            else
+            {
+
+                _maxGroups = 1; // default value
+            }
+        }
 
         /// <summary>
         /// Add event instance
@@ -65,6 +95,8 @@ namespace Business
             log.Correlation = _logCorrelation;
 
             this._logger.Add(log);
+
+            eventInstance.GroupId = SetGroupId();
 
             Models.Instance.EventInstance resultInstance = null;
             
@@ -117,6 +149,20 @@ namespace Business
             return resultInstance;
         }
 
+        private int SetGroupId()
+        {
+            if (_groupId >= _maxGroups)
+            {
+                _groupId = 1;
+            }
+            else
+            {
+                Interlocked.Increment(ref _groupId);
+            }
+
+            return _groupId;
+        }
+
         private void FetchListenersForEventInstance(Models.Instance.EventInstance eventInstance)
         {
             eventInstance.ListenerInstances.Clear();
@@ -142,7 +188,7 @@ namespace Business
             }
         }
 
-        public List<Models.Instance.EventInstance> GetEventInstancesToProcess(DateTime runDate)
+        public List<Models.Instance.EventInstance> GetEventInstancesToProcess(DateTime runDate, int groupId = 1)
         {
             //initialize log and add first log
             var log = this.GetLogModelMethodStart(MethodBase.GetCurrentMethod()?.Name, string.Empty, string.Empty);
@@ -157,6 +203,9 @@ namespace Business
                 {
                     Models.Instance.Enums.EventInstanceReadOperations.ReadNotProcessed.ToString(),
                     runDate.ToString(CultureInfo.InvariantCulture)
+                },
+                {
+                    Constants.OperationGroupId, groupId.ToString()
                 }
             };
 

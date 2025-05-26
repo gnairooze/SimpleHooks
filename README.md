@@ -1,5 +1,5 @@
 # Simple-Hooks
-version: 1.5.2
+version: 2.0.0
 
 ![high level diagram](simple-hooks-system-context.svg)
 
@@ -23,10 +23,11 @@ Simple-Hooks will call all the subscribers, with the event data and retry on the
 
 ### Components
 
-Simple-Hooks contains 2 components:
+Simple-Hooks contains 3 components:
 
 1. Web API to trigger events. You need to host it under web server that support dot net 8.0 (IIS, Apache2, Nginx ...)
-2. Console Application to run in a scheduler (windows task scheduler or cron demon).
+2. Console Application to run in a scheduler (windows task scheduler or cron demon). you can make multiple instances of it to run in parallel. every instance should have a unique group id. group id is an integer number set in the `appsettings.json` file. iit should not exceed the max groups set in the app options table.
+3. dotNET Standard 2.0 library to trigger events from any .NET project.
 
 ---
 
@@ -48,6 +49,9 @@ you will find a sample implementation of the listener in the [repository path](/
 
 associate the listeners to the events. You can have multiple listeners for the same event.
 
+### set options
+1. set top count of events to be processed in one run.
+2. set the max number of groups to be processed in parallel.
 ---
 
 ## How to Trigger Events
@@ -186,6 +190,7 @@ This table contains configurations of Simple-Hooks
 ##### _Simple-Hooks Options_
 
 1. TopCount of the GetNotProcessed operation. It determines the number of event instance rows returns every time the operation of processing events started.
+2. MaxGroups: the max number of groups to be processed in parallel.
 
 #### I. SimpleHooks_Log
 
@@ -264,5 +269,51 @@ var response2 = await client.TriggerEventAsync(
 - The URL passed to the constructor should be the full endpoint for the POST action, e.g. `https://your-simplehooks-url/api/TriggerEvent`.
 - The library uses `System.Text.Json` for serialization.
 - The response is returned as a string (the raw HTTP response body).
+
+---
+
+## LoadDefinitions API Endpoint
+
+The `LoadDefinitions` endpoint is used to reload event and listener definitions, as well as application options, from the database into the running Simple-Hooks system. This is useful if you have made changes to event definitions, listeners, or app options in the database and want those changes to take effect without restarting the service.
+
+### Endpoint
+- **URL:** `/api/TriggerEvent/load-definitions`
+- **Method:** `POST`
+
+### Request
+No request body is required.
+
+### Response
+- **200 OK**: Returns the current application options as loaded from the database.
+- **Error**: Returns an error if the definitions could not be loaded.
+
+#### Example Request
+```http
+POST /api/TriggerEvent/load-definitions HTTP/1.1
+Host: your-simplehooks-url
+Content-Type: application/json
+```
+
+#### Example Response
+```json
+[
+  {
+    "Category": "Processing",
+    "Name": "TopCount",
+    "Value": "100",
+    "Active": true
+  },
+  {
+    "Category": "General",
+    "Name": "EnableLogging",
+    "Value": "true",
+    "Active": true
+  }
+]
+```
+
+### Notes
+- Use this endpoint after making changes to event/listener definitions or app options in the database.
+- If the reload fails, the endpoint will return an error with status 500 and a message.
 
 ---

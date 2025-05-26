@@ -31,6 +31,7 @@ namespace Repo.SQL
             cmd.Parameters.AddWithValue(Constants.ParamNotes, entity.Notes);
             cmd.Parameters.AddWithValue(Constants.ParamReferenceName, entity.ReferenceName);
             cmd.Parameters.AddWithValue(Constants.ParamReferenceValue, entity.ReferenceValue);
+            cmd.Parameters.AddWithValue(Constants.ParamGroupId, entity.GroupId);
             #endregion
 
             cmd.ExecuteNonQuery();
@@ -75,6 +76,7 @@ namespace Repo.SQL
             cmd.Parameters.AddWithValue(Constants.ParamNotes, entity.Notes);
             cmd.Parameters.AddWithValue(Constants.ParamReferenceName, entity.ReferenceName);
             cmd.Parameters.AddWithValue(Constants.ParamReferenceValue, entity.ReferenceValue);
+            cmd.Parameters.AddWithValue(Constants.ParamGroupId, entity.GroupId);
             #endregion
 
             cmd.ExecuteNonQuery();
@@ -90,17 +92,28 @@ namespace Repo.SQL
                 throw new ArgumentNullException(nameof(options));
             }
 
-            bool isReadNotProcessedOperation = options.ContainsKey(Models.Instance.Enums.EventInstanceReadOperations.ReadNotProcessed.ToString());
-            if(isReadNotProcessedOperation)
+            bool canReadNotProcessedOperation = options.ContainsKey(Models.Instance.Enums.EventInstanceReadOperations.ReadNotProcessed.ToString());
+
+            if (!canReadNotProcessedOperation)
             {
-                DateTime runDate = DateTime.Parse(options[Models.Instance.Enums.EventInstanceReadOperations.ReadNotProcessed.ToString()]);
-                return ReadNotProcessed(runDate, (SqlConnection)connection);
+                throw new ArgumentException("date was not provided in Read operation");
+            }
+            
+            bool canReadGroupId = options.ContainsKey(Constants.FieldGroupId);
+
+            if (!canReadGroupId)
+            {
+                throw new ArgumentException("group id was not provided in Read operation");
             }
 
-            return new List<EventInstance>();
+            DateTime runDate = DateTime.Parse(options[Models.Instance.Enums.EventInstanceReadOperations.ReadNotProcessed.ToString()]);
+
+            int groupId = int.Parse(options[Constants.FieldGroupId]);
+
+            return ReadNotProcessed(runDate, (SqlConnection)connection, groupId);
         }
 
-        private List<EventInstance> ReadNotProcessed(DateTime runDate, SqlConnection connection)
+        private List<EventInstance> ReadNotProcessed(DateTime runDate, SqlConnection connection, int groupId = 1)
         {
             SqlCommand cmd = new SqlCommand(Constants.SpEventInstanceGetNotProcessed, (SqlConnection)connection)
             {
@@ -108,6 +121,7 @@ namespace Repo.SQL
             };
 
             cmd.Parameters.AddWithValue(Constants.ParamDate, runDate);
+            cmd.Parameters.AddWithValue(Constants.ParamGroupId, groupId);
 
             var reader = cmd.ExecuteReader();
 
@@ -201,6 +215,9 @@ namespace Repo.SQL
                             break;
                         case Constants.FieldReferenceValue:
                             instance.ReferenceValue = (string)reader[counter];
+                            break;
+                        case Constants.FieldGroupId:
+                            instance.GroupId = (int)reader[counter];
                             break;
                     }
                     #endregion

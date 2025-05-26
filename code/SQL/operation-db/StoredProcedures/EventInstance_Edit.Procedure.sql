@@ -12,6 +12,7 @@ create procedure dbo.EventInstance_Edit
 @ReferenceName nvarchar(50),
 @ReferenceValue nvarchar(100),
 @EventInstanceStatus_Id int,
+@GroupId int = 1,
 @Id bigint
 as
 begin
@@ -25,7 +26,8 @@ begin
 		Active = @Active,
 		ModifyBy = @ModifyBy,
 		ModifyDate = @ModifyDate,
-		Notes = @Notes
+		Notes = @Notes,
+		GroupId = @GroupId
 	where Id = @Id
 end
 

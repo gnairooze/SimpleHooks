@@ -25,6 +25,7 @@
         public const string ParamModifyBy = "@ModifyBy";
         public const string ParamModifyDate = "@ModifyDate";
         public const string ParamNotes = "@Notes";
+        public const string ParamGroupId = "@GroupId";
         public const string ParamTimestamp = "@TimeStamp";
 
         public const string ParamDate = "@Date";
@@ -50,6 +51,7 @@
         public const string FieldModifyDate = "ModifyDate";
         public const string FieldNotes = "Notes";
         public const string FieldTimestamp = "TimeStamp";
+        public const string FieldGroupId = "GroupId";
 
         public const string FieldEventDefinitionId = "EventDefinition_Id";
         public const string FieldEventData = "EventData";
