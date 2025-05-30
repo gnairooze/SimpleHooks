@@ -1,5 +1,5 @@
 # Simple-Hooks
-version: 2.0.0
+version: 2.1.0
 
 ![high level diagram](simple-hooks-system-context.svg)
 
@@ -317,3 +317,39 @@ Content-Type: application/json
 - If the reload fails, the endpoint will return an error with status 500 and a message.
 
 ---
+
+## Get Evet Instance Status by Business ID API Endpoint
+
+### Description
+Returns a brief status of the event instance associated with the provided businessId. If no event instance is found, a 404 response is returned.
+
+### Query Parameters
+
+| Name        | Type   | Required | Description |
+|-------------|--------|----------|-----------------------------------| 
+| businessId  | Guid   | Yes      | The business ID of the event      |
+
+### Sample Request
+
+```http
+GET /api/EventInstance/get-status?businessId=123e4567-e89b-12d3-a456-426614174000
+```
+
+### Sample Response (200 OK)
+```json 
+{
+  "id": 42,
+  "businessId": "123e4567-e89b-12d3-a456-426614174000",
+  "status": 8
+}
+```
+
+the status can be one of numerical values of EventInstanceStatus (see above).
+
+### Sample Response (404 Not Found)
+```json
+{
+  "error": "no event instance found for business id = 67b26931-e512-4a6d-9317-98c9d32dd6cf"
+}
+```
+

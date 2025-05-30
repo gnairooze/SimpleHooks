@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Repo.SQL
 {
-    public class EventInstanceDataRepo : IDataRepository<EventInstance>
+    public class EventInstanceDataRepo : IDataRepository<EventInstance>, IDataRepositoryEventInstanceStatus
     {
         public EventInstance Create(EventInstance entity, object connection, object transaction)
         {
@@ -85,7 +85,7 @@ namespace Repo.SQL
         }
 
         #region read data
-        public List<EventInstance> Read(Dictionary<string, string> options, object connection, object transaction)
+        public List<EventInstance> Read(Dictionary<string, string> options, object connection)
         {
             if (options is null)
             {
@@ -227,6 +227,63 @@ namespace Repo.SQL
 
                 results.Add(instance);
             }
+        }
+
+        EventInstanceStatusBrief IDataRepositoryEventInstanceStatus.ReadByBusinessId(Guid businessId, object connection)
+        {
+            if (businessId == Guid.Empty)
+            {
+                throw new ArgumentException("businessId cannot be empty", nameof(businessId));
+            }
+
+            SqlCommand cmd = new SqlCommand(Constants.SpEventInstanceGetStatusByBusinessId, (SqlConnection)connection)
+            {
+                CommandType = System.Data.CommandType.StoredProcedure
+            };
+
+            cmd.Parameters.AddWithValue(Constants.ParamBusinessId, businessId);
+
+            var reader = cmd.ExecuteReader();
+
+            if (!reader.HasRows)
+            {
+                throw new InvalidOperationException($"No event instance found with businessId: {businessId}");
+            }
+
+            var result = new EventInstanceStatusBrief();
+
+            while (reader.Read())
+            {
+                int counter = 0;
+
+                while (counter < reader.FieldCount)
+                {
+                    if (reader[counter] == DBNull.Value)
+                    {
+                        counter++;
+                        continue;
+                    }
+
+                    #region read event instance fields
+                    switch (reader.GetName(counter))
+                    {
+                        case Constants.FieldBusinessId:
+                            result.BusinessId = (Guid)reader[counter];
+                            break;
+                        case Constants.FieldId:
+                            result.Id = (long)reader[counter];
+                            break;
+                        case Constants.FieldEventInstanceStatusId:
+                            result.Status = (Enums.EventInstanceStatus)reader[counter];
+                            break;
+                    }
+                    #endregion
+
+                    counter++;
+                }
+            }
+
+            return result;
         }
         #endregion
     }

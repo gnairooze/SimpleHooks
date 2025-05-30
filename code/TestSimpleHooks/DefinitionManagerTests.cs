@@ -43,10 +43,10 @@ public class DefinitionManagerTests
         // Arrange
         var mockConnection = new Mock<IDbConnection>();
         _mockConnectionRepo.Setup(repo => repo.CreateConnection()).Returns(mockConnection.Object);
-        _mockAppOptionRepo.Setup(repo => repo.Read(null, mockConnection.Object, null)).Returns(new List<AppOption>());
-        _mockEventDefRepo.Setup(repo => repo.Read(null, mockConnection.Object, null)).Returns(new List<EventDefinition>());
-        _mockListenerDefRepo.Setup(repo => repo.Read(null, mockConnection.Object, null)).Returns(new List<ListenerDefinition>());
-        _mockEventDefListenerDefRepo.Setup(repo => repo.Read(null, mockConnection.Object, null)).Returns(new List<EventDefinitionListenerDefinition>());
+        _mockAppOptionRepo.Setup(repo => repo.Read(null, mockConnection.Object)).Returns([]);
+        _mockEventDefRepo.Setup(repo => repo.Read(null, mockConnection.Object)).Returns([]);
+        _mockListenerDefRepo.Setup(repo => repo.Read(null, mockConnection.Object)).Returns([]);
+        _mockEventDefListenerDefRepo.Setup(repo => repo.Read(null, mockConnection.Object)).Returns([]);
 
         // Act
         var result = _definitionManager.LoadDefinitions();

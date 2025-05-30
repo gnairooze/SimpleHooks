@@ -64,7 +64,7 @@ namespace Repo.SQL
             return entity;
         }
 
-        public List<ListenerInstance> Read(Dictionary<string, string> options, object connection, object transaction)
+        public List<ListenerInstance> Read(Dictionary<string, string> options, object connection)
         {
             if (options is null)
             {

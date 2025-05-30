@@ -63,13 +63,13 @@ namespace Business
 
                 //set definitions
                 this.AppOptions.Clear();
-                this.AppOptions.AddRange(this._appOptionRepo.Read(null, conn, null));
+                this.AppOptions.AddRange(this._appOptionRepo.Read(null, conn));
                 this.EventDefinitions.Clear();
-                this.EventDefinitions.AddRange(this._eventDefRepo.Read(null, conn, null));
+                this.EventDefinitions.AddRange(this._eventDefRepo.Read(null, conn));
                 this.ListenerDefinitions.Clear();
-                this.ListenerDefinitions.AddRange(this._listenerDefRepo.Read(null, conn, null));
+                this.ListenerDefinitions.AddRange(this._listenerDefRepo.Read(null, conn));
                 this.EventDefinitionListenerDefinitionRelations.Clear();
-                this.EventDefinitionListenerDefinitionRelations.AddRange(this._eventDefListenerDefRepo.Read(null, conn, null));
+                this.EventDefinitionListenerDefinitionRelations.AddRange(this._eventDefListenerDefRepo.Read(null, conn));
 
                 //trigger event for definitions loaded
                 this.DefitionsLoaded?.Invoke(this, EventArgs.Empty);

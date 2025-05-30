@@ -19,7 +19,7 @@ namespace Repo.SQL
             throw new NotImplementedException();
         }
 
-        public List<EventDefinitionListenerDefinition> Read(Dictionary<string, string> options, object connection, object transaction)
+        public List<EventDefinitionListenerDefinition> Read(Dictionary<string, string> options, object connection)
         {
             SqlCommand cmd = new SqlCommand(Constants.SpEventListenerDefinitionGetAll, (SqlConnection)connection)
             {

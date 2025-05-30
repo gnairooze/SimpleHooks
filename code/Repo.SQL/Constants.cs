@@ -16,7 +16,9 @@
         public const string SpEventDefinitionGetAll = "EventDefinition_GetAll";
         public const string SpListenerDefinitionGetAll = "ListenerDefinition_GetAll";
         public const string SpEventListenerDefinitionGetAll = "EventDefinition_ListenerDefinition_GetAll";
-        
+        public const string SpEventInstanceGetByBusinessId = "EventInstance_GetByBusinessId";
+        public const string SpEventInstanceGetStatusByBusinessId = "EventInstance_GetStatusByBusinessId";
+
         public const string ParamId = "@Id";
         public const string ParamActive = "@Active";
         public const string ParamBusinessId = "@BusinessId";
@@ -74,5 +76,7 @@
 
         public const string FieldCategory = "Category";
         public const string FieldValue = "Value";
+
+        
     }
 }

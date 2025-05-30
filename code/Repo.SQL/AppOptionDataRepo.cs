@@ -18,7 +18,7 @@ namespace Repo.SQL
             throw new NotImplementedException();
         }
 
-        public List<AppOption> Read(Dictionary<string, string> options, object connection, object transaction)
+        public List<AppOption> Read(Dictionary<string, string> options, object connection)
         {
             SqlCommand cmd = new SqlCommand(Constants.SpEventAppOptionGetAll, (SqlConnection)connection)
             {

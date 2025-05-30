@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using Models.Instance;
 
 namespace Business
 {
@@ -216,7 +217,7 @@ namespace Business
                 conn = this._connectionRepo.CreateConnection();
                 this._connectionRepo.OpenConnection(conn);
 
-                results = this._eventInstanceRepo.Read(readOperation, conn, null);
+                results = this._eventInstanceRepo.Read(readOperation, conn);
             }
             catch (Exception ex)
             {
@@ -410,7 +411,7 @@ namespace Business
             try
             {
                 this._connectionRepo.OpenConnection(conn);
-                listeners = this._listenerInstanceRepo.Read(readOperation, conn, null);
+                listeners = this._listenerInstanceRepo.Read(readOperation, conn);
             }
             catch (Exception ex)
             {
@@ -586,6 +587,42 @@ namespace Business
             }
 
             return succeeded;
+        }
+
+        public EventInstanceStatusBrief ReadEventInstanceStatusByBusinessId (Guid businessId)
+        {
+            object conn = null;
+            var instanceBrief = new EventInstanceStatusBrief();
+
+            //initialize log and add first log
+            var log = this.GetLogModelMethodStart(MethodBase.GetCurrentMethod()?.Name, string.Empty, string.Empty);
+            log.Correlation = this._logCorrelation;
+            log.NotesA = $"businessId {businessId}";
+            this._logger.Add(log);
+
+            try
+            {
+                conn = this._connectionRepo.CreateConnection();
+                this._connectionRepo.OpenConnection(conn);
+
+                instanceBrief = ((Interfaces.IDataRepositoryEventInstanceStatus)_eventInstanceRepo).ReadByBusinessId(businessId, conn);
+            }
+            catch (Exception ex)
+            {
+                log = GetLogModelException(log, ex);
+                log.Correlation = this._logCorrelation;
+                this._logger.Add(log);
+            }
+            finally
+            {
+                this._connectionRepo.CloseConnection(conn);
+                this._connectionRepo.DisposeConnection(conn);
+            }
+
+            //add end log
+            this._logger.Add(this.GetLogModelMethodEnd(log));
+
+            return instanceBrief;
         }
     }
 }

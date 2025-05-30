@@ -8,7 +8,7 @@ namespace TestSimpleHooks.Repos
     {
         private static long _counter = 2;
 
-        protected List<T> Entities { get; } = new();
+        protected List<T> Entities { get; } = [];
 
         public T Create(T entity, object connection, Object transaction)
         {
@@ -27,7 +27,7 @@ namespace TestSimpleHooks.Repos
             return savedEntity;
         }
 
-        public List<T> Read(Dictionary<string, string> options, object connection, Object transaction)
+        public List<T> Read(Dictionary<string, string> options, object connection)
         {
             return this.Entities;
         }
