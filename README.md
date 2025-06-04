@@ -145,6 +145,7 @@ Metadata columns exist in every table for support purposes.
 5. ReferenceValue: value of the reference for that particular event instance. (example: "34544433" which is the value of the Client Id being added in "Client Added" event).
 6. EventInstanceStatus_Id: Id of the status of the event instance.
 7. Active: marks if the event instance is active. Only active event instance will be processed.
+8. GroupId: it is used to process events in parallel. it determines which console app will process this event instance. the console app - with the same group id in its configuration file - will process this event instance.
 
 #### E. ListenerInstance
 
