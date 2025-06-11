@@ -125,7 +125,7 @@ Metadata columns exist in every table for support purposes.
 	```
 
 5. Timeout: when the HTTP request will timeout. In minutes.
-6. TrialCount: the max number of retries on the request if not succeeded to decalre its failure.
+6. TrialCount: the max number of retries on the request if not succeeded to declare its failure.
 7. RetrialDelay: the period between each retry. In minutes.
 
 #### C. EventDefinition_ListenerDefinition
@@ -319,7 +319,7 @@ Content-Type: application/json
 
 ---
 
-## Get Evet Instance Status by Business ID API Endpoint
+## Get Event Instance Status by Business ID API Endpoint
 
 ### Description
 Returns a brief status of the event instance associated with the provided businessId. If no event instance is found, a 404 response is returned.
