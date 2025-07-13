@@ -1,7 +1,7 @@
-﻿using Log.Interface;
+﻿using SimpleTools.SimpleHooks.Log.Interface;
 using System.Data.SqlClient;
 
-namespace Log.SQL
+namespace SimpleTools.SimpleHooks.Log.SQL
 {
     public class Logger : ILog
     {

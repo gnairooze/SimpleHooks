@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace SimpleHooks.Web.Models
+namespace SimpleTools.SimpleHooks.Web.Models
 {
     public class EventViewModel
     {

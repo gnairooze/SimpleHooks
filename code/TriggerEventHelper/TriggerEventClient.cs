@@ -4,7 +4,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace TriggerEventHelper
+namespace SimpleTools.SimpleHooks.TriggerEventHelper
 {
     public class TriggerEventClient
     {

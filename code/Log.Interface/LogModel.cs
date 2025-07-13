@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Log.Interface
+namespace SimpleTools.SimpleHooks.Log.Interface
 {
     public class LogModel
     {

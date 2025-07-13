@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace HttpClient.Interface
+namespace SimpleTools.SimpleHooks.HttpClient.Interface
 {
     public class HttpResult
     {

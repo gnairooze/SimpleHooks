@@ -1,4 +1,4 @@
-﻿namespace Business
+﻿namespace SimpleTools.SimpleHooks.Business
 {
     internal static class LogMeta
     {

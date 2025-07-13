@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Business
+namespace SimpleTools.SimpleHooks.Business
 {
     internal class Constants
     {
@@ -12,7 +12,7 @@ namespace Business
 
         #endregion
 
-        #region opertion options
+        #region operation options
 
         public const string OperationGroupId = "GroupId";
 

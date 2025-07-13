@@ -1,8 +1,8 @@
-﻿using Log.Interface;
+﻿using SimpleTools.SimpleHooks.Log.Interface;
 using System;
 using System.IO;
 
-namespace Business
+namespace SimpleTools.SimpleHooks.Business
 {
     public abstract class LogBase
     {

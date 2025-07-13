@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace SimpleHooks.Web.Helper
+namespace SimpleTools.SimpleHooks.Web.Helper
 {
     public class ConfigurationHelper(IConfiguration config)
     {

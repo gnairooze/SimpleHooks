@@ -1,10 +1,10 @@
-﻿using Interfaces;
-using Models.Definition;
+﻿using SimpleTools.SimpleHooks.Interfaces;
+using SimpleTools.SimpleHooks.Models.Definition;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 
-namespace Repo.SQL
+namespace SimpleTools.SimpleHooks.Repo.SQL
 {
     public class AppOptionDataRepo : IDataRepository<AppOption>
     {

@@ -1,4 +1,4 @@
-namespace SimpleHooks.Web.Models
+namespace SimpleTools.SimpleHooks.Web.Models
 {
     public class ErrorViewModel
     {

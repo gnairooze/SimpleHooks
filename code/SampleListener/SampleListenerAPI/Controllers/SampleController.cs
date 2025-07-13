@@ -9,7 +9,7 @@ using System;
 using System.Configuration;
 using System.Globalization;
 
-namespace SampleListenerAPI.Controllers
+namespace SimpleTools.SimpleHooks.SampleListener.SampleListenerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

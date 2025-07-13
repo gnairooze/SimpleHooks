@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace TestSimpleHooks.Repos
+namespace SimpleTools.SimpleHooks.TestSimpleHooks.Repos
 {
-    internal class GenericRepo<T> : Interfaces.IDataRepository<T> where T : Models.ModelBase
+    internal class GenericRepo<T> : SimpleTools.SimpleHooks.Interfaces.IDataRepository<T> where T : SimpleTools.SimpleHooks.Models.ModelBase
     {
         private static long _counter = 2;
 

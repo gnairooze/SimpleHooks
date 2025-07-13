@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TestSimpleHooks.Repos
+namespace SimpleTools.SimpleHooks.TestSimpleHooks.Repos
 {
-    internal class AppOptionsRepo : GenericRepo<Models.Definition.AppOption>
+    internal class AppOptionsRepo : GenericRepo<SimpleTools.SimpleHooks.Models.Definition.AppOption>
     {
         public AppOptionsRepo()
         {
-            this.Entities.AddRange(new List<Models.Definition.AppOption> {
+            this.Entities.AddRange(new List<SimpleTools.SimpleHooks.Models.Definition.AppOption> {
                 new (){ 
                     Active = true,
                     Category = "test",

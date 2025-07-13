@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace SampleListenerAPI.Migrations
+namespace SimpleTools.SimpleHooks.SampleListener.SampleListenerAPI.Migrations
 {
     /// <inheritdoc />
     public partial class FirstMigration : Migration

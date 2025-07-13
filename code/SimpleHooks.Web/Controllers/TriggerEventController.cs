@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Text.Json;
 
-namespace SimpleHooks.Web.Controllers
+namespace SimpleTools.SimpleHooks.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -14,15 +14,15 @@ namespace SimpleHooks.Web.Controllers
         public TriggerEventController(
             Log.Interface.ILog logger,
             Interfaces.IConnectionRepository connectionRepo,
-            Interfaces.IDataRepository<global::Models.Instance.EventInstance> eventInstanceRepo,
-            Interfaces.IDataRepository<global::Models.Instance.ListenerInstance> listenerInstanceRepo,
+            Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Instance.EventInstance> eventInstanceRepo,
+            Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Instance.ListenerInstance> listenerInstanceRepo,
             HttpClient.Interface.IHttpClient httpClient,
-            Interfaces.IDataRepository<global::Models.Definition.EventDefinition> eventDefRepo,
-            Interfaces.IDataRepository<global::Models.Definition.ListenerDefinition> listenerDefRepo,
-            Interfaces.IDataRepository<global::Models.Definition.EventDefinitionListenerDefinition> eventDefListenerDefRepo,
-            Interfaces.IDataRepository<global::Models.Definition.AppOption> appOptionRepo)
+            Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.EventDefinition> eventDefRepo,
+            Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.ListenerDefinition> listenerDefRepo,
+            Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.EventDefinitionListenerDefinition> eventDefListenerDefRepo,
+            Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.AppOption> appOptionRepo)
         {
-            _manager = new Business.InstanceManager(
+            _manager = new SimpleTools.SimpleHooks.Business.InstanceManager(
                 logger,
                 connectionRepo,
                 eventInstanceRepo,
@@ -44,7 +44,7 @@ namespace SimpleHooks.Web.Controllers
                 ? eventDataNode.GetRawText() 
                 : "{}";
 
-            var result = _manager.Add(new global::Models.Instance.EventInstance() {
+            var result = _manager.Add(new SimpleTools.SimpleHooks.Models.Instance.EventInstance() {
                 Active = true,
                 BusinessId = Guid.NewGuid(),
                 CreateBy = "system.trigger",
@@ -56,7 +56,7 @@ namespace SimpleHooks.Web.Controllers
                 Notes = string.Empty,
                 ReferenceName = value.ReferenceName,
                 ReferenceValue = value.ReferenceValue,
-                Status = global::Models.Instance.Enums.EventInstanceStatus.InQueue
+                Status = SimpleTools.SimpleHooks.Models.Instance.Enums.EventInstanceStatus.InQueue
             });
 
             return Ok(result);

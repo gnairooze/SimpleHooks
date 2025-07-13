@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Models.Instance
+namespace SimpleTools.SimpleHooks.Models.Instance
 {
     public class Enums
     {

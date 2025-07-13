@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 
-namespace HttpClient.Simple
+namespace SimpleTools.SimpleHooks.HttpClient.Simple
 {
     public class SimpleClient : Interface.IHttpClient
     {

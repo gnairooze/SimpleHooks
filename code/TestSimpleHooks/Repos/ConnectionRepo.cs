@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace TestSimpleHooks.Repos
+namespace SimpleTools.SimpleHooks.TestSimpleHooks.Repos
 {
-    internal class ConnectionRepo : Interfaces.IConnectionRepository
+    internal class ConnectionRepo : SimpleTools.SimpleHooks.Interfaces.IConnectionRepository
     {
         public string ConnectionString { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 

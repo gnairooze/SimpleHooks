@@ -1,10 +1,10 @@
-﻿using Interfaces;
-using Log.Interface;
+﻿using SimpleTools.SimpleHooks.Interfaces;
+using SimpleTools.SimpleHooks.Log.Interface;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Business
+namespace SimpleTools.SimpleHooks.Business
 {
     public class DefinitionManager:LogBase
     {

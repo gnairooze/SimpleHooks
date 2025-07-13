@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Interfaces
+namespace SimpleTools.SimpleHooks.Interfaces
 {
     public interface IConnectionRepository
     {

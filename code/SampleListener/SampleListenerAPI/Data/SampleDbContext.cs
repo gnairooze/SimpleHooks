@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SampleListenerAPI.Models;
+using SimpleTools.SimpleHooks.SampleListener.SampleListenerAPI.Models;
 
-namespace SampleListenerAPI.Data
+namespace SimpleTools.SimpleHooks.SampleListener.SampleListenerAPI.Data
 {
     
     public class SampleDbContext(DbContextOptions<SampleDbContext> options) : DbContext(options)

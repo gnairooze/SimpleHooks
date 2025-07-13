@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.IO;
 
-namespace SimpleHooks.Server
+namespace SimpleTools.SimpleHooks.Server
 {
     internal class ConfigurationHelper
     {

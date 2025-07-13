@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TestSimpleHooks.Repos
+namespace SimpleTools.SimpleHooks.TestSimpleHooks.Repos
 {
-    internal class EventDefRepo : GenericRepo<Models.Definition.EventDefinition>
+    internal class EventDefRepo : GenericRepo<SimpleTools.SimpleHooks.Models.Definition.EventDefinition>
     {
         public EventDefRepo()
         {

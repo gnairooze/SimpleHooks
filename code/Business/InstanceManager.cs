@@ -1,6 +1,6 @@
-﻿using HttpClient.Interface;
-using Interfaces;
-using Log.Interface;
+﻿using SimpleTools.SimpleHooks.HttpClient.Interface;
+using SimpleTools.SimpleHooks.Interfaces;
+using SimpleTools.SimpleHooks.Log.Interface;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -8,9 +8,9 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using Models.Instance;
+using SimpleTools.SimpleHooks.Models.Instance;
 
-namespace Business
+namespace SimpleTools.SimpleHooks.Business
 {
     public class InstanceManager:LogBase
     {

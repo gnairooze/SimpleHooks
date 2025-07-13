@@ -1,4 +1,4 @@
-﻿namespace Log.Interface
+﻿namespace SimpleTools.SimpleHooks.Log.Interface
 {
     public interface ILog
     {

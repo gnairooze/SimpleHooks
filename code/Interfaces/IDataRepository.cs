@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Interfaces
+namespace SimpleTools.SimpleHooks.Interfaces
 {
     public interface IDataRepository<T> where T:Models.ModelBase
     {

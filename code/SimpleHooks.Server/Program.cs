@@ -1,6 +1,12 @@
 ﻿using System;
+using SimpleTools.SimpleHooks.Business;
+using SimpleTools.SimpleHooks.Log.SQL;
+using SimpleTools.SimpleHooks.Repo.SQL;
+using SimpleTools.SimpleHooks.HttpClient.Simple;
+using SimpleTools.SimpleHooks.Log.Interface;
 
-namespace SimpleHooks.Server
+
+namespace SimpleTools.SimpleHooks.Server
 {
     static class Program
     {
@@ -15,20 +21,20 @@ namespace SimpleHooks.Server
         private static void Start()
         {
             Business.InstanceManager manager = new(
-                new Log.SQL.Logger()
+                new Logger()
                 {
-                    MinLogType = (Log.Interface.LogModel.LogTypes)Enum.Parse(typeof(Log.Interface.LogModel.LogTypes),_config.LoggerMinLogLevel,true),
+                    MinLogType = (LogModel.LogTypes)Enum.Parse(typeof(LogModel.LogTypes),_config.LoggerMinLogLevel,true),
                     ConnectionString = _config.ConnectionStringLog,
                     FunctionName = _config.LoggerFunction
                 },
-                new Repo.SQL.SqlConnectionRepo() { ConnectionString = _config.ConnectionStringSimpleHooks },
-                new Repo.SQL.EventInstanceDataRepo(),
-                new Repo.SQL.ListenerInstanceDataRepo(),
-                new HttpClient.Simple.SimpleClient(),
-                new Repo.SQL.EventDefinitionDataRepo(),
-                new Repo.SQL.ListenerDefinitionDataRepo(),
-                new Repo.SQL.EventIistenerDefinitionDataRepo(),
-                new Repo.SQL.AppOptionDataRepo());
+                new SqlConnectionRepo() { ConnectionString = _config.ConnectionStringSimpleHooks },
+                new EventInstanceDataRepo(),
+                new ListenerInstanceDataRepo(),
+                new SimpleClient(),
+                new EventDefinitionDataRepo(),
+                new ListenerDefinitionDataRepo(),
+                new EventIistenerDefinitionDataRepo(),
+                new AppOptionDataRepo());
 
             var instances = manager.GetEventInstancesToProcess(DateTime.UtcNow, _config.GroupId);
             manager.Process(instances);
