@@ -1,8 +1,8 @@
-﻿namespace TestSimpleHooks;
-using Business;
-using Interfaces;
-using Log.Interface;
-using Models.Definition;
+﻿namespace SimpleTools.SimpleHooks.TestSimpleHooks;
+using SimpleTools.SimpleHooks.Business;
+using SimpleTools.SimpleHooks.Interfaces;
+using SimpleTools.SimpleHooks.Log.Interface;
+using SimpleTools.SimpleHooks.Models.Definition;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -28,7 +28,7 @@ public class DefinitionManagerTests
         _mockListenerDefRepo = new Mock<IDataRepository<ListenerDefinition>>();
         _mockEventDefListenerDefRepo = new Mock<IDataRepository<EventDefinitionListenerDefinition>>();
 
-        _definitionManager = new DefinitionManager(
+        _definitionManager = new SimpleTools.SimpleHooks.Business.DefinitionManager(
             _mockLogger.Object,
             _mockEventDefRepo.Object,
             _mockListenerDefRepo.Object,

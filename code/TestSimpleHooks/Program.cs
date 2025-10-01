@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TestSimpleHooks
+namespace SimpleTools.SimpleHooks.TestSimpleHooks
 {
     static class Program
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using static Models.Instance.Enums;
+using static SimpleTools.SimpleHooks.Models.Instance.Enums;
 
-namespace Models.Instance
+namespace SimpleTools.SimpleHooks.Models.Instance
 {
     public class ListenerInstance : ModelBase
     {

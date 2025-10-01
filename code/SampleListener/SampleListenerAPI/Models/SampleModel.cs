@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SampleListenerAPI.Models
+namespace SimpleTools.SimpleHooks.SampleListener.SampleListenerAPI.Models
 {
     public class SampleModel
     {

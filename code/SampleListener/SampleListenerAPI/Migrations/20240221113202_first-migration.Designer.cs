@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SampleListenerAPI.Data;
+using SimpleTools.SimpleHooks.SampleListener.SampleListenerAPI.Data;
 
 #nullable disable
 
-namespace SampleListenerAPI.Migrations
+namespace SimpleTools.SimpleHooks.SampleListener.SampleListenerAPI.Migrations
 {
     [DbContext(typeof(SampleDbContext))]
     [Migration("20240221113202_first-migration")]
@@ -25,7 +25,7 @@ namespace SampleListenerAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("SampleListenerAPI.Models.SampleModel", b =>
+            modelBuilder.Entity("SimpleTools.SimpleHooks.SampleListener.SampleListenerAPI.Models.SampleModel", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()

@@ -1,12 +1,15 @@
 ﻿using System;
+using SimpleTools.SimpleHooks.Business;
+using SimpleTools.SimpleHooks.Log.Console;
+using SimpleTools.SimpleHooks.TestSimpleHooks.Repos;
 
-namespace TestSimpleHooks
+namespace SimpleTools.SimpleHooks.TestSimpleHooks
 {
     internal class TestBusinessDefinitionManager
     {
         public static void TestLoadDefinition1()
         {
-            Business.DefinitionManager manager = new(new Log.Console.Logger(), new Repos.EventDefRepo(), new Repos.ListenerDefRepo(), new Repos.EventDefListenerDefRepo(), new Repos.AppOptionsRepo(), new Repos.ConnectionRepo());
+            DefinitionManager manager = new(new Logger(), new EventDefRepo(), new ListenerDefRepo(), new EventDefListenerDefRepo(), new AppOptionsRepo(), new ConnectionRepo());
 
             manager.LoadDefinitions();
 

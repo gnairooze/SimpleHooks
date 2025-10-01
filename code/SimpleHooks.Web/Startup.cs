@@ -4,9 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using SimpleHooks.Web.Helper;
+using SimpleTools.SimpleHooks.Web.Helper;
 
-namespace SimpleHooks.Web
+namespace SimpleTools.SimpleHooks.Web
 {
     public class Startup
     {
@@ -79,13 +79,13 @@ namespace SimpleHooks.Web
             {
                 ConnectionString = config.ConnectionStringSimpleHooks
             });
-            services.AddSingleton<Interfaces.IDataRepository<global::Models.Instance.EventInstance>, Repo.SQL.EventInstanceDataRepo>();
-            services.AddSingleton<Interfaces.IDataRepository<global::Models.Instance.ListenerInstance>, Repo.SQL.ListenerInstanceDataRepo>();
+            services.AddSingleton<Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Instance.EventInstance>, Repo.SQL.EventInstanceDataRepo>();
+            services.AddSingleton<Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Instance.ListenerInstance>, Repo.SQL.ListenerInstanceDataRepo>();
             services.AddSingleton<HttpClient.Interface.IHttpClient, HttpClient.Simple.SimpleClient>();
-            services.AddSingleton<Interfaces.IDataRepository<global::Models.Definition.EventDefinition>, Repo.SQL.EventDefinitionDataRepo>();
-            services.AddSingleton<Interfaces.IDataRepository<global::Models.Definition.ListenerDefinition>, Repo.SQL.ListenerDefinitionDataRepo>();
-            services.AddSingleton<Interfaces.IDataRepository<global::Models.Definition.EventDefinitionListenerDefinition>, Repo.SQL.EventIistenerDefinitionDataRepo>();
-            services.AddSingleton<Interfaces.IDataRepository<global::Models.Definition.AppOption>, Repo.SQL.AppOptionDataRepo>();
+            services.AddSingleton<Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.EventDefinition>, Repo.SQL.EventDefinitionDataRepo>();
+            services.AddSingleton<Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.ListenerDefinition>, Repo.SQL.ListenerDefinitionDataRepo>();
+            services.AddSingleton<Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.EventDefinitionListenerDefinition>, Repo.SQL.EventIistenerDefinitionDataRepo>();
+            services.AddSingleton<Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.AppOption>, Repo.SQL.AppOptionDataRepo>();
 
             services.AddControllersWithViews();
         }

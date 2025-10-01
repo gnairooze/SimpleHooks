@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Models.Definition
+namespace SimpleTools.SimpleHooks.Models.Definition
 {
     public class ListenerDefinition:ModelBase
     {

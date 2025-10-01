@@ -1,4 +1,4 @@
-﻿namespace Models.Definition
+﻿namespace SimpleTools.SimpleHooks.Models.Definition
 {
     public class EventDefinitionListenerDefinition:ModelBase
     {

@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SimpleTools.SimpleHooks.Business;
+using SimpleTools.SimpleHooks.Log.Interface;
+using SimpleTools.SimpleHooks.Models.Instance;
 using System;
 
-namespace SimpleHooks.Web.Controllers
+namespace SimpleTools.SimpleHooks.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -12,13 +15,13 @@ namespace SimpleHooks.Web.Controllers
         public EventInstanceController(
             Log.Interface.ILog logger,
             Interfaces.IConnectionRepository connectionRepo,
-            Interfaces.IDataRepository<global::Models.Instance.EventInstance> eventInstanceRepo,
-            Interfaces.IDataRepository<global::Models.Instance.ListenerInstance> listenerInstanceRepo,
+            Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Instance.EventInstance> eventInstanceRepo,
+            Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Instance.ListenerInstance> listenerInstanceRepo,
             HttpClient.Interface.IHttpClient httpClient,
-            Interfaces.IDataRepository<global::Models.Definition.EventDefinition> eventDefRepo,
-            Interfaces.IDataRepository<global::Models.Definition.ListenerDefinition> listenerDefRepo,
-            Interfaces.IDataRepository<global::Models.Definition.EventDefinitionListenerDefinition> eventDefListenerDefRepo,
-            Interfaces.IDataRepository<global::Models.Definition.AppOption> appOptionRepo) => _manager = new Business.InstanceManager(
+            Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.EventDefinition> eventDefRepo,
+            Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.ListenerDefinition> listenerDefRepo,
+            Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.EventDefinitionListenerDefinition> eventDefListenerDefRepo,
+            Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.AppOption> appOptionRepo) => _manager = new SimpleTools.SimpleHooks.Business.InstanceManager(
                 logger,
                 connectionRepo,
                 eventInstanceRepo,

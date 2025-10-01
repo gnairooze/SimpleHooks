@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TestSimpleHooks
+namespace SimpleTools.SimpleHooks.TestSimpleHooks
 {
     internal class TestSimpleHttpClient
     {

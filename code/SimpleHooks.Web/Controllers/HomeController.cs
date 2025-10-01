@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SimpleHooks.Web.Models;
+using SimpleTools.SimpleHooks.Web.Models;
 using System.Diagnostics;
 
-namespace SimpleHooks.Web.Controllers
+namespace SimpleTools.SimpleHooks.Web.Controllers
 {
     public class HomeController(ILogger<HomeController> logger) : Controller
     {

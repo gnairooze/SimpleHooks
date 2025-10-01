@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using SampleListenerAPI.Data;
+using SimpleTools.SimpleHooks.SampleListener.SampleListenerAPI.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

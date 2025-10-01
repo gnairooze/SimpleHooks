@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
-using SampleListenerAPI.Data;
-using SampleListenerAPI.Models;
 using System;
 using System.Configuration;
 using System.Globalization;
+using SimpleTools.SimpleHooks.SampleListener.SampleListenerAPI.Data;
+using SimpleTools.SimpleHooks.SampleListener.SampleListenerAPI.Models;
 
-namespace SampleListenerAPI.Controllers
+namespace SimpleTools.SimpleHooks.SampleListener.SampleListenerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

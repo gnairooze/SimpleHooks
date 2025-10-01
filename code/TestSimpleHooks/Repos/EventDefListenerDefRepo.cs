@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TestSimpleHooks.Repos
+namespace SimpleTools.SimpleHooks.TestSimpleHooks.Repos
 {
-    internal class EventDefListenerDefRepo: GenericRepo<Models.Definition.EventDefinitionListenerDefinition>
+    internal class EventDefListenerDefRepo: GenericRepo<SimpleTools.SimpleHooks.Models.Definition.EventDefinitionListenerDefinition>
     {
         public EventDefListenerDefRepo()
         {
-            this.Entities.AddRange(new List<Models.Definition.EventDefinitionListenerDefinition>
+            this.Entities.AddRange(new List<SimpleTools.SimpleHooks.Models.Definition.EventDefinitionListenerDefinition>
             {
                 new (){
                     Active = true,

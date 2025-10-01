@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Models
+namespace SimpleTools.SimpleHooks.Models
 {
     public abstract class ModelBase
     {

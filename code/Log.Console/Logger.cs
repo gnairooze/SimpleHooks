@@ -1,6 +1,6 @@
-﻿using Log.Interface;
+﻿using SimpleTools.SimpleHooks.Log.Interface;
 
-namespace Log.Console
+namespace SimpleTools.SimpleHooks.Log.Console
 {
     public class Logger : ILog
     {

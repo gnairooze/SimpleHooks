@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TestSimpleHooks.Repos
+namespace SimpleTools.SimpleHooks.TestSimpleHooks.Repos
 {
-    internal class ListenerDefRepo : GenericRepo<Models.Definition.ListenerDefinition>
+    internal class ListenerDefRepo : GenericRepo<SimpleTools.SimpleHooks.Models.Definition.ListenerDefinition>
     {
         public ListenerDefRepo()
         {
-            this.Entities.AddRange(new List<Models.Definition.ListenerDefinition>
+            this.Entities.AddRange(new List<SimpleTools.SimpleHooks.Models.Definition.ListenerDefinition>
             {
                 new (){
                     Active = true,

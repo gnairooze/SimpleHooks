@@ -1,4 +1,4 @@
-﻿namespace Repo.SQL
+﻿namespace SimpleTools.SimpleHooks.Repo.SQL
 {
     internal static class Constants
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Data.SqlClient;
 
-namespace Repo.SQL
+namespace SimpleTools.SimpleHooks.Repo.SQL
 {
-    public class SqlConnectionRepo : Interfaces.IConnectionRepository
+    public class SqlConnectionRepo : SimpleTools.SimpleHooks.Interfaces.IConnectionRepository
     {
         public string ConnectionString { get; set; }
 

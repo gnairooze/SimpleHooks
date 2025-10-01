@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Interfaces
+namespace SimpleTools.SimpleHooks.Interfaces
 {
     public interface IDataRepositoryEventInstanceStatus
     {

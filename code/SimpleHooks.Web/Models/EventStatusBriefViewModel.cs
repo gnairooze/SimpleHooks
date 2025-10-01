@@ -1,7 +1,7 @@
 ﻿using System;
-using static Models.Instance.Enums;
+using static SimpleTools.SimpleHooks.Models.Instance.Enums;
 
-namespace SimpleHooks.Web.Models
+namespace SimpleTools.SimpleHooks.Web.Models
 {
     public class EventStatusBriefViewModel
     {

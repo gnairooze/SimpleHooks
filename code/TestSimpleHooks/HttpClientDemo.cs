@@ -1,7 +1,7 @@
-﻿using HttpClient.Interface;
+﻿using SimpleTools.SimpleHooks.HttpClient.Interface;
 using System.Collections.Generic;
 
-namespace TestSimpleHooks
+namespace SimpleTools.SimpleHooks.TestSimpleHooks
 {
     internal class HttpClientDemo : IHttpClient
     {

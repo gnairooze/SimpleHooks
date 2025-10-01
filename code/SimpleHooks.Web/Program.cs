@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SimpleHooks.Web
+namespace SimpleTools.SimpleHooks.Web
 {
     public class Program
     {
