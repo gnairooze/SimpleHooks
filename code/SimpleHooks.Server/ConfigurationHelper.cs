@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.IO;
 
 namespace SimpleTools.SimpleHooks.Server
@@ -6,7 +7,7 @@ namespace SimpleTools.SimpleHooks.Server
     internal class ConfigurationHelper
     {
         private readonly IConfigurationRoot _config = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
+            .SetBasePath(AppContext.BaseDirectory)
             .AddJsonFile("appsettings.json")
             .Build();
 
