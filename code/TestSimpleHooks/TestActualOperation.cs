@@ -1,6 +1,4 @@
 ﻿using System;
-using SimpleTools.SimpleHooks.Business;
-using SimpleTools.SimpleHooks.Log.Interface;
 using SimpleTools.SimpleHooks.Log.Interface;
 using SimpleTools.SimpleHooks.Models.Instance;
 using SimpleTools.SimpleHooks.Repo.SQL;
