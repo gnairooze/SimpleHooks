@@ -25,15 +25,27 @@ Simple-Hooks will call all the subscribers, with the event data and retry on the
 
 Simple-Hooks contains 3 components:
 
-1. Web API to trigger events. You need to host it under web server that support dot net 8.0 (IIS, Apache2, Nginx ...)
-2. Console Application to run in a scheduler (windows task scheduler or cron demon). you can make multiple instances of it to run in parallel. every instance should have a unique group id. group id is an integer number set in the `appsettings.json` file. iit should not exceed the max groups set in the app options table.
-3. dotNET Standard 2.0 library to trigger events from any .NET project.
+1. Web API - SimpleHooks.Web - to trigger events -TriggerEventController, and to inquire about event instance status - EventInstanceController . You need to host it under web server that support dot net 8.0 (IIS, Apache2, Nginx ...)
+2. Console Application - SimpleHooks.Server - to run in a scheduler (windows task scheduler or cron demon). you can make multiple instances of it to run in parallel. every instance should have a unique group id. group id is an integer number set in the `appsettings.json` file. iit should not exceed the max groups set in the app options table.
+3. dotNET Standard 2.0 library - Trigger Event Helper - to trigger events from any .NET project.
 
 ---
 
 ## Configuration Steps
 
 > The setup is currently using SQL server scripts to DB. It is planned in the future to have web site for configuration.
+
+### Create databases
+
+#### SimpleHooks Db
+
+1. create a new database in your SQL server instance.
+2. run the batch file [execute-operation-schema-data-sql.bat](/code/SQL/operation-db/execute-operation-schema-data-sql.bat) to create tables, stored procedures, and seed data.
+
+##### SimpleHooks_Log Db
+
+1. create a new database in your SQL server instance.
+2. run the batch file [execute-log-schema-data-sql.bat](/code/SQL/log-db/execute-log-schema-data-sql.bat) to create tables, stored procedures, and seed data.
 
 ### Define Events
 
@@ -45,13 +57,103 @@ define the listener name, the URL to post the event data to, and the headers to 
 
 you will find a sample implementation of the listener in the [repository path](/code/SampleListener/SampleListenerAPI)
 
+```sql
+insert EventDefinition 
+(
+	Name, 
+	Active, 
+	CreateBy, 
+	CreateDate, 
+	ModifyBy, 
+	ModifyDate,
+	Notes
+) 
+values 
+(
+	'Test Event', 
+	1, 
+	'admin', 
+	'2024-02-20', 
+	'admin', 
+	'2024-02-20',
+	'test event to test the system'
+);
+```
+
 ### Subscribe Listeners to Events
 
 associate the listeners to the events. You can have multiple listeners for the same event.
 
+use `EventDefiinition.Id` created in the previous step.
+
+```sql
+insert ListenerDefinition 
+(
+	Name, 
+	Active, 
+	URL,
+	Headers,
+	Timeout,
+	TrialCount,
+	RetrialDelay,
+	CreateBy, 
+	CreateDate, 
+	ModifyBy, 
+	ModifyDate,
+	Notes
+)
+values
+(
+	'sample api', 
+	1, 
+	'http://test.test.com/api',
+	'content-type: application/json',
+	60,
+	3,
+	1,
+	'admin', 
+	'2024-02-20', 
+	'admin', 
+	'2024-02-20',
+	'save event data'
+);
+```
+
+use `EventDeinition.Id` and `ListenerDefinition.Id` created in the previous steps.
+```sql
+insert EventDefinition_ListenerDefinition 
+(
+	EventDefinition_Id,
+	ListenerDefinition_Id,
+	Active,
+	CreateBy,
+	CreateDate,
+	ModifyBy,
+	ModifyDate,
+	Notes
+)
+values
+(
+	1,
+	1,
+	1,
+	'admin',
+	'2024-02-20',
+	'admin',
+	'2024-02-20',
+	'sample json to test event'
+);
+```
+
 ### set options
 1. set top count of events to be processed in one run.
 2. set the max number of groups to be processed in parallel.
+
+```sql
+insert AppOption (Category, [Name], [Value], CreateBy, ModifyBy) values ('GetNotProcessed', 'TopCount', '100', 'system.admin', 'system.admin')
+insert AppOption (Category, [Name], [Value], CreateBy, ModifyBy) values ('GetNotProcessed', 'MaxGroups', '1', 'system.admin', 'system.admin')
+```
+
 ---
 
 ## How to Trigger Events
