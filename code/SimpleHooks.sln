@@ -64,6 +64,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StoredProcedures", "StoredProcedures", "{C7472C5F-696F-4D2A-8C73-D908FA2E1E72}"
 	ProjectSection(SolutionItems) = preProject
 		SQL\log-db\StoredProcedures\SimpleHooks_Log_Add.sql = SQL\log-db\StoredProcedures\SimpleHooks_Log_Add.sql
+		Delete_Old_Logs.sql = Delete_Old_Logs.sql
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StoredProcedures", "StoredProcedures", "{4638AD46-974F-41D1-BF75-94C4A86836A0}"
@@ -73,10 +74,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StoredProcedures", "StoredP
 		SQL\operation-db\StoredProcedures\EventDefinition_ListenerDefinition_GetAll.Procedure.sql = SQL\operation-db\StoredProcedures\EventDefinition_ListenerDefinition_GetAll.Procedure.sql
 		SQL\operation-db\StoredProcedures\EventInstance_Add.Procedure.sql = SQL\operation-db\StoredProcedures\EventInstance_Add.Procedure.sql
 		SQL\operation-db\StoredProcedures\EventInstance_Edit.Procedure.sql = SQL\operation-db\StoredProcedures\EventInstance_Edit.Procedure.sql
-		SQL\operation-db\StoredProcedures\EventInstance_GetNotProcessed.Procedure.sql = SQL\operation-db\StoredProcedures\EventInstance_GetNotProcessed.Procedure.sql
 		SQL\operation-db\StoredProcedures\EventInstance_GetByBusinessId.Procedure.sql = SQL\operation-db\StoredProcedures\EventInstance_GetByBusinessId.Procedure.sql
-		SQL\operation-db\StoredProcedures\EventInstance_Remove.Procedure.sql = SQL\operation-db\StoredProcedures\EventInstance_Remove.Procedure.sql
+		SQL\operation-db\StoredProcedures\EventInstance_GetNotProcessed.Procedure.sql = SQL\operation-db\StoredProcedures\EventInstance_GetNotProcessed.Procedure.sql
 		SQL\operation-db\StoredProcedures\EventInstance_GetStatusByBusinessId.Procedure.sql = SQL\operation-db\StoredProcedures\EventInstance_GetStatusByBusinessId.Procedure.sql
+		SQL\operation-db\StoredProcedures\EventInstance_Remove.Procedure.sql = SQL\operation-db\StoredProcedures\EventInstance_Remove.Procedure.sql
 		SQL\operation-db\StoredProcedures\ListenerDefinition_GetAll.Procedure.sql = SQL\operation-db\StoredProcedures\ListenerDefinition_GetAll.Procedure.sql
 		SQL\operation-db\StoredProcedures\ListenerInstance_Add.sql = SQL\operation-db\StoredProcedures\ListenerInstance_Add.sql
 		SQL\operation-db\StoredProcedures\ListenerInstance_Edit.sql = SQL\operation-db\StoredProcedures\ListenerInstance_Edit.sql

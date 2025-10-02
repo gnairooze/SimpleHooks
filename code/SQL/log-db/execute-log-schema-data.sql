@@ -21,6 +21,7 @@ values
 ('Tables/01-LogTypes.Table.sql'),
 ('Tables/02-SimpleHooks_Log.Table.sql'),
 ('StoredProcedures/SimpleHooks_Log_Add.sql'),
+('StoredProcedures/Delete_Old_Logs.sql'),
 ('Data/SimpleHooks_Log-Data.sql')
 
 -- iterate through the file names
