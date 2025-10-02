@@ -1,5 +1,5 @@
 # Simple-Hooks
-version: 2.1.0
+version: 2.7.4
 
 ![high level diagram](simple-hooks-system-context.svg)
 
