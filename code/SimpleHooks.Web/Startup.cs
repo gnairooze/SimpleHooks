@@ -12,17 +12,39 @@ namespace SimpleTools.SimpleHooks.Web
     {
         private readonly Log.SQL.Logger _logger;
         private readonly Guid _logCorrelationId = Guid.NewGuid();
-        private readonly IConfiguration Configuration;
+        private readonly ConfigurationHelper _configurationHelper;
 
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
-            var config = new ConfigurationHelper(configuration);
+            _configurationHelper = new ConfigurationHelper(configuration);
+
+            #region if environment variables are set related confiration settings with them
+            if (!String.IsNullOrEmpty(EnvironmentVariablesHelper.ConnectionStringSimpleHooks))
+            {
+                _configurationHelper.ConnectionStringSimpleHooks = EnvironmentVariablesHelper.ConnectionStringSimpleHooks;
+            }
+
+            if (!String.IsNullOrEmpty(EnvironmentVariablesHelper.ConnectionStringLog))
+            {
+                _configurationHelper.ConnectionStringLog = EnvironmentVariablesHelper.ConnectionStringLog;
+            }
+
+            if (!String.IsNullOrEmpty(EnvironmentVariablesHelper.LoggerMinLogLevel))
+            {
+                _configurationHelper.LoggerMinLogLevel = EnvironmentVariablesHelper.LoggerMinLogLevel;
+            }
+
+            if (!String.IsNullOrEmpty(EnvironmentVariablesHelper.LoggerFunction))
+            {
+                _configurationHelper.LoggerFunction = EnvironmentVariablesHelper.LoggerFunction;
+            }
+            #endregion
+
             _logger = new Log.SQL.Logger()
             {
-                MinLogType = (Log.Interface.LogModel.LogTypes)Enum.Parse(typeof(Log.Interface.LogModel.LogTypes), config.LoggerMinLogLevel, true),
-                ConnectionString = config.ConnectionStringLog,
-                FunctionName = config.LoggerFunction
+                MinLogType = (Log.Interface.LogModel.LogTypes)Enum.Parse(typeof(Log.Interface.LogModel.LogTypes), _configurationHelper.LoggerMinLogLevel, true),
+                ConnectionString = _configurationHelper.ConnectionStringLog,
+                FunctionName = _configurationHelper.LoggerFunction
             };
 
             _logger.Add(new Log.Interface.LogModel()
@@ -67,17 +89,15 @@ namespace SimpleTools.SimpleHooks.Web
                 Step = "ConfigureServices"
             }));
 
-            var config = new ConfigurationHelper(this.Configuration);
-
             services.AddSingleton<Log.Interface.ILog>(provider => new Log.SQL.Logger()
             {
-                MinLogType = (Log.Interface.LogModel.LogTypes)Enum.Parse(typeof(Log.Interface.LogModel.LogTypes), config.LoggerMinLogLevel, true),
-                ConnectionString = config.ConnectionStringLog,
-                FunctionName = config.LoggerFunction
+                MinLogType = (Log.Interface.LogModel.LogTypes)Enum.Parse(typeof(Log.Interface.LogModel.LogTypes), _configurationHelper.LoggerMinLogLevel, true),
+                ConnectionString = _configurationHelper.ConnectionStringLog,
+                FunctionName = _configurationHelper.LoggerFunction
             });
             services.AddSingleton<Interfaces.IConnectionRepository>(provider => new Repo.SQL.SqlConnectionRepo()
             {
-                ConnectionString = config.ConnectionStringSimpleHooks
+                ConnectionString = _configurationHelper.ConnectionStringSimpleHooks
             });
             services.AddSingleton<Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Instance.EventInstance>, Repo.SQL.EventInstanceDataRepo>();
             services.AddSingleton<Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Instance.ListenerInstance>, Repo.SQL.ListenerInstanceDataRepo>();

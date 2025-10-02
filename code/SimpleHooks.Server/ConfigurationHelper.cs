@@ -11,14 +11,34 @@ namespace SimpleTools.SimpleHooks.Server
             .AddJsonFile("appsettings.json")
             .Build();
 
-        public string ConnectionStringLog => _config.GetSection("connectionStrings")["log"];
+        public string ConnectionStringLog
+        {
+            get => _config.GetSection("connectionStrings")["log"]; 
+            set => _config.GetSection("connectionStrings")["log"] = value;
+        }
 
-        public string ConnectionStringSimpleHooks => _config.GetSection("connectionStrings")["simpleHooks"];
+        public string ConnectionStringSimpleHooks
+        {
+            get => _config.GetSection("connectionStrings")["simpleHooks"];
+            set => _config.GetSection("connectionStrings")["simpleHooks"] = value;
+        }
 
-        public string LoggerMinLogLevel => _config.GetSection("logger")["min-log-level"];
+        public string LoggerMinLogLevel
+        {
+            get => _config.GetSection("logger")["min-log-level"]; 
+            set => _config.GetSection("logger")["min-log-level"] = value;
+        }
 
-        public string LoggerFunction => _config.GetSection("logger")["function"];
+        public string LoggerFunction
+        {
+            get => _config.GetSection("logger")["function"];
+            set => _config.GetSection("logger")["function"] = value;
+        }
 
-        public int GroupId => int.Parse(_config.GetSection("group-id").Value);
+        public int GroupId
+        {
+            get => int.Parse(_config.GetSection("group-id").Value);
+            set => _config.GetSection("group-id").Value = value.ToString();
+        }
     }
 }

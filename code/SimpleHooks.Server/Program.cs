@@ -15,6 +15,28 @@ namespace SimpleTools.SimpleHooks.Server
         {
             _config = new ConfigurationHelper();
 
+            #region if environment variables are set related confiration settings with them
+            if (!String.IsNullOrEmpty(EnvironmentVariablesHelper.ConnectionStringSimpleHooks))
+            {
+                _config.ConnectionStringSimpleHooks = EnvironmentVariablesHelper.ConnectionStringSimpleHooks;
+            }
+
+            if (!String.IsNullOrEmpty(EnvironmentVariablesHelper.ConnectionStringLog))
+            {
+                _config.ConnectionStringLog = EnvironmentVariablesHelper.ConnectionStringLog;
+            }
+
+            if (!String.IsNullOrEmpty(EnvironmentVariablesHelper.LoggerMinLogLevel))
+            {
+                _config.LoggerMinLogLevel = EnvironmentVariablesHelper.LoggerMinLogLevel;
+            }
+
+            if (!String.IsNullOrEmpty(EnvironmentVariablesHelper.LoggerFunction))
+            {
+                _config.LoggerFunction = EnvironmentVariablesHelper.LoggerFunction;
+            }
+            #endregion
+
             Start();
         }
 

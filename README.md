@@ -14,6 +14,48 @@ Simple-Hooks will call all the subscribers, with the event data and retry on the
 
 ---
 
+## Environment Variables Configuration
+
+Both SimpleHooks.Web and SimpleHooks.Server projects support configuration through environment variables, which override the default values in `appsettings.json`. This is particularly useful for containerized deployments and different environments (development, staging, production).
+
+### Supported Environment Variables
+
+| Environment Variable | Description | Used By | Default/Example Value |
+|---------------------|-------------|---------|----------------------|
+| `SIMPLE_HOOKS_CONNECTIONSTRING_SIMPLE_HOOKS` | Connection string for the main SimpleHooks database | Web & Server | `Server=localhost;Database=SimpleHooks;Integrated Security=true;` |
+| `SIMPLE_HOOKS_CONNECTIONSTRING_LOG` | Connection string for the logging database | Web & Server | `Server=localhost;Database=SimpleHooks_Log;Integrated Security=true;` |
+| `SIMPLE_HOOKS_LOGGER_MIN_LOG_LEVEL` | Minimum logging level | Web & Server | `Debug` |
+| `SIMPLE_HOOKS_LOGGER_FUNCTION` | Stored procedure name for logging | Web & Server | `SimpleHooks_Log_Add` |
+
+### Additional Configuration for SimpleHooks.Server
+
+The SimpleHooks.Server project has an additional configuration parameter that is set in `appsettings.json` and cannot be overridden by environment variables:
+
+- **group-id**: An integer that determines which console app instance will process specific event instances. This enables parallel processing across multiple server instances. Each server instance should have a unique group ID that doesn't exceed the `MaxGroups` value set in the AppOption table.
+
+Example `appsettings.json` for SimpleHooks.Server:
+```json
+{
+  "connectionStrings": {
+    "simpleHooks": "",
+    "log": ""
+  },
+  "logger": {
+    "min-log-level": "Debug",
+    "function": "SimpleHooks_Log_Add"
+  },
+  "group-id": 1
+}
+```
+
+### Notes
+- Environment variables take precedence over `appsettings.json` values when both are present
+- If an environment variable is not set or is empty, the application will use the value from `appsettings.json`
+- For the logger minimum log level, valid values are: `Debug`, `Information`, `Warning`, `Error`
+- Connection strings should be properly escaped when set as environment variables
+- In production environments, consider using secure secret management solutions instead of plain text environment variables for sensitive data like connection strings
+---
+
 ## How to Setup Simple-Hooks
 
 ### Prerequisites
