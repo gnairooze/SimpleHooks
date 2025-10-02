@@ -53,6 +53,7 @@ Example `appsettings.json` for SimpleHooks.Server:
 - If an environment variable is not set or is empty, the application will use the value from `appsettings.json`
 - For the logger minimum log level, valid values are: `Debug`, `Information`, `Warning`, `Error`
 - Connection strings should be properly escaped when set as environment variables
+- Urls key in SimpleHooks.Web `appsettings.json` should be set to `0.0.0.0` for docker container to work as this value is used to bind the web server to all network interfaces so accepting requests from any IP address but if it set to `localhost` or `127.0.0.1`, it will only accept requests from the same machine.
 - In production environments, consider using secure secret management solutions instead of plain text environment variables for sensitive data like connection strings
 ---
 

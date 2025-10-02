@@ -1,4 +1,4 @@
-﻿#!/bin/sh
+#!/bin/sh
 while true
 do
   dotnet /app/SimpleHooks.Server.dll

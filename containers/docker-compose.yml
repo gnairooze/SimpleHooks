@@ -1,0 +1,39 @@
+name: simple-hooks
+
+services:
+  simple-hooks-web-1:
+    image: gnairooze/simple-hooks:web-2.7.4
+    container_name: simple-hooks-web-1
+    ports:
+      - "8051:80"
+    env_file:
+      - production.env
+    environment:
+      # Instance-specific configuration (only values that need to be different per instance)
+      - SIMPLE_HOOKS_WEB_NODE_NAME=simple-hooks-web-1
+    volumes:
+      - ./web/appsettings.json:/app/appsettings.json:ro
+    networks:
+      simple-hooks-net:
+        ipv4_address: 172.27.0.11
+    restart: unless-stopped
+
+  simepl-hooks-processor-1:
+    image: gnairooze/simple-hooks:proc-2.7.4
+    container_name: simple-hooks-processor-1
+    env_file:
+      - production.env
+    volumes:
+      - ./server/appsettings.json:/app/appsettings.json:ro
+    networks:
+      simple-hooks-net:
+        ipv4_address: 172.27.0.21
+    restart: unless-stopped
+
+networks:
+  simple-hooks-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.27.0.0/16
+          gateway: 172.27.0.1
