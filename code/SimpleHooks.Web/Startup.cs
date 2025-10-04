@@ -18,27 +18,7 @@ namespace SimpleTools.SimpleHooks.Web
         {
             _configurationHelper = new ConfigurationHelper(configuration);
 
-            #region if environment variables are set related confiration settings with them
-            if (!String.IsNullOrEmpty(EnvironmentVariablesHelper.ConnectionStringSimpleHooks))
-            {
-                _configurationHelper.ConnectionStringSimpleHooks = EnvironmentVariablesHelper.ConnectionStringSimpleHooks;
-            }
-
-            if (!String.IsNullOrEmpty(EnvironmentVariablesHelper.ConnectionStringLog))
-            {
-                _configurationHelper.ConnectionStringLog = EnvironmentVariablesHelper.ConnectionStringLog;
-            }
-
-            if (!String.IsNullOrEmpty(EnvironmentVariablesHelper.LoggerMinLogLevel))
-            {
-                _configurationHelper.LoggerMinLogLevel = EnvironmentVariablesHelper.LoggerMinLogLevel;
-            }
-
-            if (!String.IsNullOrEmpty(EnvironmentVariablesHelper.LoggerFunction))
-            {
-                _configurationHelper.LoggerFunction = EnvironmentVariablesHelper.LoggerFunction;
-            }
-            #endregion
+            ReadEnvVarAndSetConfig();
 
             _logger = new Log.SQL.Logger()
             {
@@ -65,6 +45,29 @@ namespace SimpleTools.SimpleHooks.Web
                 ReferenceValue = "SimpleHooks.Web",
                 Step = "Startup"
             });
+        }
+
+        private void ReadEnvVarAndSetConfig()
+        {
+            if (!String.IsNullOrEmpty(EnvironmentVariablesHelper.ConnectionStringSimpleHooks))
+            {
+                _configurationHelper.ConnectionStringSimpleHooks = EnvironmentVariablesHelper.ConnectionStringSimpleHooks;
+            }
+
+            if (!String.IsNullOrEmpty(EnvironmentVariablesHelper.ConnectionStringLog))
+            {
+                _configurationHelper.ConnectionStringLog = EnvironmentVariablesHelper.ConnectionStringLog;
+            }
+
+            if (!String.IsNullOrEmpty(EnvironmentVariablesHelper.LoggerMinLogLevel))
+            {
+                _configurationHelper.LoggerMinLogLevel = EnvironmentVariablesHelper.LoggerMinLogLevel;
+            }
+
+            if (!String.IsNullOrEmpty(EnvironmentVariablesHelper.LoggerFunction))
+            {
+                _configurationHelper.LoggerFunction = EnvironmentVariablesHelper.LoggerFunction;
+            }
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
