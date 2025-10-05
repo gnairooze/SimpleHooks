@@ -1,0 +1,6 @@
+@SimpleHooks.AuthApi_HostAddress = http://localhost:5193
+
+GET {{SimpleHookd.AuthApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

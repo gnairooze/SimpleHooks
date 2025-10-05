@@ -499,3 +499,56 @@ the status can be one of numerical values of EventInstanceStatus (see above).
 }
 ```
 
+## SimpleHooks Authentication
+
+simple hooks support authentication by openiddict in its SimpleHooks.AuthApi asp.net web api. you can configure it in evironment variables or in the appsettings.json file by setting the section of IdentityServer.
+
+SimpleHooks.Web asp.net web api remains anonymous to be called by any client that has access to it.
+
+it is recommended to use SimpleHooks.AuthApi.
+
+### Environment Variables for IdentityServer Configuration
+
+| Environment Variable | Description | Used By | Default/Example Value |
+|---------------------|-------------|---------|----------------------|
+| `SIMPLE_HOOKS_IDENTITYSERVER_AUTHORITY` | the base url for the identity provider | Web | `https://identity.dev.test:8091` |
+| `SIMPLE_HOOKS_IDENTITYSERVER_AUDIENCE` | name of the resource api in openiddict configuration | Web | `identity_simplehooks_api` |
+| `SIMPLE_HOOKS_IDENTITYSERVER_INTROSPECTIONENDPOINT` | introspect endpoint | Web | `https://identity.dev.test:8091/connect/introspect` |
+| `SIMPLE_HOOKS_IDENTITYSERVER_CLIENTID` | api client id | Web | `my-resource-api-client` |
+| `SIMPLE_HOOKS_IDENTITYSERVER_CLIENTSECRET` | api client secret | Web | `your-secure-secret-here` |
+
+### appsettings.json Configuration for IdentityServer
+
+```json
+  "IdentityServer": {
+    "Authority": "https://identity.dev.test:8091",
+    "Audience": "identity_simplehooks_api",
+    "IntrospectionEndpoint": "https://identity.dev.test:8091/connect/introspect",
+    "ClientId": "my-resource-api-client",
+    "ClientSecret": "your-secure-secret-here"
+  }
+```
+
+### OpenIddict Configuration
+
+configure openiddict using [simple identity server cli](https://github.com/gnairooze/simple-identity-server/releases/download/0.1/SimpleIdentityServer.CLI-v0.1-win64.zip) for:
+1. simplehooks api to call introspect endpoint to validate the token when called by clients that passes their tokens.
+2. client to trigger events and check status
+	```sh
+	./SimpleIdentityServer.CLI.exe scope add --name "simplehooks_api.trigger_event" --display-name "trigger event to simple hooks api" --resources "simplehooks_api"
+
+	./SimpleIdentityServer.CLI.exe scope add --name "simplehooks_api.load_definitions" --display-name "load definitions from simple hooks api" --resources "simplehooks_api"
+
+	./SimpleIdentityServer.CLI.exe scope add --name "simplehooks_api.get_event_instance_status" --display-name "get event instance status from simple hooks api" --resources "simplehooks_api"
+
+	./SimpleIdentityServer.CLI.exe app add --client-id "postman-client-admin" --client-secret "P@ssw0rdP@ssw0rd" --display-name "simple-hooks api postman client admin" --permissions "ept:token" --permissions "ept:introspection" --permissions "gt:client_credentials" --permissions "scp:simplehooks_api.trigger_event" --permissions "scp:simplehooks_api.load_definitions" --permissions "scp:simplehooks_api.get_event_instance_status"
+	```
+
+3. client to check status
+	```sh
+	./SimpleIdentityServer.CLI.exe app add --client-id "postman-client-triggerevent" --client-secret "P@ssw0rdP@ssw0rd" --display-name "simple-hooks api postman client trigger event" --permissions "ept:token" --permissions "ept:introspection" --permissions "gt:client_credentials" --permissions "scp:simplehooks_api.trigger_event" --permissions "scp:simplehooks_api.load_definitions" --permissions "scp:simplehooks_api.get_event_instance_status"
+	```
+4. client to load definitions - mostly support admin
+	```sh
+	./SimpleIdentityServer.CLI.exe app add --client-id "postman-client-triggerevent" --client-secret "P@ssw0rdP@ssw0rd" --display-name "simple-hooks api postman client trigger event" --permissions "ept:token" --permissions "ept:introspection" --permissions "gt:client_credentials" --permissions "scp:simplehooks_api.trigger_event" --permissions "scp:simplehooks_api.load_definitions" --permissions "scp:simplehooks_api.get_event_instance_status"
+	```

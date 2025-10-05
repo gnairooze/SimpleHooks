@@ -63,8 +63,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{DC1C82E8-E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StoredProcedures", "StoredProcedures", "{C7472C5F-696F-4D2A-8C73-D908FA2E1E72}"
 	ProjectSection(SolutionItems) = preProject
-		SQL\log-db\StoredProcedures\SimpleHooks_Log_Add.sql = SQL\log-db\StoredProcedures\SimpleHooks_Log_Add.sql
 		Delete_Old_Logs.sql = Delete_Old_Logs.sql
+		SQL\log-db\StoredProcedures\SimpleHooks_Log_Add.sql = SQL\log-db\StoredProcedures\SimpleHooks_Log_Add.sql
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StoredProcedures", "StoredProcedures", "{4638AD46-974F-41D1-BF75-94C4A86836A0}"
@@ -113,6 +113,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tables", "Tables", "{26A32D
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TriggerEventHelper", "TriggerEventHelper\TriggerEventHelper.csproj", "{2D3EEA0A-0789-893C-6136-A2B6E917B749}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleHooks.AuthApi", "SimpleHooks.AuthApi\SimpleHooks.AuthApi.csproj", "{5276F62A-CC8A-4A96-8290-99DA38E72C84}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -176,6 +178,10 @@ Global
 		{2D3EEA0A-0789-893C-6136-A2B6E917B749}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D3EEA0A-0789-893C-6136-A2B6E917B749}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D3EEA0A-0789-893C-6136-A2B6E917B749}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5276F62A-CC8A-4A96-8290-99DA38E72C84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5276F62A-CC8A-4A96-8290-99DA38E72C84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5276F62A-CC8A-4A96-8290-99DA38E72C84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5276F62A-CC8A-4A96-8290-99DA38E72C84}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

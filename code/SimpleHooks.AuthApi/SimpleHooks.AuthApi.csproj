@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>SimpleTools.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+    <AssemblyVersion>2.8.0</AssemblyVersion>
+    <FileVersion>2.8.0</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.20" />
+    <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="7.1.0" />
+    <PackageReference Include="OpenIddict.Validation.ServerIntegration" Version="7.1.0" />
+    <PackageReference Include="OpenIddict.Validation.SystemNetHttp" Version="7.1.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Business\Business.csproj" />
+    <ProjectReference Include="..\HttpClient.Interface\HttpClient.Interface.csproj" />
+    <ProjectReference Include="..\HttpClient.Simple\HttpClient.Simple.csproj" />
+    <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
+    <ProjectReference Include="..\Log.Interface\Log.Interface.csproj" />
+    <ProjectReference Include="..\Log.SQL\Log.SQL.csproj" />
+    <ProjectReference Include="..\Models\Models.csproj" />
+    <ProjectReference Include="..\Repo.SQL\Repo.SQL.csproj" />
+  </ItemGroup>
+
+</Project>
