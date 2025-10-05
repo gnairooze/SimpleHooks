@@ -531,16 +531,8 @@ it is recommended to use SimpleHooks.AuthApi.
 
 ### OpenIddict Configuration
 
-configure openiddict using [simple identity server cli](https://github.com/gnairooze/simple-identity-server/releases/download/0.1/SimpleIdentityServer.CLI-v0.1-win64.zip) for:
-1. simplehooks api to call introspect endpoint to validate the token when called by clients that passes their tokens.
-
-	```sh
-	./SimpleIdentityServer.CLI.exe app add --client-id "simplehooks-api" --client-secret "P@ssw0rdP@ssw0rd" --display-name "simple-hooks auth api" --permissions "ept:introspection" --permissions "gt:client_credentials"
-
-	./SimpleIdentityServer.CLI.exe app add --client-id "simplehooks-api" --client-secret "P@ssw0rdP@ssw0rd" --display-name "simple-hooks auth api" --permissions "ept:introspection" --permissions "gt:client_credentials" --permissions "scp:simplehooks_api" --permissions "scp:simplehooks_api.trigger_event" --permissions "scp:simplehooks_api.load_definitions" --permissions "scp:simplehooks_api.get_event_instance_status"
-	```
-
-2. client to trigger events and check status
+configure openiddict using [simple identity server cli](https://github.com/gnairooze/simple-identity-server/releases/download/0.1/SimpleIdentityServer.CLI-v0.1-win64.zip):
+1. add the simplehooks api scopes
 	```sh
 	./SimpleIdentityServer.CLI.exe scope add --name "simplehooks_api" --display-name "resource simple hooks api" --resources "simplehooks_api"
 
@@ -549,15 +541,30 @@ configure openiddict using [simple identity server cli](https://github.com/gnair
 	./SimpleIdentityServer.CLI.exe scope add --name "simplehooks_api.load_definitions" --display-name "load definitions from simple hooks api" --resources "simplehooks_api"
 
 	./SimpleIdentityServer.CLI.exe scope add --name "simplehooks_api.get_event_instance_status" --display-name "get event instance status from simple hooks api" --resources "simplehooks_api"
-
-	./SimpleIdentityServer.CLI.exe app add --client-id "postman-client-admin" --client-secret "P@ssw0rdP@ssw0rd" --display-name "simple-hooks api postman client admin" --permissions "ept:token" --permissions "ept:introspection" --permissions "gt:client_credentials" --permissions "scp:simplehooks_api" --permissions "scp:simplehooks_api.trigger_event" --permissions "scp:simplehooks_api.load_definitions" --permissions "scp:simplehooks_api.get_event_instance_status"
 	```
 
-3. client to check status
+2. simplehooks api to call introspect endpoint to validate the token when called by client applications that passes their tokens.the simplehooks api client_id must be exactly the same as the resource in the scope definition.
+
 	```sh
-	./SimpleIdentityServer.CLI.exe app add --client-id "postman-client-triggerevent" --client-secret "P@ssw0rdP@ssw0rd" --display-name "simple-hooks api postman client trigger event" --permissions "ept:token" --permissions "ept:introspection" --permissions "gt:client_credentials" --permissions "scp:simplehooks_api.trigger_event" --permissions "scp:simplehooks_api.load_definitions" --permissions "scp:simplehooks_api.get_event_instance_status"
+	./SimpleIdentityServer.CLI.exe app add --client-id "simplehooks_api" --client-secret "P@ssw0rdP@ssw0rd" --display-name "simple-hooks auth api" --permissions "ept:introspection"
 	```
-4. client to load definitions - mostly support admin
+
+3. client application to trigger events and check status
 	```sh
-	./SimpleIdentityServer.CLI.exe app add --client-id "postman-client-triggerevent" --client-secret "P@ssw0rdP@ssw0rd" --display-name "simple-hooks api postman client trigger event" --permissions "ept:token" --permissions "ept:introspection" --permissions "gt:client_credentials" --permissions "scp:simplehooks_api.trigger_event" --permissions "scp:simplehooks_api.load_definitions" --permissions "scp:simplehooks_api.get_event_instance_status"
+	./SimpleIdentityServer.CLI.exe app add --client-id "postman-client-trigger-event" --client-secret "P@ssw0rdP@ssw0rd" --display-name "simple-hooks api postman client to trigger event" --permissions "ept:token" --permissions "ept:introspection" --permissions "gt:client_credentials" --permissions "scp:simplehooks_api.trigger_event"
+	```
+
+4. client to check status
+	```sh
+	./SimpleIdentityServer.CLI.exe app add --client-id "postman-client-check-status" --client-secret "P@ssw0rdP@ssw0rd" --display-name "simple-hooks api postman client to check status" --permissions "ept:token" --permissions "ept:introspection" --permissions "gt:client_credentials" --permissions "scp:simplehooks_api.get_event_instance_status"
+	```
+
+5. client to load definitions - mostly support admin
+	```sh
+	./SimpleIdentityServer.CLI.exe app add --client-id "postman-client-load-defs" --client-secret "P@ssw0rdP@ssw0rd" --display-name "simple-hooks api postman client to load definitions" --permissions "ept:token" --permissions "ept:introspection" --permissions "gt:client_credentials" --permissions "scp:simplehooks_api.load_definitions"
+	```
+
+6. support client have all permissions for testing
+	```sh
+	./SimpleIdentityServer.CLI.exe app add --client-id "postman-client-admin" --client-secret "P@ssw0rdP@ssw0rd" --display-name "simple-hooks api postman client admin" --permissions "ept:token" --permissions "ept:introspection" --permissions "gt:client_credentials" --permissions "scp:simplehooks_api.trigger_event" --permissions "scp:simplehooks_api.load_definitions" --permissions "scp:simplehooks_api.get_event_instance_status"
 	```
