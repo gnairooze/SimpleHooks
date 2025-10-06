@@ -112,7 +112,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tables", "Tables", "{26A32D
 		SQL\log-db\Tables\02-SimpleHooks_Log.Table.sql = SQL\log-db\Tables\02-SimpleHooks_Log.Table.sql
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TriggerEventHelper", "TriggerEventHelper\TriggerEventHelper.csproj", "{2D3EEA0A-0789-893C-6136-A2B6E917B749}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleHooks.Assist", "SimpleHooks.Assist\SimpleHooks.Assist.csproj", "{2D3EEA0A-0789-893C-6136-A2B6E917B749}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleHooks.AuthApi", "SimpleHooks.AuthApi\SimpleHooks.AuthApi.csproj", "{5276F62A-CC8A-4A96-8290-99DA38E72C84}"
 EndProject

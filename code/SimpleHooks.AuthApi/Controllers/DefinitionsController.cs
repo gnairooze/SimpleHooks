@@ -7,11 +7,11 @@ namespace SimpleTools.SimpleHooks.AuthApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class TriggerEventController : ControllerBase
+    public class DefinitionsController : ControllerBase
     {
         private readonly Business.InstanceManager _manager;
-
-        public TriggerEventController(
+        
+        public DefinitionsController(
             Log.Interface.ILog logger,
             Interfaces.IConnectionRepository connectionRepo,
             Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Instance.EventInstance> eventInstanceRepo,
@@ -34,33 +34,20 @@ namespace SimpleTools.SimpleHooks.AuthApi.Controllers
                 appOptionRepo
             );
         }
-
-        // POST api/<TriggerEventController>
+        
+        [Route("load-definitions")]
         [HttpPost]
-        [Authorize(Policy = AuthPolicies.REQUIRE_SIMPLEHOOKS_API_TRIGGEREVENT)]
-        public OkObjectResult Post([FromBody] Models.EventViewModel value)
+        [Authorize(Policy = AuthPolicies.REQUIRE_SIMPLEHOOKS_API_LOADDEFINITIONS)]
+        public OkObjectResult LoadDefinitions()
         {
-            // Extract the EventData node from the request
-            var eventDataJson = value.EventData.TryGetValue("EventData", out var eventDataNode)
-                ? eventDataNode.GetRawText()
-                : "{}";
+            bool succeeded = _manager.DefinitionMgr.LoadDefinitions();
 
-            var result = _manager.Add(new SimpleTools.SimpleHooks.Models.Instance.EventInstance() {
-                Active = true,
-                BusinessId = Guid.NewGuid(),
-                CreateBy = "system.trigger",
-                CreateDate = DateTime.UtcNow,
-                EventData = eventDataJson,
-                EventDefinitionId = value.EventDefinitionId,
-                ModifyBy = "system.trigger",
-                ModifyDate = DateTime.UtcNow,
-                Notes = string.Empty,
-                ReferenceName = value.ReferenceName,
-                ReferenceValue = value.ReferenceValue,
-                Status = SimpleTools.SimpleHooks.Models.Instance.Enums.EventInstanceStatus.InQueue
-            });
+            if (!succeeded)
+            {
+                throw new InvalidOperationException("could not load definitions");
+            }
 
-            return Ok(result);
+            return Ok(_manager.DefinitionMgr.AppOptions);
         }
     }
 }
