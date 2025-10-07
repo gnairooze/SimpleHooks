@@ -13,22 +13,22 @@ namespace SimpleTools.SimpleHooks.TestConsole.TestAssist
     {
         private readonly ConfigurationHelper _configHelper = configHelper;
 
-        private Assist.Models.TriggerEventRequest CreateTriggerEventRequestDataText()
+        private static Assist.Models.TriggerEventRequest CreateTriggerEventRequestDataText()
         {
             return new Assist.Models.TriggerEventRequest()
             {
-                EventData = "{\"name\": \"test.user.21\"}",
+                EventData = "{\"name\": \"test.user.334\"}",
                 EventDefinitionId = 1,
                 ReferenceName = "order-id",
                 ReferenceValue = Guid.NewGuid().ToString()
             };
         }
 
-        private Assist.Models.TriggerEventRequest CreateTriggerEventRequestDataObject()
+        private static Assist.Models.TriggerEventRequest CreateTriggerEventRequestDataObject()
         {
             return new Assist.Models.TriggerEventRequest()
             {
-                EventData = new { name = "test.user.22" },
+                EventData = new { name = "test.user.333" },
                 EventDefinitionId = 1,
                 ReferenceName = "order-id",
                 ReferenceValue = Guid.NewGuid().ToString()
@@ -45,77 +45,55 @@ namespace SimpleTools.SimpleHooks.TestConsole.TestAssist
             };
         }
 
-        private void WriteConsoleStart(string methodName)
-        {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"{methodName} started");
-        }
-
-        private void WriteConsoleCompleted(string methodName, string result)
-        {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"{methodName} completed - result: {result}");
-            Console.WriteLine("-------");
-            Console.WriteLine();
-        }
-
-        private void WriteConsoleError(string methodName, Exception e)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"{methodName} threw error: {e}");
-            Console.WriteLine("-------");
-            Console.WriteLine();
-        }
-
         internal void TestAnonymousExecuteDataText()
         {
-            WriteConsoleStart(MethodBase.GetCurrentMethod()!.Name);
+            ConsoleHelper.WriteConsoleStart(MethodBase.GetCurrentMethod()!.Name);
 
             try
             {
-                var assist = new Assist.TriggerEventAssist(configHelper.TriggerEventAnonymousUrl);
+                var assist = new Assist.TriggerEventAssist(_configHelper.TriggerEventAnonymousUrl);
 
                 var data = CreateTriggerEventRequestDataText();
 
                 Task<string> actual = assist.ExecuteAsync(data);
                 actual.Wait();
 
-                WriteConsoleCompleted(MethodBase.GetCurrentMethod()!.Name, actual.Result);
+                ConsoleHelper.WriteConsoleCompleted(MethodBase.GetCurrentMethod()!.Name, actual.Result);
             }
             catch (Exception e)
             {
-                WriteConsoleError(MethodBase.GetCurrentMethod()!.Name, e);
+                ConsoleHelper.WriteConsoleError(MethodBase.GetCurrentMethod()!.Name, e);
             }
         }
 
         internal void TestAnonymousExecuteDataObject()
         {
-            WriteConsoleStart(MethodBase.GetCurrentMethod()!.Name);
+            ConsoleHelper.WriteConsoleStart(MethodBase.GetCurrentMethod()!.Name);
 
             try
             {
-                var assist = new Assist.TriggerEventAssist(configHelper.TriggerEventAnonymousUrl);
+                var assist = new Assist.TriggerEventAssist(_configHelper.TriggerEventAnonymousUrl);
 
                 var data = CreateTriggerEventRequestDataObject();
 
                 Task<string> actual = assist.ExecuteAsync(data);
                 actual.Wait();
 
-                WriteConsoleCompleted(MethodBase.GetCurrentMethod()!.Name, actual.Result);
+                ConsoleHelper.WriteConsoleCompleted(MethodBase.GetCurrentMethod()!.Name, actual.Result);
             }
             catch (Exception e)
             {
-                WriteConsoleError(MethodBase.GetCurrentMethod()!.Name, e);
+                ConsoleHelper.WriteConsoleError(MethodBase.GetCurrentMethod()!.Name, e);
             }
         }
 
         internal void TestAuthenticatedExecuteDataText()
         {
-            WriteConsoleStart(MethodBase.GetCurrentMethod()!.Name);
+            ConsoleHelper.WriteConsoleStart(MethodBase.GetCurrentMethod()!.Name);
 
             try
             {
-                var assist = new Assist.TriggerEventAssist(configHelper.TriggerEventAuthenticatedUrl, true);
+                var assist = new Assist.TriggerEventAssist(_configHelper.TriggerEventAuthenticatedUrl, true);
 
                 var data = CreateTriggerEventRequestDataText();
 
@@ -124,21 +102,21 @@ namespace SimpleTools.SimpleHooks.TestConsole.TestAssist
                 Task<string> actual = assist.ExecuteAsync(data, cred);
                 actual.Wait();
 
-                WriteConsoleCompleted(MethodBase.GetCurrentMethod()!.Name, actual.Result);
+                ConsoleHelper.WriteConsoleCompleted(MethodBase.GetCurrentMethod()!.Name, actual.Result);
             }
             catch (Exception e)
             {
-                WriteConsoleError(MethodBase.GetCurrentMethod()!.Name, e);
+                ConsoleHelper.WriteConsoleError(MethodBase.GetCurrentMethod()!.Name, e);
             }
         }
 
         internal void TestAuthenticatedExecuteDataObject()
         {
-            WriteConsoleStart(MethodBase.GetCurrentMethod()!.Name);
+            ConsoleHelper.WriteConsoleStart(MethodBase.GetCurrentMethod()!.Name);
 
             try
             {
-                var assist = new Assist.TriggerEventAssist(configHelper.TriggerEventAuthenticatedUrl, true);
+                var assist = new Assist.TriggerEventAssist(_configHelper.TriggerEventAuthenticatedUrl, true);
 
                 var data = CreateTriggerEventRequestDataObject();
 
@@ -147,11 +125,11 @@ namespace SimpleTools.SimpleHooks.TestConsole.TestAssist
                 Task<string> actual = assist.ExecuteAsync(data, cred);
                 actual.Wait();
 
-                WriteConsoleCompleted(MethodBase.GetCurrentMethod()!.Name, actual.Result);
+                ConsoleHelper.WriteConsoleCompleted(MethodBase.GetCurrentMethod()!.Name, actual.Result);
             }
             catch (Exception e)
-            {
-                WriteConsoleError(MethodBase.GetCurrentMethod()!.Name, e);
+            { 
+                ConsoleHelper.WriteConsoleError(MethodBase.GetCurrentMethod()!.Name, e);
             }
         }
     }

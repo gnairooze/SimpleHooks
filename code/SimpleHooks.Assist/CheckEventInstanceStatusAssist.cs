@@ -26,7 +26,7 @@ namespace SimpleTools.SimpleHooks.Assist
             _useAuthenticatedApi = useAuthenticatedApi;
         }
 
-        public async Task<string> ExecuteAsync(string eventInstanceBusinessId, Credentials? cred = null)
+        public async Task<int> ExecuteAsync(string eventInstanceBusinessId, Credentials? cred = null)
         {
             try
             {
@@ -51,13 +51,9 @@ namespace SimpleTools.SimpleHooks.Assist
 
                 if (statusResponse.TryGetProperty("status", out var status))
                 {
-                    var statusString = status.GetString();
-                    if (string.IsNullOrEmpty(statusString))
-                    {
-                        throw new InvalidOperationException("empty status");
-                    }
+                    var statusInteger = status.GetInt32();
 
-                    return statusString!;
+                    return statusInteger!;
                 }
 
                 throw new InvalidOperationException($"response without status: {statusResponse}");
