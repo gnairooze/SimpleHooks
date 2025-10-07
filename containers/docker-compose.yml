@@ -2,12 +2,12 @@ name: simple-hooks
 
 services:
   simple-hooks-web-1:
-    image: gnairooze/simple-hooks:web-2.7.4
+    image: gnairooze/simple-hooks:web-2.8.0
     container_name: simple-hooks-web-1
     ports:
       - "8051:80"
     env_file:
-      - production.env
+      - simplehooks-production.env
     environment:
       # Instance-specific configuration (only values that need to be different per instance)
       - SIMPLE_HOOKS_WEB_NODE_NAME=simple-hooks-web-1
@@ -18,16 +18,54 @@ services:
         ipv4_address: 172.27.0.11
     restart: unless-stopped
 
-  simepl-hooks-processor-1:
-    image: gnairooze/simple-hooks:proc-2.7.4
+  simple-hooks-authapi-1:
+    image: gnairooze/simple-hooks:authapi-2.8.0
+    container_name: simple-hooks-authapi-1
+    ports:
+      - "8052:80"
+    extra_hosts:
+      - "identity.dev.test:172.27.0.31"
+    depends_on:
+      - identity-api-instance-1
+    env_file:
+      - simplehooks-production.env
+    environment:
+      # Instance-specific configuration (only values that need to be different per instance)
+      - SIMPLE_HOOKS_AUTHAPI_NODE_NAME=simple-hooks-authapi-1
+    volumes:
+      - ./authapi/appsettings.json:/app/appsettings.json:ro
+    networks:
+      simple-hooks-net:
+        ipv4_address: 172.27.0.16
+    restart: unless-stopped
+
+  simple-hooks-processor-1:
+    image: gnairooze/simple-hooks:proc-2.8.0
     container_name: simple-hooks-processor-1
     env_file:
-      - production.env
+      - simplehooks-production.env
     volumes:
       - ./server/appsettings.json:/app/appsettings.json:ro
     networks:
       simple-hooks-net:
         ipv4_address: 172.27.0.21
+    restart: unless-stopped
+
+  identity-api-instance-1:
+    image: gnairooze/simple-identity-server:0.5
+    container_name: identity-server-api
+    ports:
+      - "8071:8071"  # Direct access for testing
+    env_file:
+      - simple-identity-server-production.env
+    environment:
+      # Instance-specific configuration (only values that need to be different per instance)
+      - SIMPLE_IDENTITY_SERVER_NODE_NAME=simple-identity-api-instance-1
+    volumes:
+      - ./certs:/app/certs
+    networks:
+      simple-hooks-net:
+        ipv4_address: 172.27.0.31
     restart: unless-stopped
 
 networks:
