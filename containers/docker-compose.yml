@@ -32,8 +32,23 @@ services:
     environment:
       # Instance-specific configuration (only values that need to be different per instance)
       - SIMPLE_HOOKS_AUTHAPI_NODE_NAME=simple-hooks-authapi-1
+      # SSL/TLS Configuration
+      - SSL_CERT_DIR=/usr/local/share/ca-certificates
+      - DOTNET_SYSTEM_NET_HTTP_USESOCKETSHTTPHANDLER=0
     volumes:
       - ./authapi/appsettings.json:/app/appsettings.json:ro
+      - ./certs:/app/certs:ro
+    entrypoint: >
+      sh -c "
+        if [ -f /app/certs/identity-dev-test-ca.crt ]; then
+          cp /app/certs/identity-dev-test-ca.crt /usr/local/share/ca-certificates/identity-dev-test-ca.crt &&
+          update-ca-certificates &&
+          echo 'CA certificate installed successfully';
+        else
+          echo 'Warning: CA certificate not found at /app/certs/identity-dev-test-ca.crt';
+        fi &&
+        exec dotnet SimpleHooks.AuthApi.dll
+      "
     networks:
       simple-hooks-net:
         ipv4_address: 172.27.0.16
