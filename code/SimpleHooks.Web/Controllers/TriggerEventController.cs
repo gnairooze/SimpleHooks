@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace SimpleTools.SimpleHooks.Web.Controllers
 {
@@ -59,7 +60,19 @@ namespace SimpleTools.SimpleHooks.Web.Controllers
                 Status = SimpleTools.SimpleHooks.Models.Instance.Enums.EventInstanceStatus.InQueue
             });
 
-            return Ok(result);
+            // write json manually
+            JsonObject resultJson = new()
+            {
+                ["eventDefinitionId"] = result.EventDefinitionId,
+                ["businessId"] = result.BusinessId,
+                ["status"] = (int)result.Status,
+                ["referenceName"] = result.ReferenceName,
+                ["referenceValue"] = result.ReferenceValue,
+                ["createDate"] = result.CreateDate,
+                ["eventData"] = JsonNode.Parse(result.EventData)
+            };
+
+            return Ok(resultJson);
         }
         [Route("load-definitions")]
         [HttpPost]

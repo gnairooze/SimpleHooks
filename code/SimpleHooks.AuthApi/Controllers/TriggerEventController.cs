@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Text.Json;
+using System.Text.Json.Nodes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SimpleTools.SimpleHooks.AuthApi.Helper;
 
@@ -60,7 +62,19 @@ namespace SimpleTools.SimpleHooks.AuthApi.Controllers
                 Status = SimpleTools.SimpleHooks.Models.Instance.Enums.EventInstanceStatus.InQueue
             });
 
-            return Ok(result);
+            // write json manually
+            JsonObject resultJson = new()
+            {
+                ["eventDefinitionId"] = result.EventDefinitionId,
+                ["businessId"] = result.BusinessId,
+                ["status"] = (int)result.Status,
+                ["referenceName"] = result.ReferenceName,
+                ["referenceValue"] = result.ReferenceValue,
+                ["createDate"] = result.CreateDate,
+                ["eventData"] = JsonNode.Parse(result.EventData)
+            };
+
+            return Ok(resultJson);
         }
     }
 }
