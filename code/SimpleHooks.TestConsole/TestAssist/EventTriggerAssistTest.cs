@@ -17,7 +17,7 @@ namespace SimpleTools.SimpleHooks.TestConsole.TestAssist
         {
             return new Assist.Models.TriggerEventRequest()
             {
-                EventData = "{{'name': 'test.user.21'}}",
+                EventData = "{\"name\": \"test.user.21\"}",
                 EventDefinitionId = 1,
                 ReferenceName = "order-id",
                 ReferenceValue = Guid.NewGuid().ToString()
