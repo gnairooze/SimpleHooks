@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading;
 using SimpleTools.SimpleHooks.Models.Instance;
@@ -505,16 +506,67 @@ namespace SimpleTools.SimpleHooks.Business
                 this._connectionRepo.DisposeConnection(conn);
                 return;
             }
-            
-            var result = this._httpClient.Post(listenerInstance.Definition.Url, listenerInstance.Definition.Headers, eventData, listenerInstance.Definition.Timeout);
 
             #region handle http client result
             var parameters = new Dictionary<string, string>
             {
                 { "ListenerInstance", listenerInstance.ToString() },
-                { "eventData", eventData },
-                { "result", result.ToString() }
+                { "eventData", eventData }
             };
+
+            HttpResult result = null;
+
+            try
+            {
+                result = this._httpClient.Post(listenerInstance.Definition.Url, listenerInstance.Definition.Headers,
+                    eventData, listenerInstance.Definition.Timeout);
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine(e);
+
+                if (result == null)
+                {
+                    result = new HttpResult()
+                    {
+                        HttpCode = 0,
+                        Body = "null result. created in catch HttpRequestException block"
+                    };
+                }
+
+                parameters.Add("result", result.ToString());
+
+                log.LogType = LogModel.LogTypes.Error;
+                log.Counter++;
+                log.Step = "execute listener - IHttpClient.Post";
+                log.NotesA = Newtonsoft.Json.JsonConvert.SerializeObject(parameters);
+                log.NotesB = Newtonsoft.Json.JsonConvert.SerializeObject(e);
+
+                this._logger.Add(log);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+
+                if (result == null)
+                {
+                    result = new HttpResult()
+                    {
+                        HttpCode = 0,
+                        Body = "null result. created in catch Exception block"
+                    };
+                }
+
+                parameters.Add("result", result.ToString());
+
+                log.LogType = LogModel.LogTypes.Error;
+                log.Counter++;
+                log.Step = "execute listener - IHttpClient.Post";
+                log.NotesA = Newtonsoft.Json.JsonConvert.SerializeObject(parameters);
+                log.NotesB = Newtonsoft.Json.JsonConvert.SerializeObject(e);
+
+                this._logger.Add(log);
+            }
 
             //succeeded
             if (result.HttpCode == InstanceConstants.HttpCodeSucceeded)
@@ -527,6 +579,7 @@ namespace SimpleTools.SimpleHooks.Business
                 log.Step = "At the end of execute listener";
                 log.LogType = LogModel.LogTypes.Information;
                 log.NotesA = Newtonsoft.Json.JsonConvert.SerializeObject(parameters);
+                log.NotesB = string.Empty;
             }
             //failed with no remaining retrials
             else if(listenerInstance.RemainingTrialCount <= 0)
