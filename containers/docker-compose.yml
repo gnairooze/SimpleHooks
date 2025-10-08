@@ -2,7 +2,7 @@ name: simple-hooks
 
 services:
   simple-hooks-web-1:
-    image: gnairooze/simple-hooks:web-2.8.1
+    image: gnairooze/simple-hooks:web-2.8.2
     container_name: simple-hooks-web-1
     ports:
       - "8051:80"
@@ -19,7 +19,7 @@ services:
     restart: unless-stopped
 
   simple-hooks-authapi-1:
-    image: gnairooze/simple-hooks:authapi-2.8.1
+    image: gnairooze/simple-hooks:authapi-2.8.2
     container_name: simple-hooks-authapi-1
     ports:
       - "8052:80"
@@ -55,7 +55,7 @@ services:
     restart: unless-stopped
 
   simple-hooks-processor-1:
-    image: gnairooze/simple-hooks:proc-2.8.1
+    image: gnairooze/simple-hooks:proc-2.8.2
     container_name: simple-hooks-processor-1
     env_file:
       - simplehooks-production.env
