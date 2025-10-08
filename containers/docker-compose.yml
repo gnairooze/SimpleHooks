@@ -83,6 +83,17 @@ services:
         ipv4_address: 172.27.0.31
     restart: unless-stopped
 
+  simple-hooks-sample-listener-1:
+    image: gnairooze/simple-hooks:listener-1.0
+    container_name: simple-hooks-sample-listener-1
+    ports:
+      - "5011:5011"
+    volumes:
+      - ./sample-listener/appsettings.json:/app/appsettings.json:ro
+    networks:
+      simple-hooks-net:
+        ipv4_address: 172.27.0.111
+    restart: unless-stopped
 networks:
   simple-hooks-net:
     driver: bridge
