@@ -25,6 +25,14 @@ both should be created before running the container.
 
 sample docker compose file and production.env file and related files exist in [github containers](https://github.com/gnairooze/SimpleHooks/tree/main/containers).
 
+the docker-compose.yml file contains 5 services:
+1. simple-hooks-web-1: anonymous simple-hooks web api
+2. simple-hooks-authapi-1: authenticated simple-hooks web api
+3. simple-hooks-processor-1: simple-hooks server processor
+4. identity-api-instance-1: identity server api using openiddict
+5. simple-hooks-sample-listener-1: a sample listener api to test the solution
+
+all the services needs sql server databases.
 run the following command in the directory containing the docker-compose.yml file:
 
 ```bash
