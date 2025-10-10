@@ -1,5 +1,6 @@
 # Simple-Hooks
-version: 2.8.0
+
+version: 2.8.2
 
 ![high level diagram](simple-hooks-system-context.svg)
 
@@ -55,6 +56,9 @@ Example `appsettings.json` for SimpleHooks.Server:
 - Connection strings should be properly escaped when set as environment variables
 - Urls key in SimpleHooks.Web `appsettings.json` should be set to `0.0.0.0` for docker container to work as this value is used to bind the web server to all network interfaces so accepting requests from any IP address but if it set to `localhost` or `127.0.0.1`, it will only accept requests from the same machine.
 - In production environments, consider using secure secret management solutions instead of plain text environment variables for sensitive data like connection strings
+- Containers examples exist in [simple-hooks-containers](https://github.com/gnairooze/simple-hooks-containers) repository.
+- Docker images published in [simple-hooks](https://hub.docker.com/r/gnairooze/simple-hooks).
+
 ---
 
 ## How to Setup Simple-Hooks
