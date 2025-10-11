@@ -8,280 +8,886 @@
 	},
 	"item": [
 		{
-			"name": "Trigger event",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"EventDefinitionId\": \"1\",\r\n    \"EventData\": \"{'name': 'test.user8'}\",\r\n    \"ReferenceName\": \"sale.id\",\r\n    \"ReferenceValue\": \"abd1238\"\r\n}"
-				},
-				"url": {
-					"raw": "http://localhost:8081/simplehooks.web/api/triggerevent",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8081",
-					"path": [
-						"simplehooks.web",
-						"api",
-						"triggerevent"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Trigger event from debug",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"EventDefinitionId\": \"1\",\r\n    \"EventData\": \"{'name': 'test.user'}\",\r\n    \"ReferenceName\": \"sale.id\",\r\n    \"ReferenceValue\": \"abd123\"\r\n}"
-				},
-				"url": {
-					"raw": "https://localhost:44371/api/triggerevent",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "44371",
-					"path": [
-						"api",
-						"triggerevent"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "check-listener-1",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8081/sample-listener-api/api/sample",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8081",
-					"path": [
-						"sample-listener-api",
-						"api",
-						"sample"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "post-event-to-listener-1",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"data\": {\r\n    \"key1\": \"value1\",\r\n    \"key2\": \"value2\",\r\n    \"key3\": \"value3\"\r\n  },\r\n  \"simpleHooksMetadata\": { \r\n      \"eventBusinessId\": \"123456789\",\r\n      \"eventDefinitionName\": \"exampleEvent\"\r\n  }\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "anonymous",
+			"item": [
+				{
+					"name": "Trigger event",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"EventDefinitionId\": \"1\",\r\n    \"EventData\": {\"name\": \"test.user103\"},\r\n    \"ReferenceName\": \"sale.id\",\r\n    \"ReferenceValue\": \"abd2003\"\r\n}"
+						},
+						"url": {
+							"raw": "{{web-baseUrl}}/api/TriggerEvent",
+							"host": [
+								"{{web-baseUrl}}"
+							],
+							"path": [
+								"api",
+								"TriggerEvent"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://localhost:8081/sample-listener-api/api/sample",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8081",
-					"path": [
-						"sample-listener-api",
-						"api",
-						"sample"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "check-listener-2",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8081/sample-listener-api2/api/sample",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8081",
-					"path": [
-						"sample-listener-api2",
-						"api",
-						"sample"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "post-event-to-listener-2",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"data\": {\r\n    \"key1\": \"value1\",\r\n    \"key2\": \"value2\",\r\n    \"key3\": \"value3\"\r\n  },\r\n  \"simpleHooksMetadata\": { \r\n      \"eventBusinessId\": \"123456789\",\r\n      \"eventDefinitionName\": \"exampleEvent\"\r\n  }\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+				{
+					"name": "read-eventinstance-status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{mytoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{web-baseUrl}}/api/eventinstance/get-status?businessid={{event-instance-business-id}}",
+							"host": [
+								"{{web-baseUrl}}"
+							],
+							"path": [
+								"api",
+								"eventinstance",
+								"get-status"
+							],
+							"query": [
+								{
+									"key": "businessid",
+									"value": "{{event-instance-business-id}}"
+								}
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://localhost:8081/sample-listener-api2/api/sample",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8081",
-					"path": [
-						"sample-listener-api2",
-						"api",
-						"sample"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "check-listener-3",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8081/sample-listener-api3/api/sample",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8081",
-					"path": [
-						"sample-listener-api3",
-						"api",
-						"sample"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "post-event-to-listener-3",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"data\": {\r\n    \"key1\": \"value1\",\r\n    \"key2\": \"value2\",\r\n    \"key3\": \"value3\"\r\n  },\r\n  \"simpleHooksMetadata\": { \r\n      \"eventBusinessId\": \"123456789\",\r\n      \"eventDefinitionName\": \"exampleEvent\"\r\n  }\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+				{
+					"name": "read definitions",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{web-baseUrl}}/api/definitions/load-definitions",
+							"host": [
+								"{{web-baseUrl}}"
+							],
+							"path": [
+								"api",
+								"definitions",
+								"load-definitions"
+							]
 						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8081/sample-listener-api3/api/sample",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8081",
-					"path": [
-						"sample-listener-api3",
-						"api",
-						"sample"
-					]
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "debug-post-event-to-sample-listener-1",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"data\": {\r\n    \"key1\": \"value1\",\r\n    \"key2\": \"value2\",\r\n    \"key3\": \"value3\"\r\n  },\r\n  \"simpleHooksMetadata\": { \r\n      \"eventBusinessId\": \"123456789\",\r\n      \"eventDefinitionName\": \"exampleEvent\"\r\n  }\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "authenticated",
+			"item": [
+				{
+					"name": "get-token-trigger-events",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "x-forwarded-for",
+								"value": "3.3.3.3",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "postman-client-admin",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "P@ssw0rdP@ssw0rd",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "simplehooks_api.trigger_event",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{simple-hoosks-identity-baseUrl}}/connect/token",
+							"host": [
+								"{{simple-hoosks-identity-baseUrl}}"
+							],
+							"path": [
+								"connect",
+								"token"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "https://simplehookssamplelistener.dev.local:5011/api/sample",
-					"protocol": "https",
-					"host": [
-						"simplehookssamplelistener",
-						"dev",
-						"local"
-					],
-					"port": "5011",
-					"path": [
-						"api",
-						"sample"
-					]
+				{
+					"name": "AuthApi-Trigger event",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{mytoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"EventDefinitionId\": \"1\",\r\n    \"EventData\": {\"name\": \"test.user13\"},\r\n    \"ReferenceName\": \"sale.id\",\r\n    \"ReferenceValue\": \"abd1238\"\r\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/TriggerEvent",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"TriggerEvent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-token-get-status",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "x-forwarded-for",
+								"value": "3.3.3.3",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "postman-client-admin",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "P@ssw0rdP@ssw0rd",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "simplehooks_api.get_event_instance_status",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{simple-hoosks-identity-baseUrl}}/connect/token",
+							"host": [
+								"{{simple-hoosks-identity-baseUrl}}"
+							],
+							"path": [
+								"connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AuthApi-read-eventinstance-status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{mytoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/eventinstance/get-status?businessid={{event-instance-business-id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"eventinstance",
+								"get-status"
+							],
+							"query": [
+								{
+									"key": "businessid",
+									"value": "{{event-instance-business-id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-token-load-definitions",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "x-forwarded-for",
+								"value": "3.3.3.3",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "postman-client-admin",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "P@ssw0rdP@ssw0rd",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "simplehooks_api.load_definitions",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{simple-hoosks-identity-baseUrl}}/connect/token",
+							"host": [
+								"{{simple-hoosks-identity-baseUrl}}"
+							],
+							"path": [
+								"connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AuthApi-read definitions",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{mytoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/definitions/load-definitions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"definitions",
+								"load-definitions"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "debug-post-event-to-sample-listener-2",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"data\": {\r\n    \"key1\": \"value1\",\r\n    \"key2\": \"value2\",\r\n    \"key3\": \"value3\"\r\n  },\r\n  \"simpleHooksMetadata\": { \r\n      \"eventBusinessId\": \"a600192f-815D-40DE-A928-3B1FE2B3E547\",\r\n      \"eventDefinitionName\": \"exampleEvent\"\r\n  }\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "simple-hooks-identity",
+			"item": [
+				{
+					"name": "simple-hooks-identity-config",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "service-api",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "supersecret",
+									"type": "text"
+								},
+								{
+									"key": "token",
+									"value": "{{mytoken}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{simple-hoosks-identity-baseUrl}}/.well-known/openid-configuration",
+							"host": [
+								"{{simple-hoosks-identity-baseUrl}}"
+							],
+							"path": [
+								".well-known",
+								"openid-configuration"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "https://simplehookssamplelistener.dev.local:5011/api/sample",
-					"protocol": "https",
-					"host": [
-						"simplehookssamplelistener",
-						"dev",
-						"local"
-					],
-					"port": "5011",
-					"path": [
-						"api",
-						"sample"
-					]
+				{
+					"name": "simple-hooks-identity-jwks",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "service-api",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "supersecret",
+									"type": "text"
+								},
+								{
+									"key": "token",
+									"value": "{{mytoken}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{simple-hoosks-identity-baseUrl}}/.well-known/jwks",
+							"host": [
+								"{{simple-hoosks-identity-baseUrl}}"
+							],
+							"path": [
+								".well-known",
+								"jwks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-token-trigger-events",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "x-forwarded-for",
+								"value": "3.3.3.3",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "postman-client-admin",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "P@ssw0rdP@ssw0rd",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "simplehooks_api.trigger_event",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{simple-hoosks-identity-baseUrl}}/connect/token",
+							"host": [
+								"{{simple-hoosks-identity-baseUrl}}"
+							],
+							"path": [
+								"connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-token-get-status",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "x-forwarded-for",
+								"value": "3.3.3.3",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "postman-client-admin",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "P@ssw0rdP@ssw0rd",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "simplehooks_api.get_event_instance_status",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{simple-hoosks-identity-baseUrl}}/connect/token",
+							"host": [
+								"{{simple-hoosks-identity-baseUrl}}"
+							],
+							"path": [
+								"connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-token-load-definitions",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "x-forwarded-for",
+								"value": "3.3.3.3",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "postman-client-admin",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "P@ssw0rdP@ssw0rd",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "simplehooks_api.load_definitions",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{simple-hoosks-identity-baseUrl}}/connect/token",
+							"host": [
+								"{{simple-hoosks-identity-baseUrl}}"
+							],
+							"path": [
+								"connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "validate-token-for-simple-hooks-api",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "X-Forwarded-For",
+								"value": "3.3.3.3",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "simplehooks_api",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "P@ssw0rdP@ssw0rd",
+									"type": "text"
+								},
+								{
+									"key": "token",
+									"value": "{{mytoken}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{simple-hoosks-identity-baseUrl}}/connect/introspect",
+							"host": [
+								"{{simple-hoosks-identity-baseUrl}}"
+							],
+							"path": [
+								"connect",
+								"introspect"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "validate-token-for-simple-hooks",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "X-Forwarded-For",
+								"value": "3.3.3.3",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "postman-client-admin",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "P@ssw0rdP@ssw0rd",
+									"type": "text"
+								},
+								{
+									"key": "token",
+									"value": "{{mytoken}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{simple-hoosks-identity-baseUrl}}/connect/introspect",
+							"host": [
+								"{{simple-hoosks-identity-baseUrl}}"
+							],
+							"path": [
+								"connect",
+								"introspect"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
+		},
+		{
+			"name": "sample-listener",
+			"item": [
+				{
+					"name": "check-sample-listener",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{sample-listener-baseUrl}}/api/sample",
+							"host": [
+								"{{sample-listener-baseUrl}}"
+							],
+							"path": [
+								"api",
+								"sample"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post-event-to-sample-listener",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"data\": {\r\n    \"key1\": \"value1\",\r\n    \"key2\": \"value2\",\r\n    \"key3\": \"value3\"\r\n  },\r\n  \"simpleHooksMetadata\": { \r\n    \"eventDefinitionId\": 1,\r\n    \"eventDefinitionName\": \"Test Event\",\r\n    \"eventBusinessId\": \"88878721-0a73-4c9d-9b63-aedb28ef22f1\",\r\n    \"eventCreateDate\": \"2025-10-10T19:21:29.31\",\r\n    \"eventReferenceName\": \"sale.id\",\r\n    \"eventReferenceValue\": \"abd2003\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{sample-listener-baseUrl}}/api/sample",
+							"host": [
+								"{{sample-listener-baseUrl}}"
+							],
+							"path": [
+								"api",
+								"sample"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "event-instance-business-id",
+			"value": ""
+		},
+		{
+			"key": "simple-hoosks-identity-baseUrl",
+			"value": ""
+		},
+		{
+			"key": "mytoken",
+			"value": "",
+			"type": "default"
 		}
 	]
 }
