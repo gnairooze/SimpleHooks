@@ -21,9 +21,8 @@ from typing import List, Dict, Optional
 
 
 class ReleaseAutomation:
-    def __init__(self, new_version: str, github_token: Optional[str] = None, docker_registry: str = "gnairooze"):
+    def __init__(self, new_version: str, docker_registry: str = "gnairooze"):
         self.new_version = new_version
-        self.github_token = github_token
         self.docker_registry = docker_registry
         self.root_path = Path.cwd()
         self.code_path = self.root_path / "code"
@@ -181,12 +180,6 @@ class ReleaseAutomation:
         """Steps 11-18: Create GitHub release and upload compressed files"""
         print(f"\n=== Steps 11-18: Creating GitHub release ===")
         
-        if not self.github_token:
-            print("Warning: No GitHub token provided. Skipping GitHub release creation.")
-            print("Please create the release manually and upload the compressed files.")
-            self._create_compressed_files()
-            return
-        
         # Create compressed files
         self._create_compressed_files()
         
@@ -325,7 +318,6 @@ class ReleaseAutomation:
 def main():
     parser = argparse.ArgumentParser(description="SimpleHooks Release Automation")
     parser.add_argument("version", help="New version number (e.g., 2.8.3)")
-    parser.add_argument("--github-token", help="GitHub token for release creation")
     parser.add_argument("--docker-registry", default="gnairooze", help="Docker registry username")
     parser.add_argument("--steps", nargs="+", 
                        choices=["readme", "assemblies", "commit", "publish", "github", "docker"],
@@ -347,7 +339,6 @@ def main():
     # Create release automation instance
     automation = ReleaseAutomation(
         new_version=args.version,
-        github_token=args.github_token,
         docker_registry=args.docker_registry
     )
     
