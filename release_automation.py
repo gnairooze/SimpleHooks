@@ -25,7 +25,12 @@ class ReleaseAutomation:
         self.new_version = new_version
         self.docker_registry = docker_registry
         self.root_path = Path.cwd()
-        self.code_path = self.root_path / "code"
+
+        # if root_path not ending with code then add it to code_path 
+        if not str(self.root_path).endswith("code"):
+            self.code_path = self.root_path / "code"
+        else:
+            self.code_path = self.root_path
         
         # Project configurations
         self.projects = {
@@ -244,19 +249,21 @@ class ReleaseAutomation:
             dockerfile_path = project_path / "Dockerfile"
             
             if not dockerfile_path.exists():
-                print(f"Warning: Dockerfile not found for {project_name}")
+                print(f"Warning: Dockerfile not found for {project_name} in {dockerfile_path}")
                 continue
             
             # Build Docker image with version tag
             version_tag = f"{self.docker_registry}/simple-hooks:{docker_tag}-{self.new_version}"
             latest_tag = f"{self.docker_registry}/simple-hooks:{docker_tag}-latest"
             
-            # Build image
+            # Build image with dockerfile path and current directory as context
+
             build_cmd = [
                 "docker", "build",
+                "-f", str(dockerfile_path),
                 "-t", version_tag,
                 "-t", latest_tag,
-                str(project_path)
+                "."
             ]
             
             try:
