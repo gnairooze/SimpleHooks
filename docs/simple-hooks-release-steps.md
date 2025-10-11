@@ -1,11 +1,11 @@
 # simple hooks release steps
 
-1. set new version
+1. readme file with the new version
 2. update SimpleHooks.Web assembly with the new version
 3. update SimpleHooks.AuthApi assembly with the new version
 4. update SimpleHooks.Server assembly with the new version
 5. update SimpleHooks.Assist assembly with the new version
-6. update readme file with the new version
+6. commit and push the changes to the main branch
 7. publish SimpleHooks.Web for win-x64
 8. publish SimpleHooks.AuthApi for win-x64
 9. publish SimpleHooks.Server for win-x64

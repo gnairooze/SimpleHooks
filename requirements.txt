@@ -1,0 +1,8 @@
+# No external Python dependencies required
+# This script uses only standard library modules:
+# - os, sys, subprocess, json, re, argparse, zipfile, pathlib, typing
+
+# Optional dependencies for enhanced functionality:
+# - Install GitHub CLI for automated release creation: https://cli.github.com/
+# - Install Docker for container operations: https://docker.com/
+# - Install .NET 8.0 SDK for project publishing: https://dotnet.microsoft.com/
