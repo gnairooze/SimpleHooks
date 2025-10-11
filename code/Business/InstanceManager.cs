@@ -520,6 +520,8 @@ namespace SimpleTools.SimpleHooks.Business
             {
                 result = this._httpClient.Post(listenerInstance.Definition.Url, listenerInstance.Definition.Headers,
                     eventData, listenerInstance.Definition.Timeout);
+
+                parameters.Add("result", result.ToString());
             }
             catch (HttpRequestException e)
             {
@@ -532,10 +534,10 @@ namespace SimpleTools.SimpleHooks.Business
                         HttpCode = 0,
                         Body = "null result. created in catch HttpRequestException block"
                     };
+
+                    parameters.Add("result", result.ToString());
                 }
-
-                parameters.Add("result", result.ToString());
-
+                
                 log.LogType = LogModel.LogTypes.Error;
                 log.Counter++;
                 log.Step = "execute listener - IHttpClient.Post";
@@ -555,9 +557,9 @@ namespace SimpleTools.SimpleHooks.Business
                         HttpCode = 0,
                         Body = "null result. created in catch Exception block"
                     };
-                }
 
-                parameters.Add("result", result.ToString());
+                    parameters.Add("result", result.ToString());
+                }
 
                 log.LogType = LogModel.LogTypes.Error;
                 log.Counter++;
