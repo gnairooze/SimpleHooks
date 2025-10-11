@@ -328,7 +328,7 @@ def main():
     parser.add_argument("--github-token", help="GitHub token for release creation")
     parser.add_argument("--docker-registry", default="gnairooze", help="Docker registry username")
     parser.add_argument("--steps", nargs="+", 
-                       choices=["version", "assemblies", "readme", "publish", "github", "docker"],
+                       choices=["readme", "assemblies", "commit", "publish", "github", "docker"],
                        help="Specific steps to run (default: all)")
     parser.add_argument("--dry-run", action="store_true", help="Show what would be done without executing")
     
