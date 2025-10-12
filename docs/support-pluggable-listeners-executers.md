@@ -4,7 +4,7 @@
 
 allow simple hooks to call authenticated endpoints. allow multiple authentication methods using plugins approach. first will support bearer token.
 
-## technical
+## technical details
 
 the listener execution logic in Business/InstanceManager.cs method ExecuteListener will be refactored to be based on plugins.
 every listener definition will have a type that will state how listener execution is handled by which plugin.
@@ -47,3 +47,9 @@ In TypeA listener plugin, the ExecuteAsync method will first read the options pa
 4. Scope: optional
 
 then it will call the identity provider url with client id, client secret, and scope if exists to get the token. then it will add the token to listener headers as `Authorization: Bearer <token>`. then it will call the listener endpoint with event data, listener headers, and timeout. finally, it will return the listener result.
+
+## technology stack
+
+- .net 8
+- HttpClient.Simple for making http calls
+- System.Text.Json for json serialization and deserialization
