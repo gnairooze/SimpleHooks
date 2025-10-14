@@ -1,0 +1,91 @@
+name: Build and Publish
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        runtime: [linux-x64, win-x64]
+        project: 
+          - { name: 'SimpleHooks.Web', path: 'code/SimpleHooks.Web/SimpleHooks.Web.csproj' }
+          - { name: 'SimpleHooks.AuthApi', path: 'code/SimpleHooks.AuthApi/SimpleHooks.AuthApi.csproj' }
+          - { name: 'SimpleHooks.Server', path: 'code/SimpleHooks.Server/SimpleHooks.Server.csproj' }
+          - { name: 'SimpleHooks.Assist', path: 'code/SimpleHooks.Assist/SimpleHooks.Assist.csproj' }
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: Restore dependencies
+      run: dotnet restore **/*.sln
+    
+    - name: Build ${{ matrix.project.name }}
+      run: dotnet build ${{ matrix.project.path }} --configuration Release --no-restore
+    
+    - name: Publish ${{ matrix.project.name }} (${{ matrix.runtime }})
+      run: |
+        dotnet publish ${{ matrix.project.path }} \
+          --configuration Release \
+          --self-contained true \
+          --runtime ${{ matrix.runtime }} \
+          --output ./publish/${{ matrix.runtime }}/${{ matrix.project.name }} \
+          --no-restore
+    
+    - name: Archive ${{ matrix.project.name }} (${{ matrix.runtime }})
+      run: |
+        cd ./publish/${{ matrix.runtime }}/${{ matrix.project.name }}
+        zip -r ../../../${{ matrix.project.name }}-${{ matrix.runtime }}.zip .
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.project.name }}-${{ matrix.runtime }}
+        path: ${{ matrix.project.name }}-${{ matrix.runtime }}.zip
+        retention-days: 30
+
+  publish-artifacts:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: artifacts
+    
+    - name: Organize artifacts by platform
+      run: |
+        mkdir -p simple-hooks-linux-x64
+        mkdir -p simple-hooks-win-x64
+        
+        # Move Linux artifacts
+        find artifacts -name "*-linux-x64.zip" -exec cp {} simple-hooks-linux-x64/ \;
+        
+        # Move Windows artifacts
+        find artifacts -name "*-win-x64.zip" -exec cp {} simple-hooks-win-x64/ \;
+    
+    - name: Upload Linux x64 artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: simple-hooks-linux-x64
+        path: simple-hooks-linux-x64/
+        retention-days: 90
+    
+    - name: Upload Windows x64 artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: simple-hooks-win-x64
+        path: simple-hooks-win-x64/
+        retention-days: 90
