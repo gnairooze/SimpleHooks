@@ -1,0 +1,193 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: 'Restore NuGet packages'
+  inputs: 
+    command: restore
+    projects: '**/*.sln'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build SimpleHooks.Web'
+  inputs:
+    command: 'build'
+    projects: 'code/SimpleHooks.Web/SimpleHooks.Web.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build SimpleHooks.AuthApi'
+  inputs:
+    command: 'build'
+    projects: 'code/SimpleHooks.AuthApi/SimpleHooks.AuthApi.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build SimpleHooks.Server'
+  inputs:
+    command: 'build'
+    projects: 'code/SimpleHooks.Server/SimpleHooks.Server.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build SimpleHooks.Assist'
+  inputs:
+    command: 'build'
+    projects: 'code/SimpleHooks.Assist/SimpleHooks.Assist.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish SimpleHooks.Web (Linux x64)'
+  inputs:
+    command: 'publish'
+    projects: 'code/SimpleHooks.Web/SimpleHooks.Web.csproj'
+    publishWebProjects: false
+    arguments: '--configuration $(buildConfiguration) --self-contained true --runtime linux-x64 --output $(build.artifactStagingDirectory)/temp/linux-x64/SimpleHooks.Web'
+    zipAfterPublish: false
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish SimpleHooks.AuthApi (Linux x64)'
+  inputs:
+    command: 'publish'
+    projects: 'code/SimpleHooks.AuthApi/SimpleHooks.AuthApi.csproj'
+    publishWebProjects: false
+    arguments: '--configuration $(buildConfiguration) --self-contained true --runtime linux-x64 --output $(build.artifactStagingDirectory)/temp/linux-x64/SimpleHooks.AuthApi'
+    zipAfterPublish: false
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish SimpleHooks.Server (Linux x64)'
+  inputs:
+    command: 'publish'
+    projects: 'code/SimpleHooks.Server/SimpleHooks.Server.csproj'
+    publishWebProjects: false
+    arguments: '--configuration $(buildConfiguration) --self-contained true --runtime linux-x64 --output $(build.artifactStagingDirectory)/temp/linux-x64/SimpleHooks.Server'
+    zipAfterPublish: false
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish SimpleHooks.Assist (Linux x64)'
+  inputs:
+    command: 'publish'
+    projects: 'code/SimpleHooks.Assist/SimpleHooks.Assist.csproj'
+    publishWebProjects: false
+    arguments: '--configuration $(buildConfiguration) --self-contained true --runtime linux-x64 --output $(build.artifactStagingDirectory)/temp/linux-x64/SimpleHooks.Assist'
+    zipAfterPublish: false
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish SimpleHooks.Web (Windows x64)'
+  inputs:
+    command: 'publish'
+    projects: 'code/SimpleHooks.Web/SimpleHooks.Web.csproj'
+    publishWebProjects: false
+    arguments: '--configuration $(buildConfiguration) --self-contained true --runtime win-x64 --output $(build.artifactStagingDirectory)/temp/win-x64/SimpleHooks.Web'
+    zipAfterPublish: false
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish SimpleHooks.AuthApi (Windows x64)'
+  inputs:
+    command: 'publish'
+    projects: 'code/SimpleHooks.AuthApi/SimpleHooks.AuthApi.csproj'
+    publishWebProjects: false
+    arguments: '--configuration $(buildConfiguration) --self-contained true --runtime win-x64 --output $(build.artifactStagingDirectory)/temp/win-x64/SimpleHooks.AuthApi'
+    zipAfterPublish: false
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish SimpleHooks.Server (Windows x64)'
+  inputs:
+    command: 'publish'
+    projects: 'code/SimpleHooks.Server/SimpleHooks.Server.csproj'
+    publishWebProjects: false
+    arguments: '--configuration $(buildConfiguration) --self-contained true --runtime win-x64 --output $(build.artifactStagingDirectory)/temp/win-x64/SimpleHooks.Server'
+    zipAfterPublish: false
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish SimpleHooks.Assist (Windows x64)'
+  inputs:
+    command: 'publish'
+    projects: 'code/SimpleHooks.Assist/SimpleHooks.Assist.csproj'
+    publishWebProjects: false
+    arguments: '--configuration $(buildConfiguration) --self-contained true --runtime win-x64 --output $(build.artifactStagingDirectory)/temp/win-x64/SimpleHooks.Assist'
+    zipAfterPublish: false
+
+- task: ArchiveFiles@2
+  displayName: 'Archive SimpleHooks.Web (Linux x64)'
+  inputs:
+    rootFolderOrFile: '$(build.artifactStagingDirectory)/temp/linux-x64/SimpleHooks.Web'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(build.artifactStagingDirectory)/linux-x64/SimpleHooks.Web-linux-x64.zip'
+
+- task: ArchiveFiles@2
+  displayName: 'Archive SimpleHooks.AuthApi (Linux x64)'
+  inputs:
+    rootFolderOrFile: '$(build.artifactStagingDirectory)/temp/linux-x64/SimpleHooks.AuthApi'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(build.artifactStagingDirectory)/linux-x64/SimpleHooks.AuthApi-linux-x64.zip'
+
+- task: ArchiveFiles@2
+  displayName: 'Archive SimpleHooks.Server (Linux x64)'
+  inputs:
+    rootFolderOrFile: '$(build.artifactStagingDirectory)/temp/linux-x64/SimpleHooks.Server'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(build.artifactStagingDirectory)/linux-x64/SimpleHooks.Server-linux-x64.zip'
+
+- task: ArchiveFiles@2
+  displayName: 'Archive SimpleHooks.Assist (Linux x64)'
+  inputs:
+    rootFolderOrFile: '$(build.artifactStagingDirectory)/temp/linux-x64/SimpleHooks.Assist'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(build.artifactStagingDirectory)/linux-x64/SimpleHooks.Assist-linux-x64.zip'
+
+- task: ArchiveFiles@2
+  displayName: 'Archive SimpleHooks.Web (Windows x64)'
+  inputs:
+    rootFolderOrFile: '$(build.artifactStagingDirectory)/temp/win-x64/SimpleHooks.Web'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(build.artifactStagingDirectory)/win-x64/SimpleHooks.Web-win-x64.zip'
+
+- task: ArchiveFiles@2
+  displayName: 'Archive SimpleHooks.AuthApi (Windows x64)'
+  inputs:
+    rootFolderOrFile: '$(build.artifactStagingDirectory)/temp/win-x64/SimpleHooks.AuthApi'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(build.artifactStagingDirectory)/win-x64/SimpleHooks.AuthApi-win-x64.zip'
+
+- task: ArchiveFiles@2
+  displayName: 'Archive SimpleHooks.Server (Windows x64)'
+  inputs:
+    rootFolderOrFile: '$(build.artifactStagingDirectory)/temp/win-x64/SimpleHooks.Server'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(build.artifactStagingDirectory)/win-x64/SimpleHooks.Server-win-x64.zip'
+
+- task: ArchiveFiles@2
+  displayName: 'Archive SimpleHooks.Assist (Windows x64)'
+  inputs:
+    rootFolderOrFile: '$(build.artifactStagingDirectory)/temp/win-x64/SimpleHooks.Assist'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(build.artifactStagingDirectory)/win-x64/SimpleHooks.Assist-win-x64.zip'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Linux x64 Artifacts'
+  inputs:
+    pathToPublish: '$(build.artifactStagingDirectory)/linux-x64'
+    artifactName: 'sinple-hooks-linux-x64'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Windows x64 Artifacts'
+  inputs:
+    pathToPublish: '$(build.artifactStagingDirectory)/win-x64'
+    artifactName: 'simple-hooks-win-x64'
