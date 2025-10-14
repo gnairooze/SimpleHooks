@@ -17,7 +17,6 @@ jobs:
           - { name: 'SimpleHooks.Web', path: 'code/SimpleHooks.Web/SimpleHooks.Web.csproj' }
           - { name: 'SimpleHooks.AuthApi', path: 'code/SimpleHooks.AuthApi/SimpleHooks.AuthApi.csproj' }
           - { name: 'SimpleHooks.Server', path: 'code/SimpleHooks.Server/SimpleHooks.Server.csproj' }
-          - { name: 'SimpleHooks.Assist', path: 'code/SimpleHooks.Assist/SimpleHooks.Assist.csproj' }
 
     steps:
     - uses: actions/checkout@v4
@@ -54,8 +53,41 @@ jobs:
         path: ${{ matrix.project.name }}-${{ matrix.runtime }}.zip
         retention-days: 30
 
+  build-library:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: Restore dependencies
+      run: dotnet restore **/*.sln
+    
+    - name: Build SimpleHooks.Assist
+      run: dotnet build code/SimpleHooks.Assist/SimpleHooks.Assist.csproj --configuration Release --no-restore
+    
+    - name: Pack SimpleHooks.Assist
+      run: dotnet pack code/SimpleHooks.Assist/SimpleHooks.Assist.csproj --configuration Release --output ./library-package --no-build
+    
+    - name: Copy library files
+      run: |
+        mkdir -p ./library-artifact
+        cp -r code/SimpleHooks.Assist/bin/Release/netstandard2.0/* ./library-artifact/
+        cp ./library-package/*.nupkg ./library-artifact/ 2>/dev/null || true
+    
+    - name: Upload SimpleHooks.Assist artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: SimpleHooks.Assist-library
+        path: ./library-artifact/
+        retention-days: 90
+
   publish-artifacts:
-    needs: build
+    needs: [build, build-library]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     
@@ -88,4 +120,11 @@ jobs:
       with:
         name: simple-hooks-win-x64
         path: simple-hooks-win-x64/
+        retention-days: 90
+    
+    - name: Upload SimpleHooks.Assist library
+      uses: actions/upload-artifact@v4
+      with:
+        name: simple-hooks-assist-library
+        path: artifacts/SimpleHooks.Assist-library/
         retention-days: 90
