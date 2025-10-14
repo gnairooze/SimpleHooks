@@ -184,7 +184,7 @@ steps:
   displayName: 'Publish Linux x64 Artifacts'
   inputs:
     pathToPublish: '$(build.artifactStagingDirectory)/linux-x64'
-    artifactName: 'sinple-hooks-linux-x64'
+    artifactName: 'simple-hooks-linux-x64'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Windows x64 Artifacts'
