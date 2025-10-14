@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <RuntimeIdentifiers>linux-x64;win-x64</RuntimeIdentifiers>
     <UserSecretsId>7d7fc977-34a0-4070-ae69-aca40b2b80c7</UserSecretsId>
     <AssemblyVersion>2.8.3</AssemblyVersion>
     <FileVersion>2.8.3</FileVersion>
