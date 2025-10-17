@@ -58,6 +58,10 @@ builder.Services.AddSingleton<SimpleTools.SimpleHooks.HttpClient.Interface.IHttp
 builder.Services.AddSingleton<SimpleTools.SimpleHooks.Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.EventDefinition>, SimpleTools.SimpleHooks.Repo.SQL.EventDefinitionDataRepo>();
 builder.Services.AddSingleton<SimpleTools.SimpleHooks.Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.ListenerDefinition>, SimpleTools.SimpleHooks.Repo.SQL.ListenerDefinitionDataRepo>();
 builder.Services.AddSingleton<SimpleTools.SimpleHooks.Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.EventDefinitionListenerDefinition>, SimpleTools.SimpleHooks.Repo.SQL.EventIistenerDefinitionDataRepo>();
+
+builder.Services.AddSingleton<SimpleTools.SimpleHooks.Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.ListenerType>, SimpleTools.SimpleHooks.Repo.SQL.ListenerTypeDataRepo>();
+builder.Services.AddSingleton<SimpleTools.SimpleHooks.Business.ListenerPluginManager>();
+
 builder.Services.AddSingleton<SimpleTools.SimpleHooks.Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.AppOption>, SimpleTools.SimpleHooks.Repo.SQL.AppOptionDataRepo>();
 
 builder.Services.AddControllers();

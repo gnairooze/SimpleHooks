@@ -95,6 +95,12 @@ namespace SimpleTools.SimpleHooks.Repo.SQL
                         case Constants.FieldTrialCount:
                             definition.TrialCount = (int)reader[counter];
                             break;
+                        case Constants.FieldTypeId:
+                            definition.TypeId = (int)reader[counter];
+                            break;
+                        case Constants.FieldTypeOptions:
+                            definition.TypeOptions = (string)reader[counter];
+                            break;
                     }
                     #endregion
 

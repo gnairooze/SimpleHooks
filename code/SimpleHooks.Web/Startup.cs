@@ -108,6 +108,9 @@ namespace SimpleTools.SimpleHooks.Web
             services.AddSingleton<Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.EventDefinition>, Repo.SQL.EventDefinitionDataRepo>();
             services.AddSingleton<Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.ListenerDefinition>, Repo.SQL.ListenerDefinitionDataRepo>();
             services.AddSingleton<Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.EventDefinitionListenerDefinition>, Repo.SQL.EventIistenerDefinitionDataRepo>();
+            services.AddSingleton<SimpleTools.SimpleHooks.Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.ListenerType>, SimpleTools.SimpleHooks.Repo.SQL.ListenerTypeDataRepo>();
+            services.AddSingleton<SimpleTools.SimpleHooks.Business.ListenerPluginManager>();
+
             services.AddSingleton<Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.AppOption>, Repo.SQL.AppOptionDataRepo>();
 
             services.AddControllersWithViews();

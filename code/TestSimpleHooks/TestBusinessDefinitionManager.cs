@@ -1,6 +1,7 @@
 ﻿using System;
 using SimpleTools.SimpleHooks.Business;
 using SimpleTools.SimpleHooks.Log.Console;
+using SimpleTools.SimpleHooks.Repo.SQL;
 using SimpleTools.SimpleHooks.TestSimpleHooks.Repos;
 
 namespace SimpleTools.SimpleHooks.TestSimpleHooks
@@ -9,7 +10,9 @@ namespace SimpleTools.SimpleHooks.TestSimpleHooks
     {
         public static void TestLoadDefinition1()
         {
-            DefinitionManager manager = new(new Logger(), new EventDefRepo(), new ListenerDefRepo(), new EventDefListenerDefRepo(), new AppOptionsRepo(), new ConnectionRepo());
+            var logger = new Logger();
+
+            DefinitionManager manager = new(logger, new EventDefRepo(), new ListenerDefRepo(), new EventDefListenerDefRepo(), new AppOptionsRepo(), new ListenerTypeDataRepo(), new ConnectionRepo(), new ListenerPluginManager(logger));
 
             manager.LoadDefinitions();
 

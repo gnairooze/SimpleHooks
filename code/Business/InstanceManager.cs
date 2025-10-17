@@ -21,6 +21,7 @@ namespace SimpleTools.SimpleHooks.Business
         private readonly IDataRepository<Models.Instance.EventInstance> _eventInstanceRepo;
         private readonly IDataRepository<Models.Instance.ListenerInstance> _listenerInstanceRepo;
         private readonly IHttpClient _httpClient;
+        private readonly ListenerPluginManager _listenerPluginManager;
         private readonly DefinitionManager _definitionManager;
         private readonly Guid _logCorrelation = Guid.NewGuid();
 
@@ -38,7 +39,9 @@ namespace SimpleTools.SimpleHooks.Business
             IHttpClient httpClient, 
             IDataRepository<Models.Definition.EventDefinition> eventDefRepo, 
             IDataRepository<Models.Definition.ListenerDefinition> listenerDefRepo, 
-            IDataRepository<Models.Definition.EventDefinitionListenerDefinition> eventDefListenerDefRepo, 
+            IDataRepository<Models.Definition.EventDefinitionListenerDefinition> eventDefListenerDefRepo,
+            IDataRepository<Models.Definition.ListenerType> listenerTypeRepo,
+            ListenerPluginManager listenerPluginManager,
             IDataRepository<Models.Definition.AppOption> appOptionRepo
             )
         {
@@ -51,7 +54,7 @@ namespace SimpleTools.SimpleHooks.Business
             
             this._httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
-            this._definitionManager = new DefinitionManager(logger, eventDefRepo, listenerDefRepo, eventDefListenerDefRepo, appOptionRepo, connectionRepo);
+            this._definitionManager = new DefinitionManager(logger, eventDefRepo, listenerDefRepo, eventDefListenerDefRepo, appOptionRepo, listenerTypeRepo, connectionRepo, listenerPluginManager);
             
             _definitionManager.DefitionsLoaded += OnDefinitionsLoaded;
 

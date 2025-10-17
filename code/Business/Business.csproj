@@ -13,6 +13,7 @@
     <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
     <ProjectReference Include="..\Log.Interface\Log.Interface.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
+    <ProjectReference Include="..\SimpleHooks.ListenerInterfaces\SimpleHooks.ListenerInterfaces.csproj" />
   </ItemGroup>
 
 </Project>
