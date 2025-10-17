@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SimpleTools.SimpleHooks.ListenerInterfaces;
 
 namespace SimpleTools.SimpleHooks.Models.Definition
 {
@@ -38,7 +39,7 @@ namespace SimpleTools.SimpleHooks.Models.Definition
         /// Not persisted to database - runtime only.
         /// </summary>
         [Newtonsoft.Json.JsonIgnore]
-        public object ListenerPlugin { get; set; }
+        public IListener ListenerPlugin { get; set; }
 
         public override string ToString()
         {
