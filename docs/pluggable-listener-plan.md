@@ -163,6 +163,13 @@ Server Startup
 ```csharp
 public interface IListener
 {
+    // Properties to be set during plugin initialization
+    string Url { get; set; }
+    int Timeout { get; set; }
+    List<string> Headers { get; set; }
+    string TypeOptionsValue { get; set; }
+    
+    // Method to execute the listener
     Task<ListenerResult> ExecuteAsync(
         string eventData,
         string typeOptions
@@ -176,6 +183,15 @@ public class ListenerResult
     public SortedList<int, LogModel> Logs { get; set; } = new SortedList<int, LogModel>();
 }
 ```
+
+**Property Descriptions:**
+
+- `Url`: The target URL for the listener webhook call
+- `Timeout`: Timeout duration in minutes for the HTTP request
+- `Headers`: List of HTTP headers to include in the request
+- `TypeOptionsValue`: Plugin-specific configuration value read from environment variable
+
+These properties are set by `ListenerPluginManager.InitializePlugin()` after the plugin instance is created, allowing the plugin to have access to all necessary configuration during execution.
 
 **Dependencies:**
 
@@ -513,7 +529,8 @@ public DefinitionManager(
 
 - Handle plugin lifecycle and error handling
 - Dynamically load plugin DLLs using reflection
-- Create and initialize plugin instances
+- Create plugin instances with `Activator.CreateInstance()`
+- Initialize plugin properties directly (no reflection needed for properties)
 - Cache plugin types for performance
 - Validate plugin implementations
 
@@ -592,8 +609,11 @@ namespace SimpleTools.SimpleHooks.Business
                         $"Type does not implement IListener interface.");
                 }
 
-                // Initialize plugin properties if it has a constructor or init method
-                InitializePlugin(pluginInstance, url, timeout, headers, typeOptionsValue);
+                // Set properties directly
+                pluginInstance.Url = url;
+                pluginInstance.Timeout = timeout;
+                pluginInstance.Headers = headers;
+                pluginInstance.TypeOptionsValue = typeOptionsValue;
 
                 log = GetLogModelMethodEnd(log);
                 _logger.Add(log);
@@ -634,49 +654,6 @@ namespace SimpleTools.SimpleHooks.Business
 
             return pluginType;
         }
-
-        private void InitializePlugin(IListener plugin, string url, int timeout, List<string> headers, string typeOptionsValue)
-        {
-            // Use reflection to set properties if the plugin has them
-            Type pluginType = plugin.GetType();
-
-            // Set Url property if exists
-            PropertyInfo urlProperty = pluginType.GetProperty("Url");
-            if (urlProperty != null && urlProperty.CanWrite)
-            {
-                urlProperty.SetValue(plugin, url);
-            }
-
-            // Set Timeout property if exists
-            PropertyInfo timeoutProperty = pluginType.GetProperty("Timeout");
-            if (timeoutProperty != null && timeoutProperty.CanWrite)
-            {
-                timeoutProperty.SetValue(plugin, timeout);
-            }
-
-            // Set Headers property if exists
-            PropertyInfo headersProperty = pluginType.GetProperty("Headers");
-            if (headersProperty != null && headersProperty.CanWrite)
-            {
-                headersProperty.SetValue(plugin, headers);
-            }
-
-            // Set TypeOptionsValue property if exists
-            PropertyInfo typeOptionsProperty = pluginType.GetProperty("TypeOptionsValue");
-            if (typeOptionsProperty != null && typeOptionsProperty.CanWrite)
-            {
-                typeOptionsProperty.SetValue(plugin, typeOptionsValue);
-            }
-
-            // Alternatively, look for an Initialize method
-            MethodInfo initMethod = pluginType.GetMethod("Initialize", 
-                new Type[] { typeof(string), typeof(int), typeof(List<string>), typeof(string) });
-            
-            if (initMethod != null)
-            {
-                initMethod.Invoke(plugin, new object[] { url, timeout, headers, typeOptionsValue });
-            }
-        }
     }
 }
 ```
@@ -703,57 +680,17 @@ namespace SimpleTools.SimpleHooks.Business
    - Validates that created instance implements `IListener`
    - Throws descriptive exceptions on failure
 
-5. **Plugin Initialization:**
-   - Attempts to set properties via reflection (Url, Timeout, Headers, TypeOptionsValue)
-   - Falls back to calling an `Initialize` method if it exists
-   - Flexible approach supports different plugin implementation styles
-
-6. **Error Handling:**
+5. **Error Handling:**
    - Comprehensive validation of inputs
    - Descriptive exception messages
    - Logging at method entry, exit, and on exceptions
    - Re-throws exceptions to let caller handle appropriately
 
-7. **Logging:**
+6. **Logging:**
    - Inherits from `LogBase` for consistent logging
    - Logs method start with key parameters
    - Logs method end on success
    - Logs exceptions with full details
-
-**Alternative Implementation (Simpler Version):**
-
-If plugins don't need property injection and will receive all parameters in `ExecuteAsync`, a simpler version would be:
-
-```csharp
-public IListener CreatePluginInstance(string path, string url, int timeout, List<string> headers, string typeOptionsValue)
-{
-    try
-    {
-        // Resolve full path
-        string fullPath = Path.IsPathRooted(path) 
-            ? path 
-            : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, path);
-
-        // Load assembly
-        Assembly assembly = Assembly.LoadFrom(fullPath);
-
-        // Find IListener implementation
-        Type listenerType = assembly.GetTypes()
-            .FirstOrDefault(t => typeof(IListener).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
-
-        if (listenerType == null)
-            throw new InvalidOperationException($"No IListener implementation found in {fullPath}");
-
-        // Create and return instance
-        return (IListener)Activator.CreateInstance(listenerType);
-    }
-    catch (Exception ex)
-    {
-        _logger.Add(GetLogModelException(GetLogModelMethodStart("CreatePluginInstance", path, ""), ex));
-        throw;
-    }
-}
-```
 
 **Usage Example:**
 
@@ -789,9 +726,9 @@ listenerDef.ListenerPlugin = plugin;
    - Review loader exceptions for specific missing dependencies
 
 4. **Plugin properties not initialized**
-   - Verify plugin has public settable properties: `Url`, `Timeout`, `Headers`, `TypeOptionsValue`
-   - Or verify plugin has `Initialize(string, int, List<string>, string)` method
-   - Check property names match exactly (case-sensitive)
+   - This should not occur since properties are part of the `IListener` interface
+   - All plugins implementing `IListener` must have these properties
+   - Properties are set directly after instance creation
 
 5. **Environment variable not found**
    - Verify environment variable name in `ListenerDefinition.TypeOptions` is correct
@@ -824,6 +761,101 @@ listenerDef.ListenerPlugin = plugin;
 - Use `HttpClient.Simple` for HTTP calls
 - Handle timeouts and error scenarios. do not throw exceptions, add logs in ListenerResult.Logs and return ListenerResult with Succeeded = false and appropriate message.
 
+**Class Structure:**
+
+```csharp
+using SimpleTools.SimpleHooks.ListenerInterfaces;
+using SimpleTools.SimpleHooks.HttpClient.Interface;
+using SimpleTools.SimpleHooks.Log.Interface;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace SimpleTools.SimpleHooks.ListenerPlugins.Anonymous
+{
+    public class AnonymousListener : IListener
+    {
+        // IListener properties - set by ListenerPluginManager
+        public string Url { get; set; }
+        public int Timeout { get; set; }
+        public List<string> Headers { get; set; }
+        public string TypeOptionsValue { get; set; }
+        
+        private readonly IHttpClient _httpClient;
+        
+        public AnonymousListener()
+        {
+            // Initialize with default HTTP client
+            _httpClient = new SimpleTools.SimpleHooks.HttpClient.Simple.SimpleClient();
+        }
+        
+        public async Task<ListenerResult> ExecuteAsync(string eventData, string typeOptions)
+        {
+            var result = new ListenerResult();
+            int logCounter = 0;
+            
+            try
+            {
+                // Log start
+                result.Logs.Add(logCounter++, new LogModel
+                {
+                    Message = $"Anonymous plugin executing call to {Url}",
+                    CreateDate = DateTime.Now
+                });
+                
+                // Make HTTP call using properties
+                var httpResult = _httpClient.Post(Url, Headers, eventData, Timeout);
+                
+                // Check result
+                if (httpResult.HttpCode >= 200 && httpResult.HttpCode < 300)
+                {
+                    result.Succeeded = true;
+                    result.Message = $"HTTP call succeeded with status code {httpResult.HttpCode}";
+                    
+                    result.Logs.Add(logCounter++, new LogModel
+                    {
+                        Message = $"Success: {httpResult.HttpCode} - {httpResult.Body}",
+                        CreateDate = DateTime.Now
+                    });
+                }
+                else
+                {
+                    result.Succeeded = false;
+                    result.Message = $"HTTP call failed with status code {httpResult.HttpCode}";
+                    
+                    result.Logs.Add(logCounter++, new LogModel
+                    {
+                        Message = $"Failed: {httpResult.HttpCode} - {httpResult.Body}",
+                        CreateDate = DateTime.Now
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Message = $"Exception during execution: {ex.Message}";
+                
+                result.Logs.Add(logCounter++, new LogModel
+                {
+                    Message = $"Exception: {ex.Message}\n{ex.StackTrace}",
+                    CreateDate = DateTime.Now
+                });
+            }
+            
+            return await Task.FromResult(result);
+        }
+    }
+}
+```
+
+**Key Points:**
+
+- Implements all four required properties from `IListener` interface
+- Properties are set by `ListenerPluginManager` after instantiation
+- Uses the properties (`Url`, `Timeout`, `Headers`) in `ExecuteAsync` execution
+- `TypeOptionsValue` not used in Anonymous plugin but must be implemented
+- No constructor parameters needed - default constructor only
+
 #### Task 2.2: TypeA Plugin (Bearer Token Authentication)
 
 **Project**: `SimpleHooks.ListenerPlugins.TypeA`
@@ -836,6 +868,8 @@ listenerDef.ListenerPlugin = plugin;
 - Token caching and refresh logic
 
 **Options JSON Structure:**
+
+The `TypeOptionsValue` property will contain JSON configuration:
 
 ```json
 {
@@ -853,6 +887,249 @@ listenerDef.ListenerPlugin = plugin;
 3. Cache tokens with expiration handling
 4. Add Authorization header to listener requests
 5. Handle token refresh on 401 responses
+
+**Class Structure:**
+
+```csharp
+using SimpleTools.SimpleHooks.ListenerInterfaces;
+using SimpleTools.SimpleHooks.HttpClient.Interface;
+using SimpleTools.SimpleHooks.Log.Interface;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Text.Json;
+
+namespace SimpleTools.SimpleHooks.ListenerPlugins.TypeA
+{
+    public class TypeAListener : IListener
+    {
+        // IListener properties - set by ListenerPluginManager
+        public string Url { get; set; }
+        public int Timeout { get; set; }
+        public List<string> Headers { get; set; }
+        public string TypeOptionsValue { get; set; }
+        
+        private readonly IHttpClient _httpClient;
+        private string _cachedToken;
+        private DateTime _tokenExpiration;
+        
+        public TypeAListener()
+        {
+            _httpClient = new SimpleTools.SimpleHooks.HttpClient.Simple.SimpleClient();
+        }
+        
+        public async Task<ListenerResult> ExecuteAsync(string eventData, string typeOptions)
+        {
+            var result = new ListenerResult();
+            int logCounter = 0;
+            
+            try
+            {
+                // Log start
+                result.Logs.Add(logCounter++, new LogModel
+                {
+                    Message = $"TypeA plugin executing call to {Url}",
+                    CreateDate = DateTime.Now
+                });
+                
+                // Parse TypeOptionsValue to get auth configuration
+                var authConfig = JsonSerializer.Deserialize<TypeAOptions>(TypeOptionsValue);
+                
+                if (authConfig == null || string.IsNullOrWhiteSpace(authConfig.IdentityProviderUrl))
+                {
+                    result.Succeeded = false;
+                    result.Message = "Invalid or missing authentication configuration";
+                    result.Logs.Add(logCounter++, new LogModel
+                    {
+                        Message = "TypeOptionsValue is missing or invalid",
+                        CreateDate = DateTime.Now
+                    });
+                    return result;
+                }
+                
+                // Get bearer token (cached or fresh)
+                string token = await GetBearerToken(authConfig, result, ref logCounter);
+                
+                if (string.IsNullOrWhiteSpace(token))
+                {
+                    result.Succeeded = false;
+                    result.Message = "Failed to obtain bearer token";
+                    return result;
+                }
+                
+                // Add Authorization header
+                var headersWithAuth = new List<string>(Headers ?? new List<string>());
+                headersWithAuth.Add($"Authorization: Bearer {token}");
+                
+                // Make HTTP call
+                var httpResult = _httpClient.Post(Url, headersWithAuth, eventData, Timeout);
+                
+                // Check result
+                if (httpResult.HttpCode >= 200 && httpResult.HttpCode < 300)
+                {
+                    result.Succeeded = true;
+                    result.Message = $"HTTP call succeeded with status code {httpResult.HttpCode}";
+                    
+                    result.Logs.Add(logCounter++, new LogModel
+                    {
+                        Message = $"Success: {httpResult.HttpCode} - {httpResult.Body}",
+                        CreateDate = DateTime.Now
+                    });
+                }
+                else if (httpResult.HttpCode == 401)
+                {
+                    // Token might be expired, try refreshing
+                    result.Logs.Add(logCounter++, new LogModel
+                    {
+                        Message = "Received 401, attempting token refresh",
+                        CreateDate = DateTime.Now
+                    });
+                    
+                    _cachedToken = null; // Invalidate cache
+                    token = await GetBearerToken(authConfig, result, ref logCounter);
+                    
+                    // Retry with new token
+                    headersWithAuth = new List<string>(Headers ?? new List<string>());
+                    headersWithAuth.Add($"Authorization: Bearer {token}");
+                    httpResult = _httpClient.Post(Url, headersWithAuth, eventData, Timeout);
+                    
+                    if (httpResult.HttpCode >= 200 && httpResult.HttpCode < 300)
+                    {
+                        result.Succeeded = true;
+                        result.Message = $"HTTP call succeeded after token refresh: {httpResult.HttpCode}";
+                    }
+                    else
+                    {
+                        result.Succeeded = false;
+                        result.Message = $"HTTP call failed after token refresh: {httpResult.HttpCode}";
+                    }
+                    
+                    result.Logs.Add(logCounter++, new LogModel
+                    {
+                        Message = $"Retry result: {httpResult.HttpCode}",
+                        CreateDate = DateTime.Now
+                    });
+                }
+                else
+                {
+                    result.Succeeded = false;
+                    result.Message = $"HTTP call failed with status code {httpResult.HttpCode}";
+                    
+                    result.Logs.Add(logCounter++, new LogModel
+                    {
+                        Message = $"Failed: {httpResult.HttpCode} - {httpResult.Body}",
+                        CreateDate = DateTime.Now
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Message = $"Exception during execution: {ex.Message}";
+                
+                result.Logs.Add(logCounter++, new LogModel
+                {
+                    Message = $"Exception: {ex.Message}\n{ex.StackTrace}",
+                    CreateDate = DateTime.Now
+                });
+            }
+            
+            return result;
+        }
+        
+        private async Task<string> GetBearerToken(TypeAOptions config, ListenerResult result, ref int logCounter)
+        {
+            // Check cache
+            if (!string.IsNullOrWhiteSpace(_cachedToken) && DateTime.Now < _tokenExpiration)
+            {
+                result.Logs.Add(logCounter++, new LogModel
+                {
+                    Message = "Using cached bearer token",
+                    CreateDate = DateTime.Now
+                });
+                return _cachedToken;
+            }
+            
+            try
+            {
+                // Request new token
+                result.Logs.Add(logCounter++, new LogModel
+                {
+                    Message = $"Requesting bearer token from {config.IdentityProviderUrl}",
+                    CreateDate = DateTime.Now
+                });
+                
+                var tokenRequestBody = $"grant_type=client_credentials&client_id={config.ClientId}&client_secret={config.ClientSecret}&scope={config.Scope}";
+                var tokenHeaders = new List<string> { "Content-Type: application/x-www-form-urlencoded" };
+                
+                var tokenResult = _httpClient.Post(config.IdentityProviderUrl, tokenHeaders, tokenRequestBody, 5);
+                
+                if (tokenResult.HttpCode >= 200 && tokenResult.HttpCode < 300)
+                {
+                    var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(tokenResult.Body);
+                    _cachedToken = tokenResponse.AccessToken;
+                    _tokenExpiration = DateTime.Now.AddSeconds(tokenResponse.ExpiresIn - 60); // Refresh 60 seconds before expiry
+                    
+                    result.Logs.Add(logCounter++, new LogModel
+                    {
+                        Message = "Bearer token obtained successfully",
+                        CreateDate = DateTime.Now
+                    });
+                    
+                    return _cachedToken;
+                }
+                else
+                {
+                    result.Logs.Add(logCounter++, new LogModel
+                    {
+                        Message = $"Failed to obtain token: {tokenResult.HttpCode} - {tokenResult.Body}",
+                        CreateDate = DateTime.Now
+                    });
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Logs.Add(logCounter++, new LogModel
+                {
+                    Message = $"Exception obtaining token: {ex.Message}",
+                    CreateDate = DateTime.Now
+                });
+                return null;
+            }
+        }
+    }
+    
+    // Configuration model
+    public class TypeAOptions
+    {
+        public string IdentityProviderUrl { get; set; }
+        public string ClientId { get; set; }
+        public string ClientSecret { get; set; }
+        public string Scope { get; set; }
+    }
+    
+    // Token response model
+    public class TokenResponse
+    {
+        [System.Text.Json.Serialization.JsonPropertyName("access_token")]
+        public string AccessToken { get; set; }
+        
+        [System.Text.Json.Serialization.JsonPropertyName("expires_in")]
+        public int ExpiresIn { get; set; }
+    }
+}
+```
+
+**Key Points:**
+
+- Implements all four required properties from `IListener` interface
+- Properties are set by `ListenerPluginManager` after instantiation
+- `TypeOptionsValue` contains the OAuth configuration JSON
+- Parses `TypeOptionsValue` in `ExecuteAsync` to get authentication parameters
+- Implements token caching with expiration handling
+- Handles 401 responses with automatic token refresh
+- Uses existing `Headers` property and adds Authorization header for each request
 
 ### Phase 3: Core System Integration
 
