@@ -85,7 +85,7 @@ var listenerDef = new ListenerDefinition
 {
     TypeId = 2, // TypeA plugin
     TypeOptions = "OAUTH_CLIENT_CREDENTIALS", // Environment variable name
-    ListenerPlugin = _listnerPluginManager.CreatePluginInstance(pass Url as string, TypeId as id parameter, timeoutInMinutes as int, headers as List<string>) // in the CreatePluginInstance method, the plugin will be created and initialized with the configuration
+    ListenerPlugin = _listenerPluginManager.CreatePluginInstance(pass Url as string, TypeId as id parameter, timeoutInMinutes as int, headers as List<string>) // in the CreatePluginInstance method, the plugin will be created and initialized with the configuration
     Url = "https://api.example.com/v1/data",
     Headers = new List<string> { "Content-Type: application/json" },
     Timeout = 60,
@@ -109,7 +109,7 @@ await plugin.ExecuteAsync(eventData, typeOptions);
 
 in the plugin, the type options will be parsed and used to authenticate the request. the plugin will be responsible for the authentication logic.
 
-the benefits of passing type options as string parameter to the method instead of persisting it directly in the listener definition is that the type options may contain sensitive information such as client id and client secret. So it is better to use it in the method execution only instead of storing it in the listener definition. So the listener definition object in the memory will not contain sensitive information.
+the benefits of passing type options as string parameter to the method instead of persisting it directly in the listener definition is that the type options may contain sensitive information such as client id and client secret. So it is better to use it in the method execution only instead of storing it in the listener definition. So the listener definition object in the memory will not contain sensitive information for long time.
 
 **New Model to Create:**
 
@@ -134,19 +134,16 @@ The ListenerType model serves as the configuration source for plugin initializat
 
 **Environment Variable Naming Convention:**
 
-- Plugin configuration is read from environment variables named: `{ListenerType.Name}_CONFIG`
-- Example: For ListenerType with Name="TypeA", the system reads `TYPEA_CONFIG` environment variable
+- Plugin configuration is read from environment variables named: `SimpleHooks_Listener_{ListenerType.Name}_CONFIG`
+- Example: For ListenerType with Name="TypeA", the system reads `SimpleHooks_Listener_TYPEA_CONFIG` environment variable
 - This allows each plugin type to have independent configuration without conflicts
 
 **Server Startup Process:**
 
 1. Query all ListenerType records from database
-2. For each ListenerType:
-   - Load plugin DLL from `Path`
-   - Create plugin instance
-   - Read configuration from `{Name}_CONFIG` environment variable
-   - Initialize plugin with headers, timeout, URL, and type-specific options
-   - Cache initialized plugin for runtime use
+2. Query all ListenerDefinition records from database
+3. While initializing ListenerDefinition, call CreatePluginInstance method to create the plugin instance for each ListenerType. Pass the Url, TypeId, timeoutInMinutes, headers as parameters to the CreatePluginInstance method.
+4. Store the plugin instance in the ListenerDefinition.ListenerPlugin property.
 
 #### Task 1.3: Update Database Schema
 
@@ -221,90 +218,19 @@ FOREIGN KEY (Type_Id) REFERENCES ListenerType(Id);
 
 **Responsibilities:**
 
-- Load listener plugins from specified paths at startup
-- Maintain dictionary of plugin instances by type
 - Handle plugin lifecycle and error handling
-- Validate plugin compatibility
-- Initialize listener plugins during server startup with ListenerType configuration
 
 **Key Methods:**
 
-- `LoadListenerPlugins()` - Load all listener plugins at startup
-- `GetListenerPlugin(string type)` - Retrieve plugin instance by type
-- `ValidateListenerPlugin(Assembly assembly)` - Ensure plugin implements interface
-- `InitializePluginsAtStartup()` - Initialize plugins with ListenerType data during server startup
+- `IListener CreatePluginInstance(pass Url as string, TypeId as id parameter, timeoutInMinutes as int, headers as List<string>)` - create the plugin instance for the given listener type
 
-**Server Startup Initialization:**
-
-During server startup, the ListenerPluginManager will:
-
-1. **Load ListenerType Configuration**: Query database for all ListenerType records
-2. **Create Plugin Instances**: For each ListenerType, load the corresponding plugin DLL and create instances
-3. **Initialize Plugin Properties**: Set up each plugin with:
-   - Headers from environment variables
-   - Timeout configuration
-   - URL endpoints
-   - Type-specific options from environment variables (using Type_Options as environment variable name)
-4. **Cache Plugin Instances**: Store initialized plugins in memory for runtime execution
-5. **Validate Plugin Compatibility**: Ensure all plugins implement IListener interface correctly
-
-**Implementation Details:**
+**Implementation:**
 
 ```csharp
-public class ListenerPluginManager
+public IListener CreatePluginInstance(string url, int typeId, int timeoutInMinutes, List<string> headers)
 {
-    private readonly Dictionary<int, IListener> _pluginInstances = new();
-    private readonly Dictionary<int, ListenerType> _listenerTypes = new();
-    
-    public async Task InitializePluginsAtStartupAsync()
-    {
-        // 1. Load ListenerType configuration from database
-        var listenerTypes = await _listenerTypeRepository.GetAllAsync();
-        
-        foreach (var listenerType in listenerTypes)
-        {
-            try
-            {
-                // 2. Load plugin assembly
-                var assembly = Assembly.LoadFrom(listenerType.Path);
-                var pluginType = assembly.GetTypes()
-                    .FirstOrDefault(t => t.GetInterface(nameof(IListener)) != null);
-                
-                if (pluginType != null)
-                {
-                    // 3. Create plugin instance
-                    var pluginInstance = Activator.CreateInstance(pluginType) as IListener;
-                    
-                    // 4. Initialize plugin with environment-based configuration
-                    await InitializePluginConfiguration(pluginInstance, listenerType);
-                    
-                    // 5. Cache plugin instance
-                    _pluginInstances[listenerType.Id] = pluginInstance;
-                    _listenerTypes[listenerType.Id] = listenerType;
-                    
-                    _logger.LogInformation($"Successfully initialized plugin: {listenerType.Name}");
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Failed to initialize plugin: {listenerType.Name}");
-            }
-        }
-    }
-    
-    private async Task InitializePluginConfiguration(IListener plugin, ListenerType listenerType)
-    {
-        // Read configuration from environment variables
-        var environmentVariableName = listenerType.Name + "_CONFIG";
-        var configJson = Environment.GetEnvironmentVariable(environmentVariableName);
-        
-        if (!string.IsNullOrEmpty(configJson))
-        {
-            // Parse and apply configuration to plugin
-            // This allows each plugin type to have its own configuration
-            // stored in environment variables like ANONYMOUS_CONFIG, TYPEA_CONFIG, etc.
-        }
-    }
+    // create the plugin instance for the given listener type
+    // 
 }
 ```
 
@@ -330,7 +256,7 @@ public class ListenerPluginManager
 #### Task 2.2: TypeA Plugin (Bearer Token Authentication)
 
 **Project**: `SimpleHooks.ListenerPlugins.TypeA`
-**Location**: `code/listener-plugins/SimpleHooks.Listener      Plugins.TypeA`
+**Location**: `code/listener-plugins/SimpleHooks.ListenerPlugins.TypeA`
 
 **Purpose**:
 
@@ -372,179 +298,21 @@ public class ListenerPluginManager
 
 **New ExecuteListener Logic:**
 
-1. Get plugin instance from ListenerPluginManager by listener type
-2. Read environment variable for options (if specified)
-3. Call plugin's ExecuteAsync method
-4. Process ListenerResult and update status
-5. Handle plugin execution errors
-
-#### Task 3.2: Update Dependency Injection
-**Files**: 
-- `code/SimpleHooks.Server/Program.cs`
-- `code/SimpleHooks.Web/Startup.cs`
-
-**Changes:**
-- Register ListenerPluginManager as singleton
-- Initialize plugins at startup with ListenerType configuration
-- Handle plugin loading errors gracefully
-- Set up environment variable-based configuration
-
-**Server Startup Implementation:**
-
-**For SimpleHooks.Server/Program.cs:**
-```csharp
-public class Program
-{
-    public static async Task Main(string[] args)
-    {
-        var builder = WebApplication.CreateBuilder(args);
-        
-        // Register services
-        builder.Services.AddSingleton<IListenerTypeRepository, ListenerTypeRepository>();
-        builder.Services.AddSingleton<ListenerPluginManager>();
-        
-        var app = builder.Build();
-        
-        // Initialize listener plugins at startup
-        var pluginManager = app.Services.GetRequiredService<ListenerPluginManager>();
-        await InitializeListenerPluginsAsync(pluginManager);
-        
-        app.Run();
-    }
-    
-    private static async Task InitializeListenerPluginsAsync(ListenerPluginManager pluginManager)
-    {
-        try
-        {
-            await pluginManager.InitializePluginsAtStartupAsync();
-            Console.WriteLine("Listener plugins initialized successfully");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error initializing listener plugins: {ex.Message}");
-            // Log error but continue startup - system can work with fallback mechanisms
-        }
-    }
-}
-```
-
-**For SimpleHooks.Web/Startup.cs:**
-```csharp
-public class Startup
-{
-    public void ConfigureServices(IServiceCollection services)
-    {
-        // Register listener plugin services
-        services.AddSingleton<IListenerTypeRepository, ListenerTypeRepository>();
-        services.AddSingleton<ListenerPluginManager>();
-        
-        // Other service registrations...
-    }
-    
-    public async void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-    {
-        // Initialize listener plugins during application startup
-        var pluginManager = app.ApplicationServices.GetRequiredService<ListenerPluginManager>();
-        await InitializeListenerPluginsAsync(pluginManager);
-        
-        // Other middleware configuration...
-    }
-    
-    private async Task InitializeListenerPluginsAsync(ListenerPluginManager pluginManager)
-    {
-        try
-        {
-            await pluginManager.InitializePluginsAtStartupAsync();
-            // Log successful initialization
-        }
-        catch (Exception ex)
-        {
-            // Log error but allow application to continue
-            // System can fall back to default behavior if plugins fail to load
-        }
-    }
-}
-```
-
-**Environment Variable Configuration:**
-
-The system will read plugin-specific configuration from environment variables during startup:
-
-- `ANONYMOUS_CONFIG`: Configuration for Anonymous plugin (if needed)
-- `TYPEA_CONFIG`: Configuration for TypeA plugin (OAuth2 settings)
-- `PLUGIN_DIRECTORY`: Base directory for plugin DLLs (default: "listener-plugins")
-- `PLUGIN_TIMEOUT`: Plugin loading timeout in seconds (default: 30)
-
-**Example Environment Variables:**
-```bash
-# TypeA Plugin OAuth2 Configuration
-TYPEA_CONFIG={"identityProviderUrl":"https://auth.example.com/token","clientId":"client_id","clientSecret":"client_secret","scope":"api.read api.write"}
-
-# Plugin Directory Configuration
-PLUGIN_DIRECTORY=F:\SimpleHooks\plugins
-PLUGIN_TIMEOUT=60
-```
+1. Get plugin instance by querying the DefinitionManager.ListenerDefinitions and get the ListenerPlugin property
+2. Call plugin's ExecuteAsync method. pass the eventData as string parameter and type options as string parameter.
+3. Process ListenerResult and update status. if the ListenerResult.Succeeded is false, update the listener instance status to Failed. if the ListenerResult.Succeeded is true, update the listener instance status to Succeeded.
+4. Handle plugin execution errors. if the plugin execution throws an exception, update the listener instance status to Failed.
+5. Loop over ListenerResult.Logs and save logs.
 
 **Startup Sequence:**
 
 1. **Service Registration**: Register ListenerPluginManager and dependencies
 2. **Database Connection**: Ensure database connectivity for ListenerType queries
-3. **Plugin Discovery**: Load ListenerType records from database
-4. **Plugin Loading**: Load and instantiate plugins from configured paths
-5. **Configuration Application**: Apply environment variable configuration to plugins
-6. **Validation**: Validate plugin compatibility and readiness
-7. **Caching**: Store initialized plugins for runtime use
-8. **Error Handling**: Log any initialization failures and continue with available plugins
 
 #### Task 3.3: Configuration Management
 **Files**:
 - `code/SimpleHooks.Server/appsettings.json`
 - Environment variable handling
-
-**New Configuration:**
-- Plugin directory path
-- Plugin loading timeout
-- Default plugin type for new listeners
-
-### Phase 4: Testing Infrastructure
-
-#### Task 4.1: Unit Tests for Plugin Interface
-**Project**: `TestSimpleHooks.Plugins`
-**Location**: `code/TestSimpleHooks/Plugins/`
-
-**Test Classes:**
-- `ListenerExecuterPluginManagerTests.cs`
-- `AnonymousPluginTests.cs`
-- `TypeAPluginTests.cs`
-- `ListenerResultTests.cs`
-
-#### Task 4.2: Integration Tests
-**File**: `code/TestSimpleHooks/TestPluginIntegration.cs`
-
-**Test Scenarios:**
-- End-to-end listener execution with plugins
-- Plugin loading and error handling
-- Environment variable configuration
-- Database integration with new fields
-
-#### Task 4.3: Mock Implementations
-**Files**:
-- `code/TestSimpleHooks/Mocks/MockPlugin.cs`
-- `code/TestSimpleHooks/Mocks/MockHttpClient.cs`
-- `code/TestSimpleHooks/Mocks/MockIdentityProvider.cs`
-
-### Phase 5: Migration and Deployment
-
-#### Task 5.1: Data Migration
-**File**: `code/SQL/operation-db/migrate-to-plugins.sql`
-
-**Migration Steps:**
-1. Create ListenerDefinitionType table with proper constraints
-2. Populate ListenerDefinitionType with initial data (Anonymous and TypeA)
-3. Add Type_Id and Type_Options columns to ListenerDefinition table
-4. Set default values for existing records (Type_Id = 1 for Anonymous)
-5. Add foreign key constraint between ListenerDefinition and ListenerDefinitionType
-6. Update existing data repository methods to handle new schema
 
 #### Task 5.2: Plugin Deployment Structure
 **Directory Structure:**
@@ -567,37 +335,6 @@ SimpleHooks.Server/
 - Migration guide
 
 ## Detailed Unit Test Plans
-
-### ListenerExecuterPluginManager Tests
-
-#### Test Class: `ListenerExecuterPluginManagerTests.cs`
-
-**Test Methods:**
-
-1. **LoadPlugins_ValidDirectory_LoadsAllPlugins**
-   - Setup: Create test plugins in temp directory
-   - Action: Call LoadPlugins()
-   - Assert: All valid plugins loaded, invalid ones ignored
-
-2. **GetPlugin_ExistingType_ReturnsPlugin**
-   - Setup: Load test plugins
-   - Action: Call GetPlugin("TestType")
-   - Assert: Returns correct plugin instance
-
-3. **GetPlugin_NonExistentType_ThrowsException**
-   - Setup: Load test plugins
-   - Action: Call GetPlugin("InvalidType")
-   - Assert: Throws appropriate exception
-
-4. **LoadPlugins_InvalidAssembly_LogsErrorAndContinues**
-   - Setup: Place invalid DLL in plugins directory
-   - Action: Call LoadPlugins()
-   - Assert: Error logged, other plugins still loaded
-
-5. **LoadPlugins_MissingInterface_SkipsPlugin**
-   - Setup: Plugin without IListenerExecute interface
-   - Action: Call LoadPlugins()
-   - Assert: Plugin skipped, warning logged
 
 ### Anonymous Plugin Tests
 
