@@ -32,7 +32,7 @@ namespace SimpleTools.SimpleHooks.Business
         /// <param name="headers">HTTP headers to include</param>
         /// <param name="typeOptionsValue">Plugin-specific configuration value</param>
         /// <returns>Initialized plugin instance</returns>
-        public IListener CreatePluginInstance(string path, string url, int timeout, List<string> headers, string typeOptionsValue)
+        public IListener CreatePluginInstance(string path, string url, int timeout, List<string> headers)
         {
             var log = GetLogModelMethodStart(MethodBase.GetCurrentMethod()?.Name,
                 $"Path: {path}, URL: {url}, Timeout: {timeout}", string.Empty);

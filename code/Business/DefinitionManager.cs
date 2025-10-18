@@ -89,7 +89,7 @@ namespace SimpleTools.SimpleHooks.Business
                 this.EventDefinitionListenerDefinitionRelations.AddRange(this._eventDefListenerDefRepo.Read(null, conn));
 
                 // Initialize listener plugins for each ListenerDefinition
-                this.SetListenerPlugins(conn);
+                this.SetListenerPlugins();
 
                 //trigger event for definitions loaded
                 this.DefitionsLoaded?.Invoke(this, EventArgs.Empty);
@@ -118,7 +118,7 @@ namespace SimpleTools.SimpleHooks.Business
         /// Called after ListenerTypes and ListenerDefinitions are loaded.
         /// </summary>
         /// <param name="conn">Database connection (not used but kept for consistency)</param>
-        private void SetListenerPlugins(object conn)
+        private void SetListenerPlugins()
         {
             var log = this.GetLogModelMethodStart(MethodBase.GetCurrentMethod()?.Name, string.Empty, string.Empty);
             this._logger.Add(log);
@@ -150,20 +150,12 @@ namespace SimpleTools.SimpleHooks.Business
                             continue;
                         }
 
-                        // Get the TypeOptions value from environment variable
-                        string typeOptionsValue = string.Empty;
-                        if (!string.IsNullOrWhiteSpace(listenerDef.TypeOptions))
-                        {
-                            typeOptionsValue = Environment.GetEnvironmentVariable(listenerDef.TypeOptions) ?? string.Empty;
-                        }
-
                         // Create plugin instance
                         listenerDef.ListenerPlugin = _listenerPluginManager.CreatePluginInstance(
                             path: listenerType.Path,
                             url: listenerDef.Url,
                             timeout: listenerDef.Timeout,
-                            headers: listenerDef.Headers,
-                            typeOptionsValue: typeOptionsValue
+                            headers: listenerDef.Headers
                         );
                     }
                     catch (Exception ex)
