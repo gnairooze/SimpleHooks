@@ -26,19 +26,24 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.Anonymous
         {
             var result = new ListenerResult();
             int logCounter = 0;
+            var log = new LogModel
+            {
+                LogType = LogModel.LogTypes.Information,
+                NotesA = $"Anonymous plugin executing call to {Url}. eventData: {eventData}",
+                NotesB = string.Empty,
+                Correlation = Guid.NewGuid(),
+                CreateDate = DateTime.UtcNow
+            };
+
+            HttpResult httpResult = null;
 
             try
             {
                 // Log start
-                result.Logs.Add(logCounter++, new LogModel
-                {
-                    LogType = LogModel.LogTypes.Information,
-                    NotesA = $"Anonymous plugin executing call to {Url}",
-                    CreateDate = DateTime.UtcNow
-                });
+                result.Logs.Add(logCounter++, log);
 
                 // Make HTTP call using properties
-                var httpResult = _httpClient.Post(Url, Headers, eventData, Timeout);
+                httpResult = _httpClient.Post(Url, Headers, eventData, Timeout);
 
                 // Check result
                 if (httpResult.HttpCode >= 200 && httpResult.HttpCode < 300)
@@ -46,24 +51,19 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.Anonymous
                     result.Succeeded = true;
                     result.Message = $"HTTP call succeeded with status code {httpResult.HttpCode}";
 
-                    result.Logs.Add(logCounter++, new LogModel
-                    {
-                        LogType = LogModel.LogTypes.Information,
-                        NotesA = $"Success: {httpResult.HttpCode} - {httpResult.Body}",
-                        CreateDate = DateTime.UtcNow
-                    });
+                    log.NotesA = $"Success: {httpResult.HttpCode} - {httpResult.Body}";
+                    log.CreateDate = DateTime.UtcNow;
+                    result.Logs.Add(logCounter++, log);
                 }
                 else
                 {
                     result.Succeeded = false;
                     result.Message = $"HTTP call failed with status code {httpResult.HttpCode}";
 
-                    result.Logs.Add(logCounter++, new LogModel
-                    {
-                        LogType = LogModel.LogTypes.Error,
-                        NotesA = $"Failed: {httpResult.HttpCode} - {httpResult.Body}",
-                        CreateDate = DateTime.UtcNow
-                    });
+                    log.LogType = LogModel.LogTypes.Error;
+                    log.NotesB = $"Failed: {httpResult}";
+                    log.CreateDate = DateTime.UtcNow;
+                    result.Logs.Add(logCounter++, log);
                 }
             }
             catch (Exception ex)
@@ -71,12 +71,11 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.Anonymous
                 result.Succeeded = false;
                 result.Message = $"Exception during execution: {ex.Message}";
 
-                result.Logs.Add(logCounter++, new LogModel
-                {
-                    LogType = LogModel.LogTypes.Error,
-                    NotesA = $"Exception: {ex.Message}\n{ex.StackTrace}",
-                    CreateDate = DateTime.UtcNow
-                });
+                log.LogType = LogModel.LogTypes.Error;
+                log.NotesA = (httpResult != null)? httpResult.ToString() : "exception caught with null httpResult";
+                log.NotesB = ex.ToString();
+                log.CreateDate = DateTime.UtcNow;
+                result.Logs.Add(logCounter++, log);
             }
 
             return await Task.FromResult(result);
