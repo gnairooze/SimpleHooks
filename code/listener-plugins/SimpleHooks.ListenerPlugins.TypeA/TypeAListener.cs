@@ -14,7 +14,6 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.TypeA
         public string Url { get; set; }
         public int Timeout { get; set; }
         public List<string> Headers { get; set; }
-        public string TypeOptionsValue { get; set; }
 
         private readonly IHttpClient _httpClient;
         private string _cachedToken;

@@ -130,6 +130,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleHooks.ListenerPlugins
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleHooks.TestListeners", "listener-plugins\SimpleHooks.TestListeners\SimpleHooks.TestListeners.csproj", "{B3119470-6FBF-8CE1-1425-6D1DF196DA31}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebugListeners", "listener-plugins\DebugListeners\DebugListeners.csproj", "{722CDE6F-686E-4733-AE1A-21C39227C073}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -380,6 +382,18 @@ Global
 		{B3119470-6FBF-8CE1-1425-6D1DF196DA31}.Release|x64.Build.0 = Release|Any CPU
 		{B3119470-6FBF-8CE1-1425-6D1DF196DA31}.Release|x86.ActiveCfg = Release|Any CPU
 		{B3119470-6FBF-8CE1-1425-6D1DF196DA31}.Release|x86.Build.0 = Release|Any CPU
+		{722CDE6F-686E-4733-AE1A-21C39227C073}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{722CDE6F-686E-4733-AE1A-21C39227C073}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{722CDE6F-686E-4733-AE1A-21C39227C073}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{722CDE6F-686E-4733-AE1A-21C39227C073}.Debug|x64.Build.0 = Debug|Any CPU
+		{722CDE6F-686E-4733-AE1A-21C39227C073}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{722CDE6F-686E-4733-AE1A-21C39227C073}.Debug|x86.Build.0 = Debug|Any CPU
+		{722CDE6F-686E-4733-AE1A-21C39227C073}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{722CDE6F-686E-4733-AE1A-21C39227C073}.Release|Any CPU.Build.0 = Release|Any CPU
+		{722CDE6F-686E-4733-AE1A-21C39227C073}.Release|x64.ActiveCfg = Release|Any CPU
+		{722CDE6F-686E-4733-AE1A-21C39227C073}.Release|x64.Build.0 = Release|Any CPU
+		{722CDE6F-686E-4733-AE1A-21C39227C073}.Release|x86.ActiveCfg = Release|Any CPU
+		{722CDE6F-686E-4733-AE1A-21C39227C073}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -399,6 +413,7 @@ Global
 		{FDAD441C-BBFC-4D36-9AC7-1F1256CD54DB} = {59BAECB5-A23E-A1C6-1015-734B6FB08DCA}
 		{90387028-8115-412A-B58B-78554748E385} = {59BAECB5-A23E-A1C6-1015-734B6FB08DCA}
 		{B3119470-6FBF-8CE1-1425-6D1DF196DA31} = {59BAECB5-A23E-A1C6-1015-734B6FB08DCA}
+		{722CDE6F-686E-4733-AE1A-21C39227C073} = {59BAECB5-A23E-A1C6-1015-734B6FB08DCA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {019C6500-A05E-4917-85BC-0D9BD2CD2D06}

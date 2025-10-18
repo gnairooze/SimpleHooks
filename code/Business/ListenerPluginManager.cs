@@ -74,7 +74,6 @@ namespace SimpleTools.SimpleHooks.Business
                 pluginInstance.Url = url;
                 pluginInstance.Timeout = timeout;
                 pluginInstance.Headers = headers ?? new List<string>();
-                pluginInstance.TypeOptionsValue = typeOptionsValue ?? string.Empty;
 
                 log = GetLogModelMethodEnd(log);
                 _logger.Add(log);

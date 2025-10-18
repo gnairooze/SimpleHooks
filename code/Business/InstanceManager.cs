@@ -22,7 +22,7 @@ namespace SimpleTools.SimpleHooks.Business
         private readonly IDataRepository<Models.Instance.EventInstance> _eventInstanceRepo;
         private readonly IDataRepository<Models.Instance.ListenerInstance> _listenerInstanceRepo;
         private readonly IHttpClient _httpClient;
-        private readonly ListenerPluginManager _listenerPluginManager;
+        
         private readonly DefinitionManager _definitionManager;
         private readonly Guid _logCorrelation = Guid.NewGuid();
 

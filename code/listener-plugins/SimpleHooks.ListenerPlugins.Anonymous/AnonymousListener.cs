@@ -13,7 +13,6 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.Anonymous
         public string Url { get; set; }
         public int Timeout { get; set; }
         public List<string> Headers { get; set; }
-        public string TypeOptionsValue { get; set; }
 
         private readonly IHttpClient _httpClient;
 

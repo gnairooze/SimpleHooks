@@ -28,12 +28,6 @@ namespace SimpleTools.SimpleHooks.ListenerInterfaces
         List<string> Headers { get; set; }
 
         /// <summary>
-        /// Plugin-specific configuration value read from environment variable.
-        /// Set by ListenerPluginManager during initialization.
-        /// </summary>
-        string TypeOptionsValue { get; set; }
-
-        /// <summary>
         /// Execute the listener with the provided event data.
         /// </summary>
         /// <param name="eventData">The event data to send to the listener endpoint</param>
