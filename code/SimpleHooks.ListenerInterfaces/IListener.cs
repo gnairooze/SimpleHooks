@@ -30,10 +30,11 @@ namespace SimpleTools.SimpleHooks.ListenerInterfaces
         /// <summary>
         /// Execute the listener with the provided event data.
         /// </summary>
+        /// <param name="listenerInstanceId">listener instance id used as reference value in logging</param>
         /// <param name="eventData">The event data to send to the listener endpoint</param>
         /// <param name="typeOptions">Plugin-specific configuration options (typically JSON)</param>
         /// <returns>Result of the listener execution including success status, message, and logs</returns>
-        Task<ListenerResult> ExecuteAsync(string eventData, string typeOptions);
+        Task<ListenerResult> ExecuteAsync(long listenerInstanceId, string eventData, string typeOptions);
     }
 }
 

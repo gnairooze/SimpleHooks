@@ -1,8 +1,9 @@
-using SimpleTools.SimpleHooks.ListenerInterfaces;
 using SimpleTools.SimpleHooks.HttpClient.Interface;
+using SimpleTools.SimpleHooks.ListenerInterfaces;
 using SimpleTools.SimpleHooks.Log.Interface;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace SimpleTools.SimpleHooks.ListenerPlugins.Anonymous
@@ -22,61 +23,99 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.Anonymous
             _httpClient = new SimpleTools.SimpleHooks.HttpClient.Simple.SimpleClient();
         }
 
-        public async Task<ListenerResult> ExecuteAsync(string eventData, string typeOptions)
+        public async Task<ListenerResult> ExecuteAsync(long listenerInstanceId, string eventData, string typeOptions)
         {
+            var startTime = DateTime.UtcNow;
+
             var result = new ListenerResult();
             int logCounter = 0;
-            var log = new LogModel
+
+            //create basic log model
+            var parameters = new Dictionary<string, string>
             {
-                LogType = LogModel.LogTypes.Information,
-                NotesA = $"Anonymous plugin executing call to {Url}. eventData: {eventData}",
-                NotesB = string.Empty,
-                Correlation = Guid.NewGuid(),
-                CreateDate = DateTime.UtcNow
+                { "listenerInstanceId", listenerInstanceId.ToString() },
+                { "eventData", eventData },
+                { "typeOptions", typeOptions }
             };
+
+            var log = Log.Interface.Utility.FillBasicProps(null); //fill Machine, Owner, Location
+            log.CodeReference = $"{this.GetType().FullName}|{System.Reflection.MethodBase.GetCurrentMethod()?.Name}";
+            log.Correlation = Guid.NewGuid();
+            log.ReferenceName = "listenerInstance.Id";
+            log.ReferenceValue = listenerInstanceId.ToString();
+            log = Log.Interface.Utility.SetArgumentsToNotesA(log, parameters); //fill NotesA
 
             HttpResult httpResult = null;
 
             try
             {
                 // Log start
+                log = Log.Interface.Utility.SetMethodStart(log); //fill LogType, LogStep, Counter, CreateDate
                 result.Logs.Add(logCounter++, log);
 
                 // Make HTTP call using properties
                 httpResult = _httpClient.Post(Url, Headers, eventData, Timeout);
 
+                parameters.Add("httpResult", httpResult.ToString());
+                log = Log.Interface.Utility.SetArgumentsToNotesA(log, parameters);
+
                 // Check result
                 if (httpResult.HttpCode >= 200 && httpResult.HttpCode < 300)
                 {
+                    var message = $"HTTP call succeeded with status code {httpResult.HttpCode}";
                     result.Succeeded = true;
-                    result.Message = $"HTTP call succeeded with status code {httpResult.HttpCode}";
+                    result.Message = message;
 
-                    log.NotesA = $"Success: {httpResult.HttpCode} - {httpResult.Body}";
-                    log.CreateDate = DateTime.UtcNow;
+                    log = Log.Interface.Utility.SetInformationMessage(log, message);
                     result.Logs.Add(logCounter++, log);
                 }
                 else
                 {
+                    var message = $"HTTP call failed with status code {httpResult.HttpCode}";
                     result.Succeeded = false;
-                    result.Message = $"HTTP call failed with status code {httpResult.HttpCode}";
+                    result.Message = message;
 
-                    log.LogType = LogModel.LogTypes.Error;
-                    log.NotesB = $"Failed: {httpResult}";
-                    log.CreateDate = DateTime.UtcNow;
+                    log = Log.Interface.Utility.SetError(log, message);
                     result.Logs.Add(logCounter++, log);
                 }
+            }
+            catch (HttpRequestException ex)
+            {
+                result.Succeeded = false;
+                result.Message = $"Exception during execution: {ex.Message}";
+
+                httpResult = httpResult ?? new HttpResult()
+                {
+                    Body = "null httpResult filled in  catch HttpRequestException",
+                    HttpCode = 0
+                };
+
+                parameters.Add("httpResult", httpResult.ToString());
+                log = Log.Interface.Utility.SetArgumentsToNotesA(log, parameters);
+
+                log = Log.Interface.Utility.SetError(log, ex);
+                result.Logs.Add(logCounter++, log);
             }
             catch (Exception ex)
             {
                 result.Succeeded = false;
                 result.Message = $"Exception during execution: {ex.Message}";
 
-                log.LogType = LogModel.LogTypes.Error;
-                log.NotesA = (httpResult != null)? httpResult.ToString() : "exception caught with null httpResult";
-                log.NotesB = ex.ToString();
-                log.CreateDate = DateTime.UtcNow;
+                httpResult = httpResult ?? new HttpResult()
+                {
+                    Body = "null httpResult filled in  catch Exception",
+                    HttpCode = 0
+                };
+
+                parameters.Add("httpResult", httpResult.ToString());
+                log = Log.Interface.Utility.SetArgumentsToNotesA(log, parameters);
+
+                log = Log.Interface.Utility.SetError(log, ex);
                 result.Logs.Add(logCounter++, log);
             }
+
+            log = Log.Interface.Utility.SetMethodEnd(log, startTime);
+            result.Logs.Add(logCounter++, log);
 
             return await Task.FromResult(result);
         }
