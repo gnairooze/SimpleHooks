@@ -264,6 +264,9 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.TypeA
                     log = Log.Interface.Utility.SetInformationMessage(log, "Bearer token obtained successfully");
                     result.Logs.Add(logCounter++, log);
 
+                    log = Log.Interface.Utility.SetMethodEnd(log, startTime);
+                    result.Logs.Add(logCounter++, log);
+
                     return (_cachedToken, logCounter);
                 }
                 else
@@ -300,9 +303,6 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.TypeA
                 result.Logs.Add(logCounter++, log);
                 return (null, logCounter);
             }
-
-            log = Log.Interface.Utility.SetMethodEnd(log, startTime);
-            result.Logs.Add(logCounter++, log);
         }
     }
 }

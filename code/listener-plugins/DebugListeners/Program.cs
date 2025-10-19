@@ -24,7 +24,9 @@ void RunAnonymousListener()
         Timeout = timeoutInMinutes
     };
 
-    var task = anonymousListener.ExecuteAsync(eventData, typeOptionsValue);
+    var listenerInstanceId = 1;
+
+    var task = anonymousListener.ExecuteAsync(listenerInstanceId, eventData, typeOptionsValue);
 
     task.Wait();
 
@@ -40,7 +42,9 @@ void RunTypeAListener()
         Timeout = timeoutInMinutes
     };
 
-    var task = anonymousListener.ExecuteAsync(eventData, typeOptionsValue);
+    var listenerInstanceId = 1;
+
+    var task = anonymousListener.ExecuteAsync(listenerInstanceId, eventData, typeOptionsValue);
 
     task.Wait();
 

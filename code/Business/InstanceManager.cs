@@ -538,7 +538,7 @@ namespace SimpleTools.SimpleHooks.Business
                 }
 
                 // Execute plugin
-                pluginResult = plugin.ExecuteAsync(eventData, typeOptionsValue).GetAwaiter().GetResult();
+                pluginResult = plugin.ExecuteAsync(listenerInstance.Id, eventData, typeOptionsValue).GetAwaiter().GetResult();
 
                 parameters.Add("result", pluginResult.Message);
 

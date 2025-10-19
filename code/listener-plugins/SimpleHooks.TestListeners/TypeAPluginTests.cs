@@ -40,12 +40,11 @@ namespace SimpleTools.SimpleHooks.TestListeners
             {
                 Url = "https://api.example.com/webhook",
                 Timeout = 5,
-                Headers = new List<string> { "Content-Type: application/json" },
-                TypeOptionsValue = ValidAuthOptions
+                Headers = new List<string> { "Content-Type: application/json" }
             };
 
             // Act
-            var result = await plugin.ExecuteAsync("{\"event\":\"test\"}", ValidAuthOptions);
+            var result = await plugin.ExecuteAsync(1, "{\"event\":\"test\"}", ValidAuthOptions);
 
             // Assert
             Assert.True(result.Succeeded);
@@ -71,12 +70,11 @@ namespace SimpleTools.SimpleHooks.TestListeners
             {
                 Url = "https://api.example.com/webhook",
                 Timeout = 5,
-                Headers = new List<string>(),
-                TypeOptionsValue = ValidAuthOptions
+                Headers = new List<string>()
             };
 
             // Act
-            var result = await plugin.ExecuteAsync("{\"event\":\"test\"}", ValidAuthOptions);
+            var result = await plugin.ExecuteAsync(1, "{\"event\":\"test\"}", ValidAuthOptions);
 
             // Assert
             Assert.False(result.Succeeded);
@@ -112,12 +110,11 @@ namespace SimpleTools.SimpleHooks.TestListeners
             {
                 Url = "https://api.example.com/webhook",
                 Timeout = 5,
-                Headers = new List<string>(),
-                TypeOptionsValue = ValidAuthOptions
+                Headers = new List<string>()
             };
 
             // Act
-            var result = await plugin.ExecuteAsync("{\"event\":\"test\"}", ValidAuthOptions);
+            var result = await plugin.ExecuteAsync(1, "{\"event\":\"test\"}", ValidAuthOptions);
 
             // Assert
             Assert.True(result.Succeeded);
@@ -135,12 +132,11 @@ namespace SimpleTools.SimpleHooks.TestListeners
             {
                 Url = "https://api.example.com/webhook",
                 Timeout = 5,
-                Headers = new List<string>(),
-                TypeOptionsValue = "invalid-json{{{" // Malformed JSON
+                Headers = new List<string>()
             };
 
             // Act
-            var result = await plugin.ExecuteAsync("{\"event\":\"test\"}", "invalid-json{{{");
+            var result = await plugin.ExecuteAsync(1, "{\"event\":\"test\"}", "invalid-json{{{");
 
             // Assert
             Assert.False(result.Succeeded);
@@ -161,12 +157,11 @@ namespace SimpleTools.SimpleHooks.TestListeners
             {
                 Url = "https://api.example.com/webhook",
                 Timeout = 5,
-                Headers = new List<string>(),
-                TypeOptionsValue = incompleteOptions
+                Headers = new List<string>()
             };
 
             // Act
-            var result = await plugin.ExecuteAsync("{\"event\":\"test\"}", incompleteOptions);
+            var result = await plugin.ExecuteAsync(1, "{\"event\":\"test\"}", incompleteOptions);
 
             // Assert
             Assert.False(result.Succeeded);
@@ -186,12 +181,11 @@ namespace SimpleTools.SimpleHooks.TestListeners
             {
                 Url = "https://api.example.com/webhook",
                 Timeout = 5,
-                Headers = new List<string>(),
-                TypeOptionsValue = ValidAuthOptions
+                Headers = new List<string>()
             };
 
             // Act
-            var result = await plugin.ExecuteAsync("{\"event\":\"test\"}", ValidAuthOptions);
+            var result = await plugin.ExecuteAsync(1, "{\"event\":\"test\"}", ValidAuthOptions);
 
             // Assert
             Assert.False(result.Succeeded);
@@ -208,12 +202,11 @@ namespace SimpleTools.SimpleHooks.TestListeners
             {
                 Url = "https://api.example.com/webhook",
                 Timeout = 5,
-                Headers = new List<string>(),
-                TypeOptionsValue = ""
+                Headers = new List<string>()
             };
 
             // Act
-            var result = await plugin.ExecuteAsync("{\"event\":\"test\"}", "");
+            var result = await plugin.ExecuteAsync(1, "{\"event\":\"test\"}", "");
 
             // Assert
             Assert.False(result.Succeeded);
@@ -241,13 +234,12 @@ namespace SimpleTools.SimpleHooks.TestListeners
             {
                 Url = "https://api.example.com/webhook",
                 Timeout = 5,
-                Headers = new List<string>(),
-                TypeOptionsValue = ValidAuthOptions
+                Headers = new List<string>()
             };
 
             // Act
-            var result1 = await plugin.ExecuteAsync("{\"event\":\"test1\"}", ValidAuthOptions);
-            var result2 = await plugin.ExecuteAsync("{\"event\":\"test2\"}", ValidAuthOptions);
+            var result1 = await plugin.ExecuteAsync(1, "{\"event\":\"test1\"}", ValidAuthOptions);
+            var result2 = await plugin.ExecuteAsync(2, "{\"event\":\"test2\"}", ValidAuthOptions);
 
             // Assert
             Assert.True(result1.Succeeded);
@@ -266,14 +258,13 @@ namespace SimpleTools.SimpleHooks.TestListeners
         public string Url { get; set; } = string.Empty;
         public int Timeout { get; set; }
         public List<string> Headers { get; set; } = new List<string>();
-        public string TypeOptionsValue { get; set; } = string.Empty;
 
         public TypeAListenerTestable(IHttpClient httpClient)
         {
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
-        public async Task<ListenerResult> ExecuteAsync(string eventData, string typeOptions)
+        public async Task<ListenerResult> ExecuteAsync(long listenerInstanceId, string eventData, string typeOptionsValue)
         {
             var result = new ListenerResult();
             int logCounter = 0;
@@ -286,22 +277,10 @@ namespace SimpleTools.SimpleHooks.TestListeners
                     CreateDate = DateTime.Now
                 });
 
-                if (string.IsNullOrWhiteSpace(TypeOptionsValue))
-                {
-                    result.Succeeded = false;
-                    result.Message = "Invalid or missing authentication configuration";
-                    result.Logs.Add(logCounter++, new Log.Interface.LogModel
-                    {
-                        NotesA = "TypeOptionsValue is missing or invalid",
-                        CreateDate = DateTime.Now
-                    });
-                    return result;
-                }
-
                 TypeAOptions? authConfig;
                 try
                 {
-                    authConfig = JsonSerializer.Deserialize<TypeAOptions>(TypeOptionsValue);
+                    authConfig = JsonSerializer.Deserialize<TypeAOptions>(typeOptionsValue);
                 }
                 catch (JsonException)
                 {

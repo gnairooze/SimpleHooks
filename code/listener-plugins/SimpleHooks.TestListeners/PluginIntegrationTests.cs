@@ -34,8 +34,7 @@ namespace SimpleTools.SimpleHooks.TestListeners
                 {
                     "Content-Type: application/json",
                     "X-Event-Source: SimpleHooks"
-                },
-                TypeOptionsValue = ""
+                }
             };
 
             var eventData = JsonSerializer.Serialize(new
@@ -46,8 +45,10 @@ namespace SimpleTools.SimpleHooks.TestListeners
                 data = new { userId = 456, username = "testuser" }
             });
 
+            var listenerInstanceId = 1;
+
             // Act
-            var result = await plugin.ExecuteAsync(eventData, "");
+            var result = await plugin.ExecuteAsync(listenerInstanceId, eventData, "");
 
             // Assert
             Assert.True(result.Succeeded);
@@ -86,8 +87,7 @@ namespace SimpleTools.SimpleHooks.TestListeners
             {
                 Url = "https://api.example.com/webhooks/events",
                 Timeout = 10,
-                Headers = new List<string> { "Content-Type: application/json" },
-                TypeOptionsValue = authOptions
+                Headers = new List<string> { "Content-Type: application/json" }
             };
 
             var eventData = JsonSerializer.Serialize(new
@@ -98,8 +98,10 @@ namespace SimpleTools.SimpleHooks.TestListeners
                 data = new { orderId = 789, total = 99.99 }
             });
 
+            var listenerInstanceId = 1;
+
             // Act
-            var result = await plugin.ExecuteAsync(eventData, authOptions);
+            var result = await plugin.ExecuteAsync(listenerInstanceId, eventData, authOptions);
 
             // Assert
             Assert.True(result.Succeeded);
@@ -162,12 +164,11 @@ namespace SimpleTools.SimpleHooks.TestListeners
             {
                 Url = "https://api.example.com/webhook",
                 Timeout = 5,
-                Headers = new List<string>(),
-                TypeOptionsValue = ""
+                Headers = new List<string>()
             };
 
             // Act
-            var result = await plugin.ExecuteAsync("{\"test\":\"data\"}", "");
+            var result = await plugin.ExecuteAsync(1, "{\"test\":\"data\"}", "");
 
             // Assert
             Assert.False(result.Succeeded);
@@ -192,12 +193,11 @@ namespace SimpleTools.SimpleHooks.TestListeners
             {
                 Url = "https://unreachable.example.com/webhook",
                 Timeout = 5,
-                Headers = new List<string>(),
-                TypeOptionsValue = ""
+                Headers = new List<string>()
             };
 
             // Act
-            var result = await plugin.ExecuteAsync("{\"test\":\"data\"}", "");
+            var result = await plugin.ExecuteAsync(1, "{\"test\":\"data\"}", "");
 
             // Assert
             Assert.False(result.Succeeded);
@@ -235,14 +235,13 @@ namespace SimpleTools.SimpleHooks.TestListeners
             {
                 Url = "https://api.example.com/webhook",
                 Timeout = 5,
-                Headers = new List<string>(),
-                TypeOptionsValue = authOptions
+                Headers = new List<string>()
             };
 
             // Act
-            var result1 = await plugin.ExecuteAsync("{\"event\":1}", authOptions);
-            var result2 = await plugin.ExecuteAsync("{\"event\":2}", authOptions);
-            var result3 = await plugin.ExecuteAsync("{\"event\":3}", authOptions);
+            var result1 = await plugin.ExecuteAsync(1, "{\"event\":1}", authOptions);
+            var result2 = await plugin.ExecuteAsync(2, "{\"event\":2}", authOptions);
+            var result3 = await plugin.ExecuteAsync(3, "{\"event\":3}", authOptions);
 
             // Assert
             Assert.True(result1.Succeeded);
@@ -289,12 +288,11 @@ namespace SimpleTools.SimpleHooks.TestListeners
             {
                 Url = "https://api.example.com/webhook",
                 Timeout = 5,
-                Headers = new List<string>(),
-                TypeOptionsValue = authOptions
+                Headers = new List<string>()
             };
 
             // Act
-            var result = await plugin.ExecuteAsync("{\"event\":\"test\"}", authOptions);
+            var result = await plugin.ExecuteAsync(1, "{\"event\":\"test\"}", authOptions);
 
             // Assert
             Assert.True(result.Succeeded);
@@ -320,21 +318,19 @@ namespace SimpleTools.SimpleHooks.TestListeners
             {
                 Url = "https://webhook1.example.com/events",
                 Timeout = 5,
-                Headers = new List<string>(),
-                TypeOptionsValue = ""
+                Headers = new List<string>()
             };
 
             var plugin2 = new AnonymousListenerTestable(mockHttpClient2)
             {
                 Url = "https://webhook2.example.com/events",
                 Timeout = 5,
-                Headers = new List<string>(),
-                TypeOptionsValue = ""
+                Headers = new List<string>()
             };
 
             // Act
-            var task1 = plugin1.ExecuteAsync("{\"source\":\"plugin1\"}", "");
-            var task2 = plugin2.ExecuteAsync("{\"source\":\"plugin2\"}", "");
+            var task1 = plugin1.ExecuteAsync(1, "{\"source\":\"plugin1\"}", "");
+            var task2 = plugin2.ExecuteAsync(2, "{\"source\":\"plugin2\"}", "");
 
             await Task.WhenAll(task1, task2);
 
