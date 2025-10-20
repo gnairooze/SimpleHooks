@@ -38,12 +38,15 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.Anonymous
                 { "typeOptions", typeOptions }
             };
 
+            var methodName = Log.Interface.Utility.GetRealMethodFromAsync(System.Reflection.MethodBase.GetCurrentMethod())?.Name;
+
             var log = Log.Interface.Utility.FillBasicProps(null); //fill Machine, Owner, Location
-            log.CodeReference = $"{this.GetType().FullName}|{System.Reflection.MethodBase.GetCurrentMethod()?.Name}";
+            log.Operation = methodName;
+            log.CodeReference = $"{this.GetType().FullName}|{methodName}";
             log.Correlation = Guid.NewGuid();
             log.ReferenceName = "listenerInstance.Id";
             log.ReferenceValue = listenerInstanceId.ToString();
-            log = Log.Interface.Utility.SetArgumentsToNotesA(log, parameters); //fill NotesA
+            log.NotesA = System.Text.Json.JsonSerializer.Serialize(parameters);
 
             HttpResult httpResult = null;
 
@@ -51,13 +54,13 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.Anonymous
             {
                 // Log start
                 log = Log.Interface.Utility.SetMethodStart(log); //fill LogType, LogStep, Counter, CreateDate
-                result.Logs.Add(logCounter++, log);
+                result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
 
                 // Make HTTP call using properties
                 httpResult = _httpClient.Post(Url, Headers, eventData, Timeout);
 
                 parameters.Add("httpResult", httpResult.ToString());
-                log = Log.Interface.Utility.SetArgumentsToNotesA(log, parameters);
+                log.NotesA = System.Text.Json.JsonSerializer.Serialize(parameters);
 
                 // Check result
                 if (httpResult.HttpCode >= 200 && httpResult.HttpCode < 300)
@@ -67,7 +70,7 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.Anonymous
                     result.Message = message;
 
                     log = Log.Interface.Utility.SetInformationMessage(log, message);
-                    result.Logs.Add(logCounter++, log);
+                    result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
                 }
                 else
                 {
@@ -76,7 +79,7 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.Anonymous
                     result.Message = message;
 
                     log = Log.Interface.Utility.SetError(log, message);
-                    result.Logs.Add(logCounter++, log);
+                    result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
                 }
             }
             catch (HttpRequestException ex)
@@ -91,10 +94,10 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.Anonymous
                 };
 
                 parameters.Add("httpResult", httpResult.ToString());
-                log = Log.Interface.Utility.SetArgumentsToNotesA(log, parameters);
+                log.NotesA = System.Text.Json.JsonSerializer.Serialize(parameters);
 
                 log = Log.Interface.Utility.SetError(log, ex);
-                result.Logs.Add(logCounter++, log);
+                result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
             }
             catch (Exception ex)
             {
@@ -108,14 +111,14 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.Anonymous
                 };
 
                 parameters.Add("httpResult", httpResult.ToString());
-                log = Log.Interface.Utility.SetArgumentsToNotesA(log, parameters);
+                log.NotesA = System.Text.Json.JsonSerializer.Serialize(parameters);
 
                 log = Log.Interface.Utility.SetError(log, ex);
-                result.Logs.Add(logCounter++, log);
+                result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
             }
 
             log = Log.Interface.Utility.SetMethodEnd(log, startTime);
-            result.Logs.Add(logCounter++, log);
+            result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
 
             return await Task.FromResult(result);
         }

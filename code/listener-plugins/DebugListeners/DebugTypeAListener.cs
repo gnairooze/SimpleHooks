@@ -30,7 +30,7 @@ namespace DebugListeners
             var listener = new SimpleTools.SimpleHooks.ListenerPlugins.TypeA.TypeAListener()
             {
                 Url = "http://localhost:5011/api/sample",
-                Headers = { "content-type:application/json" },
+                Headers = [ "content-type:application/json" ],
                 Timeout = 1
             };
 

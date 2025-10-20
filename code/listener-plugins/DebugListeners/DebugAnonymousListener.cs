@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace DebugListeners
@@ -37,7 +38,19 @@ namespace DebugListeners
 
             task.Wait();
 
-            Console.WriteLine(task.Result.ToString());
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true
+            };
+
+            Console.WriteLine($"result: {task.Result.Succeeded} - {task.Result.Message}");
+            Console.WriteLine("---");
+            for (int i = 0; i < task.Result.Logs.Count; i++)
+            {
+                var log = task.Result.Logs[i];
+                Console.WriteLine(JsonSerializer.Serialize(log, options));
+                Console.WriteLine("---");
+            }
         }
 
         static AnonymousListener SetupListener()
@@ -45,7 +58,7 @@ namespace DebugListeners
             var listener = new SimpleTools.SimpleHooks.ListenerPlugins.Anonymous.AnonymousListener()
             {
                 Url = "http://localhost:5011/api/sample",
-                Headers = { "content-type:application/json" },
+                Headers = [ "content-type:application/json" ],
                 Timeout = 1
             };
 

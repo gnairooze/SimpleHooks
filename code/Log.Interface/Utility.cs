@@ -2,6 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.Serialization.Json;
 using System.Text;
 
 namespace SimpleTools.SimpleHooks.Log.Interface
@@ -105,27 +109,40 @@ namespace SimpleTools.SimpleHooks.Log.Interface
             return log;
         }
 
-        public static LogModel SetArgumentsToNotesA(LogModel log, Dictionary<string, string> args)
+        public static MethodBase GetRealMethodFromAsync(MethodBase asyncMethod)
         {
-            log = log ?? FillBasicProps(null);
+            var generatedType = asyncMethod.DeclaringType;
+            var originalType = generatedType.DeclaringType;
+            var matching = from method in originalType.GetMethods()
+                let attr = method.GetCustomAttribute<AsyncStateMachineAttribute>()
+                where attr != null && attr.StateMachineType == generatedType
+                select method;
+            return matching.SingleOrDefault();
+        }
 
-            args = args ??
-                   throw new ArgumentNullException(
-                       $"SetPArametersToNotesA requires {nameof(args)} argument.");
-
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine();
-            sb.AppendLine("---arguments start---");
-            foreach (var arg in args)
+        public static LogModel Clone(LogModel log)
+        {
+            var clonedLog = new LogModel()
             {
-                sb.AppendLine($"{arg.Key}: {arg.Value}");
-            }
-            sb.AppendLine("---arguments end---");
-            sb.AppendLine();
+                CodeReference = log.CodeReference,
+                Correlation = log.Correlation,
+                Counter = log.Counter,
+                CreateDate = log.CreateDate,
+                Duration = log.Duration,
+                Id = log.Id,
+                Location = log.Location,
+                LogType = log.LogType,
+                Machine = log.Machine,
+                NotesA = log.NotesA,
+                NotesB = log.NotesB,
+                Owner = log.Owner,
+                Operation = log.Operation,
+                ReferenceName = log.ReferenceName,
+                ReferenceValue = log.ReferenceValue,
+                Step = log.Step
+            };
 
-            log.NotesA += sb.ToString();
-
-            return log;
+            return clonedLog;
         }
     }
 }

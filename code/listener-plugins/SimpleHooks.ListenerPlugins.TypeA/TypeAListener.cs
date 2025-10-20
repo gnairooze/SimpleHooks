@@ -3,6 +3,7 @@ using SimpleTools.SimpleHooks.ListenerInterfaces;
 using SimpleTools.SimpleHooks.Log.Interface;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO.Pipes;
 using System.Net.Http;
 using System.Text.Json;
@@ -41,20 +42,23 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.TypeA
                 { "typeOptions", typeOptions }
             };
 
+            var methodName = Log.Interface.Utility.GetRealMethodFromAsync(System.Reflection.MethodBase.GetCurrentMethod())?.Name;
+
             var log = Log.Interface.Utility.FillBasicProps(null); //fill Machine, Owner, Location
-            log.CodeReference = $"{this.GetType().FullName}|{System.Reflection.MethodBase.GetCurrentMethod()?.Name}";
+            log.CodeReference = $"{this.GetType().FullName}|{methodName}";
+            log.Operation = methodName;
             log.Correlation = Guid.NewGuid();
             log.ReferenceName = "listenerInstance.Id";
             log.ReferenceValue = listenerInstanceId.ToString();
-            log = Log.Interface.Utility.SetArgumentsToNotesA(log, parameters); //fill NotesA
-            
+            log.NotesA = System.Text.Json.JsonSerializer.Serialize(parameters);
+
             HttpResult httpResult = null;
 
             try
             {
                 // Log start
                 log = Log.Interface.Utility.SetMethodStart(log); //fill LogType, LogStep, Counter, CreateDate
-                result.Logs.Add(logCounter++, log);
+                result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
 
                 // Parse TypeOptionsValue to get auth configuration
                 TypeAOptions authConfig = null;
@@ -68,7 +72,7 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.TypeA
                     result.Message = "Failed to parse authentication configuration";
 
                     log = Log.Interface.Utility.SetError(log, ex); // fill LogType, Step, NotesB, Counter, CreateDate
-                    result.Logs.Add(logCounter++, log);
+                    result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
                     return result;
                 }
 
@@ -79,7 +83,7 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.TypeA
 
                     log = Log.Interface.Utility.SetError(log,
                         "TypeOptions is missing or invalid"); //fill LogType, Step, NotesB, Counter, CreateDate
-                    result.Logs.Add(logCounter++, log);
+                    result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
                     return result;
                 }
 
@@ -95,7 +99,7 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.TypeA
 
                     log = Log.Interface.Utility.SetError(log,
                         "Failed to obtain bearer token"); //fill LogType, Step, NotesB, Counter, CreateDate
-                    result.Logs.Add(logCounter++, log);
+                    result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
                     return result;
                 }
 
@@ -109,7 +113,7 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.TypeA
                 httpResult = _httpClient.Post(Url, headersWithAuth, eventData, Timeout);
 
                 parameters.Add("httpResult", httpResult.ToString());
-                log = Log.Interface.Utility.SetArgumentsToNotesA(log, parameters);
+                log.NotesA = System.Text.Json.JsonSerializer.Serialize(parameters);
 
                 // Check result
                 if (httpResult.HttpCode >= 200 && httpResult.HttpCode < 300)
@@ -119,13 +123,13 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.TypeA
                     result.Message = message;
 
                     log = Log.Interface.Utility.SetInformationMessage(log, message);
-                    result.Logs.Add(logCounter++, log);
+                    result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
                 }
                 else if (httpResult.HttpCode == 401)
                 {
                     // Token might be expired, try refreshing
                     log = Log.Interface.Utility.SetError(log, "Received 401, attempting token refresh");
-                    result.Logs.Add(logCounter++, log);
+                    result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
 
                     _cachedToken = null; // Invalidate cache
                     tokenResult = await GetBearerToken(listenerInstanceId, authConfig, result, logCounter);
@@ -147,7 +151,7 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.TypeA
                         result.Message = message;
 
                         log = Log.Interface.Utility.SetInformationMessage(log, message);
-                        result.Logs.Add(logCounter++, log);
+                        result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
                     }
                     else
                     {
@@ -156,11 +160,11 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.TypeA
                         result.Message = message;
 
                         log = Log.Interface.Utility.SetError(log, message);
-                        result.Logs.Add(logCounter++, log);
+                        result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
                     }
 
                     log = Log.Interface.Utility.SetInformationMessage(log, $"Retry result: {httpResult.HttpCode}");
-                    result.Logs.Add(logCounter++, log);
+                    result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
                 }
                 else
                 {
@@ -169,7 +173,7 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.TypeA
                     result.Message = message;
 
                     log = Log.Interface.Utility.SetError(log, message);
-                    result.Logs.Add(logCounter++, log);
+                    result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
                 }
             }
             catch (HttpRequestException ex)
@@ -184,10 +188,10 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.TypeA
                 };
 
                 parameters.Add("httpResult", httpResult.ToString());
-                log = Log.Interface.Utility.SetArgumentsToNotesA(log, parameters);
+                log.NotesA = System.Text.Json.JsonSerializer.Serialize(parameters);
 
                 log = Log.Interface.Utility.SetError(log, ex);
-                result.Logs.Add(logCounter++, log);
+                result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
             }
             catch (Exception ex)
             {
@@ -201,13 +205,14 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.TypeA
                 };
 
                 parameters.Add("httpResult", httpResult.ToString());
-                log = Log.Interface.Utility.SetArgumentsToNotesA(log, parameters);
+                log.NotesA = System.Text.Json.JsonSerializer.Serialize(parameters);
 
                 log = Log.Interface.Utility.SetError(log, ex);
-                result.Logs.Add(logCounter++, log);
+                result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
             }
 
             log = Log.Interface.Utility.SetMethodEnd(log, startTime);
+            result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
 
             return result;
         }
@@ -217,8 +222,11 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.TypeA
             var startTime = DateTime.UtcNow;
 
             //create basic log model
+            var methodName = Log.Interface.Utility.GetRealMethodFromAsync(System.Reflection.MethodBase.GetCurrentMethod())?.Name;
+
             var log = Log.Interface.Utility.FillBasicProps(null); //fill Machine, Owner, Location
-            log.CodeReference = $"{this.GetType().FullName}|{System.Reflection.MethodBase.GetCurrentMethod()?.Name}";
+            log.CodeReference = $"{this.GetType().FullName}|{methodName}";
+            log.Operation = "ExecuteAsync";
             log.Correlation = Guid.NewGuid();
             log.ReferenceName = "listenerInstance.Id";
             log.ReferenceValue = listenerInstanceId.ToString();
@@ -226,13 +234,13 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.TypeA
             var parameters = new Dictionary<string, string>();
 
             log = Log.Interface.Utility.SetMethodStart(log);
-            result.Logs.Add(logCounter++, log);
+            result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
 
             // Check cache
             if (!string.IsNullOrWhiteSpace(_cachedToken) && DateTime.UtcNow < _tokenExpiration)
             {
                 log = Log.Interface.Utility.SetInformationMessage(log, "Using cached bearer token");
-                result.Logs.Add(logCounter++, log);
+                result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
                 return (_cachedToken, logCounter);
             }
 
@@ -243,7 +251,7 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.TypeA
                 // Request new token
                 log = Log.Interface.Utility.SetInformationMessage(log,
                     $"Requesting bearer token from {config.IdentityProviderUrl}");
-                result.Logs.Add(logCounter++, log);
+                result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
 
                 var tokenRequestBody =
                     $"grant_type=client_credentials&client_id={config.ClientId}&client_secret={config.ClientSecret}&scope={config.Scope}";
@@ -252,7 +260,7 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.TypeA
                 tokenHttpResult = _httpClient.Post(config.IdentityProviderUrl, tokenHeaders, tokenRequestBody, 5);
 
                 parameters.Add("tokenHttpResult", tokenHttpResult.ToString());
-                log = Log.Interface.Utility.SetArgumentsToNotesA(log, parameters); //fill NotesA
+                log.NotesA = System.Text.Json.JsonSerializer.Serialize(parameters);
 
                 if (tokenHttpResult.HttpCode >= 200 && tokenHttpResult.HttpCode < 300)
                 {
@@ -262,10 +270,10 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.TypeA
                         DateTime.UtcNow.AddSeconds(tokenResponse.ExpiresIn - 60); // Refresh 60 seconds before expiry
 
                     log = Log.Interface.Utility.SetInformationMessage(log, "Bearer token obtained successfully");
-                    result.Logs.Add(logCounter++, log);
+                    result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
 
                     log = Log.Interface.Utility.SetMethodEnd(log, startTime);
-                    result.Logs.Add(logCounter++, log);
+                    result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
 
                     return (_cachedToken, logCounter);
                 }
@@ -273,7 +281,7 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.TypeA
                 {
                     log = Log.Interface.Utility.SetError(log,
                         $"Failed to obtain token: {tokenHttpResult.HttpCode} - {tokenHttpResult.Body}");
-                    result.Logs.Add(logCounter++, log);
+                    result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
                     return (null, logCounter);
                 }
             }
@@ -285,9 +293,9 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.TypeA
                     HttpCode = 0
                 };
                 parameters.Add("httpResult", tokenHttpResult.ToString());
-                log = Log.Interface.Utility.SetArgumentsToNotesA(log, parameters);
+                log.NotesA = System.Text.Json.JsonSerializer.Serialize(parameters);
                 log = Log.Interface.Utility.SetError(log, ex);
-                result.Logs.Add(logCounter++, log);
+                result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
                 return (null, logCounter);
             }
             catch (Exception ex)
@@ -298,9 +306,9 @@ namespace SimpleTools.SimpleHooks.ListenerPlugins.TypeA
                     HttpCode = 0
                 };
                 parameters.Add("httpResult", tokenHttpResult.ToString());
-                log = Log.Interface.Utility.SetArgumentsToNotesA(log, parameters);
+                log.NotesA = System.Text.Json.JsonSerializer.Serialize(parameters);
                 log = Log.Interface.Utility.SetError(log, ex);
-                result.Logs.Add(logCounter++, log);
+                result.Logs.Add(logCounter++, Log.Interface.Utility.Clone(log));
                 return (null, logCounter);
             }
         }
