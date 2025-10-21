@@ -57,7 +57,7 @@ namespace DebugListeners
         {
             var listener = new SimpleTools.SimpleHooks.ListenerPlugins.Anonymous.AnonymousListener()
             {
-                Url = "http://localhost:5011/api/sample",
+                Url = "http://localhost:5164/api/sample",
                 Headers = [ "content-type:application/json" ],
                 Timeout = 1
             };
