@@ -113,8 +113,8 @@ namespace SimpleTools.SimpleHooks.Log.Interface
         {
             var generatedType = asyncMethod.DeclaringType;
             var originalType = generatedType.DeclaringType;
-            var matching = from method in originalType.GetMethods()
-                let attr = method.GetCustomAttribute<AsyncStateMachineAttribute>()
+            var matching = from method in originalType.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+                           let attr = method.GetCustomAttribute<AsyncStateMachineAttribute>()
                 where attr != null && attr.StateMachineType == generatedType
                 select method;
             return matching.SingleOrDefault();
