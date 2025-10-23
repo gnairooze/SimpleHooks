@@ -10,6 +10,7 @@ This script automates the release process for SimpleHooks project including:
 """
 
 import os
+import shutil
 import sys
 import subprocess
 import json
@@ -282,6 +283,8 @@ class ReleaseAutomation:
         """Steps 19-30: Build and push Docker images"""
         print(f"\n=== Steps 19-30: Docker operations ===")
         
+        print(f"\n update docker tag latest: {self.update_docker_latest}")
+
         for project_name, config in self.projects.items():
             docker_tag = config.get("docker_tag")
             if not docker_tag:
