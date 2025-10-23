@@ -21,9 +21,10 @@ from typing import List, Dict, Optional
 
 
 class ReleaseAutomation:
-    def __init__(self, new_version: str, docker_registry: str = "gnairooze"):
+    def __init__(self, new_version: str, docker_registry: str = "gnairooze", update_docker_latest: bool = True):
         self.new_version = new_version
         self.docker_registry = docker_registry
+        self.update_docker_latest = update_docker_latest
         self.root_path = Path.cwd()
 
         # if root_path not ending with code then add it to code_path 
@@ -297,18 +298,31 @@ class ReleaseAutomation:
                 continue
             
             # Build Docker image with version tag
+            latest_tag = ""
+
             version_tag = f"{self.docker_registry}/simple-hooks:{docker_tag}-{self.new_version}"
-            latest_tag = f"{self.docker_registry}/simple-hooks:{docker_tag}-latest"
+
+            if self.update_docker_latest:
+                latest_tag = f"{self.docker_registry}/simple-hooks:{docker_tag}-latest"
             
             # Build image with dockerfile path and current directory as context
+            build_cmd = []            
 
-            build_cmd = [
-                "docker", "build",
-                "-f", str(dockerfile_path),
-                "-t", version_tag,
-                "-t", latest_tag,
-                "."
-            ]
+            if self.update_docker_latest:
+                build_cmd = [
+                    "docker", "build",
+                    "-f", str(dockerfile_path),
+                    "-t", version_tag,
+                    "-t", latest_tag,
+                    "."
+                ]
+            else:
+                build_cmd = [
+                    "docker", "build",
+                    "-f", str(dockerfile_path),
+                    "-t", version_tag,
+                    "."
+                ]
             
             try:
                 self.run_command(build_cmd)
@@ -318,8 +332,9 @@ class ReleaseAutomation:
                 self.run_command(push_version_cmd)
                 
                 # Push latest tag
-                push_latest_cmd = ["docker", "push", latest_tag]
-                self.run_command(push_latest_cmd)
+                if self.update_docker_latest:
+                    push_latest_cmd = ["docker", "push", latest_tag]
+                    self.run_command(push_latest_cmd)
                 
             except subprocess.CalledProcessError as e:
                 print(f"Error with Docker operations for {project_name}: {e}")
@@ -370,6 +385,7 @@ def main():
     parser = argparse.ArgumentParser(description="SimpleHooks Release Automation")
     parser.add_argument("version", help="New version number (e.g., 2.8.3)")
     parser.add_argument("--docker-registry", default="gnairooze", help="Docker registry username")
+    parser.add_argument("--update-docker-latest", default=True, help="tag and push latest docker image")
     parser.add_argument("--steps", nargs="+", 
                        choices=["readme", "assemblies", "commit", "publish", "github", "docker"],
                        help="Specific steps to run (default: all)")
@@ -390,7 +406,8 @@ def main():
     # Create release automation instance
     automation = ReleaseAutomation(
         new_version=args.version,
-        docker_registry=args.docker_registry
+        docker_registry=args.docker_registry,
+        update_docker_latest=args.update_docker_latest
     )
     
     # Run release process
