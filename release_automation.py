@@ -225,7 +225,9 @@ class ReleaseAutomation:
                 project_publish_path = self.publish_path / project_name / "listener-plugins"
                 for plugin_name, config in self.listener_plugins.items():
                     plugin_publish_path = self.publish_path / plugin_name
-                    shutil.copytree(plugin_publish_path, project_publish_path)
+                    project_plugin_publish_path = project_publish_path / plugin_name
+
+                    shutil.copytree(plugin_publish_path, project_plugin_publish_path)
 
     def step_11_to_18_create_github_release(self):
         """Steps 11-18: Create GitHub release and upload compressed files"""
