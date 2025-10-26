@@ -398,9 +398,9 @@ def main():
     
     args = parser.parse_args()
     
-    # Validate version format example 2.8.3-beta.1 or 2.8.3-alpha.1 or 2.8.3
-    if not re.match(r'^\d+\.\d+\.\d+(-beta\.\d+|-alpha\.\d+)?$', args.version):
-        print("Error: Version must be in format X.Y.Z (e.g., 2.8.3) or X.Y.Z-beta.1 (e.g., 2.8.3-beta.1) or X.Y.Z-alpha.1 (e.g., 2.8.3-alpha.1)")
+    # Validate version format
+    if not re.match(r'^\d+\.\d+\.\d+$', args.version):
+        print("Error: Version must be in format X.Y.Z (e.g., 2.8.3)")
         sys.exit(1)
     
     if args.dry_run:

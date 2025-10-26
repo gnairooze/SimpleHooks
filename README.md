@@ -3,7 +3,7 @@
 [![Build and Publish](https://github.com/gnairooze/SimpleHooks/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/gnairooze/SimpleHooks/actions/workflows/build.yml)
 [![Docker Image](https://img.shields.io/docker/v/gnairooze/simple-hooks?sort=semver&label=docker%20image)](https://hub.docker.com/r/gnairooze/simple-hooks)
 
-version: 2.8.3
+version: 3.0.0-alpha.1-alpha.1
 
 ![high level diagram](simple-hooks-system-context.svg)
 
