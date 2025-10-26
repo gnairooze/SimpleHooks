@@ -225,7 +225,7 @@ class ReleaseAutomation:
                 project_publish_path = self.publish_path / project_name / "listener-plugins"
                 for plugin_name, config in self.listener_plugins.items():
                     plugin_publish_path = self.publish_path / plugin_name
-                    project_plugin_publish_path = project_publish_path / plugin_name
+                    project_plugin_publish_path = project_publish_path / plugin_name.split('.')[-1]
 
                     shutil.copytree(plugin_publish_path, project_plugin_publish_path)
 
