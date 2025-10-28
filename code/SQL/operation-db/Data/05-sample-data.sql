@@ -48,11 +48,11 @@ insert ListenerDefinition
 values
 (
 	1,
-	'sample api', 
+	'sample listener', 
 	1, 
-	'http://test.test.com/api',
+	'http://host.docker.internal:5011/api/sample',
 	'content-type: application/json',
-	60,
+	600,
 	3,
 	1,
 	'admin', 
@@ -84,5 +84,5 @@ values
 	'2024-02-20',
 	'admin',
 	'2024-02-20',
-	'sample json to test event'
+	'sample listener api to test event'
 );
