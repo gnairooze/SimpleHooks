@@ -6,29 +6,29 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY . .
-RUN dotnet restore "SimpleHooks.AuthApi/SimpleHooks.AuthApi.csproj"
-RUN dotnet build "SimpleHooks.AuthApi/SimpleHooks.AuthApi.csproj" -c Release -o /app/build
+RUN dotnet restore "code/SimpleHooks.AuthApi/SimpleHooks.AuthApi.csproj"
+RUN dotnet build "code/SimpleHooks.AuthApi/SimpleHooks.AuthApi.csproj" -c Release -o /app/build
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-anonymous
 WORKDIR /src
 COPY . .
-RUN dotnet restore "listener-plugins/SimpleHooks.ListenerPlugins.Anonymous/SimpleHooks.ListenerPlugins.Anonymous.csproj"
-RUN dotnet build "listener-plugins/SimpleHooks.ListenerPlugins.Anonymous/SimpleHooks.ListenerPlugins.Anonymous.csproj" -c Release -o /app/build
+RUN dotnet restore "code/listener-plugins/SimpleHooks.ListenerPlugins.Anonymous/SimpleHooks.ListenerPlugins.Anonymous.csproj"
+RUN dotnet build "code/listener-plugins/SimpleHooks.ListenerPlugins.Anonymous/SimpleHooks.ListenerPlugins.Anonymous.csproj" -c Release -o /app/build
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-typea
 WORKDIR /src
 COPY . .
-RUN dotnet restore "listener-plugins/SimpleHooks.ListenerPlugins.TypeA/SimpleHooks.ListenerPlugins.TypeA.csproj"
-RUN dotnet build "listener-plugins/SimpleHooks.ListenerPlugins.TypeA/SimpleHooks.ListenerPlugins.TypeA.csproj" -c Release -o /app/build
+RUN dotnet restore "code/listener-plugins/SimpleHooks.ListenerPlugins.TypeA/SimpleHooks.ListenerPlugins.TypeA.csproj"
+RUN dotnet build "code/listener-plugins/SimpleHooks.ListenerPlugins.TypeA/SimpleHooks.ListenerPlugins.TypeA.csproj" -c Release -o /app/build
 
 FROM build-anonymous AS publish-anonymous
-RUN dotnet publish "listener-plugins/SimpleHooks.ListenerPlugins.Anonymous/SimpleHooks.ListenerPlugins.Anonymous.csproj" -c Release -o /app/publish
+RUN dotnet publish "code/listener-plugins/SimpleHooks.ListenerPlugins.Anonymous/SimpleHooks.ListenerPlugins.Anonymous.csproj" -c Release -o /app/publish
 
 FROM build-typea AS publish-typea
-RUN dotnet publish "listener-plugins/SimpleHooks.ListenerPlugins.TypeA/SimpleHooks.ListenerPlugins.TypeA.csproj" -c Release -o /app/publish
+RUN dotnet publish "code/listener-plugins/SimpleHooks.ListenerPlugins.TypeA/SimpleHooks.ListenerPlugins.TypeA.csproj" -c Release -o /app/publish
 
 FROM build AS publish
-RUN dotnet publish "SimpleHooks.AuthApi/SimpleHooks.AuthApi.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "code/SimpleHooks.AuthApi/SimpleHooks.AuthApi.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

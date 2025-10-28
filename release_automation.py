@@ -22,7 +22,7 @@ from typing import List, Dict, Optional
 
 
 class ReleaseAutomation:
-    def __init__(self, new_version: str, docker_registry: str = "gnairooze", update_docker_latest: bool = True):
+    def __init__(self, new_version: str, docker_registry: str = "gnairooze", update_docker_latest: bool = False):
         self.new_version = new_version
         self.docker_registry = docker_registry
         self.update_docker_latest = update_docker_latest
@@ -390,7 +390,7 @@ def main():
     parser = argparse.ArgumentParser(description="SimpleHooks Release Automation")
     parser.add_argument("version", help="New version number (e.g., 2.8.3)")
     parser.add_argument("--docker-registry", default="gnairooze", help="Docker registry username")
-    parser.add_argument("--update-docker-latest", default=True, help="tag and push latest docker image")
+    parser.add_argument("--update-docker-latest", default=False, help="tag and push latest docker image")
     parser.add_argument("--steps", nargs="+", 
                        choices=["readme", "assemblies", "commit", "publish", "github", "docker"],
                        help="Specific steps to run (default: all)")
