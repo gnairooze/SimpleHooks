@@ -91,6 +91,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{94F0E907-C
 		SQL\operation-db\Data\01-AppOption-Data.sql = SQL\operation-db\Data\01-AppOption-Data.sql
 		SQL\operation-db\Data\02-EventInstanceStatus-Data.sql = SQL\operation-db\Data\02-EventInstanceStatus-Data.sql
 		SQL\operation-db\Data\03-ListenerInstanceStatus-Data.sql = SQL\operation-db\Data\03-ListenerInstanceStatus-Data.sql
+		SQL\operation-db\Data\03-ListenerType-Data.sql = SQL\operation-db\Data\03-ListenerType-Data.sql
 		SQL\operation-db\Data\05-sample-data.sql = SQL\operation-db\Data\05-sample-data.sql
 	EndProjectSection
 EndProject

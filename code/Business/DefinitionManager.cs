@@ -1,5 +1,6 @@
 ﻿using SimpleTools.SimpleHooks.Interfaces;
 using SimpleTools.SimpleHooks.Log.Interface;
+using SimpleTools.SimpleHooks.Models.Instance;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -89,7 +90,7 @@ namespace SimpleTools.SimpleHooks.Business
                 this.EventDefinitionListenerDefinitionRelations.AddRange(this._eventDefListenerDefRepo.Read(null, conn));
 
                 // Initialize listener plugins for each ListenerDefinition
-                this.SetListenerPlugins();
+                this.SetListenerPlugins(log.Correlation, log.Counter++);
 
                 //trigger event for definitions loaded
                 this.DefitionsLoaded?.Invoke(this, EventArgs.Empty);
@@ -113,14 +114,17 @@ namespace SimpleTools.SimpleHooks.Business
             return succeeded;
         }
 
-        /// <summary>
-        /// Initializes listener plugins for all listener definitions.
-        /// Called after ListenerTypes and ListenerDefinitions are loaded.
-        /// </summary>
-        /// <param name="conn">Database connection (not used but kept for consistency)</param>
-        private void SetListenerPlugins()
+        private void SetListenerPlugins(Guid correlation, int counter)
         {
-            var log = this.GetLogModelMethodStart(MethodBase.GetCurrentMethod()?.Name, string.Empty, string.Empty);
+            var methodName = (System.Reflection.MethodBase.GetCurrentMethod())?.Name;
+
+            var log = Log.Interface.Utility.FillBasicProps(null); //fill Machine, Owner, Location
+            log.Operation = methodName;
+            log.CodeReference = $"{this.GetType().FullName}|{methodName}";
+            log.Correlation = correlation;
+            log.Counter = counter;
+
+            log = Log.Interface.Utility.SetMethodStart(log); //fill LogType, LogStep, 
             this._logger.Add(log);
 
             try
@@ -136,17 +140,16 @@ namespace SimpleTools.SimpleHooks.Business
                         if (listenerType == null)
                         {
                             // Log error if ListenerType not found
-                            var errorLog = new Log.Interface.LogModel
-                            {
-                                LogType = Log.Interface.LogModel.LogTypes.Error,
-                                CreateDate = DateTime.UtcNow,
-                                Operation = MethodBase.GetCurrentMethod()?.Name,
-                                Step = "ListenerType Not Found",
-                                ReferenceName = "ListenerDefinition.Id",
-                                ReferenceValue = listenerDef.Id.ToString(),
-                                NotesA = $"ListenerType with Id {listenerDef.TypeId} not found for ListenerDefinition {listenerDef.Id}"
-                            };
-                            this._logger.Add(errorLog);
+                            log.LogType = Log.Interface.LogModel.LogTypes.Error;
+                            log.CreateDate = DateTime.UtcNow;
+                            log.Operation = methodName;
+                            log.Step = "ListenerType Not Found";
+                            log.ReferenceName = "ListenerDefinition.Id";
+                            log.ReferenceValue = listenerDef.Id.ToString();
+                            log.NotesB =
+                                $"ListenerType with Id {listenerDef.TypeId} not found for ListenerDefinition {listenerDef.Id}";
+                            log.Counter++;
+                            this._logger.Add(log);
                             continue;
                         }
 
@@ -161,18 +164,15 @@ namespace SimpleTools.SimpleHooks.Business
                     catch (Exception ex)
                     {
                         // Log error for this specific listener but continue with others
-                        var errorLog = new Log.Interface.LogModel
-                        {
-                            LogType = Log.Interface.LogModel.LogTypes.Error,
-                            CreateDate = DateTime.UtcNow,
-                            Operation = MethodBase.GetCurrentMethod()?.Name,
-                            Step = "Plugin Creation Failed",
-                            ReferenceName = "ListenerDefinition.Id",
-                            ReferenceValue = listenerDef.Id.ToString(),
-                            NotesA = $"Failed to create plugin for ListenerDefinition {listenerDef.Id}",
-                            NotesB = Newtonsoft.Json.JsonConvert.SerializeObject(ex)
-                        };
-                        this._logger.Add(errorLog);
+                        log.LogType = Log.Interface.LogModel.LogTypes.Error;
+                        log.CreateDate = DateTime.UtcNow;
+                        log.Operation = methodName;
+                        log.Step = ex.Message;
+                        log.ReferenceName = "ListenerDefinition.Id";
+                        log.ReferenceValue = listenerDef.Id.ToString();
+                        log.NotesB = Newtonsoft.Json.JsonConvert.SerializeObject(ex);
+
+                        this._logger.Add(log);
                     }
                 }
 
