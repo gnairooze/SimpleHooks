@@ -30,7 +30,7 @@ namespace DebugListeners
     }
 }
 ";
-            string typeOptionsValue = @"{""identityProviderUrl"": ""https://identity.dev.test:8091/connect/token"", ""clientId"": ""client-sample"", ""clientSecret"": ""P@ssw0rdP@ssw0rd"", ""scope"": ""samplelistener_api.sample""}";
+            string typeOptionsValue = @"{""identityProviderUrl"": ""https://identity.dev.test:8071/connect/token"", ""clientId"": ""client-sample"", ""clientSecret"": ""P@ssw0rdP@ssw0rd"", ""scope"": ""samplelistener_api.sample""}";
             var listenerInstanceId = 1;
 
             var listener = SetupListener();
@@ -58,7 +58,7 @@ namespace DebugListeners
         {
             var listener = new SimpleTools.SimpleHooks.ListenerPlugins.TypeA.TypeAListener()
             {
-                Url = "http://localhost:5164/api/SampleAuth",
+                Url = "http://localhost:5011/api/SampleAuth",
                 Headers = [ "content-type:application/json" ],
                 Timeout = 1
             };
