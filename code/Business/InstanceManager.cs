@@ -1,6 +1,7 @@
 ﻿using SimpleTools.SimpleHooks.HttpClient.Interface;
 using SimpleTools.SimpleHooks.Interfaces;
 using SimpleTools.SimpleHooks.Log.Interface;
+using SimpleTools.SimpleHooks.ListenerInterfaces;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace SimpleTools.SimpleHooks.Business
         private readonly IDataRepository<Models.Instance.EventInstance> _eventInstanceRepo;
         private readonly IDataRepository<Models.Instance.ListenerInstance> _listenerInstanceRepo;
         private readonly IHttpClient _httpClient;
+        
         private readonly DefinitionManager _definitionManager;
         private readonly Guid _logCorrelation = Guid.NewGuid();
 
@@ -31,14 +33,16 @@ namespace SimpleTools.SimpleHooks.Business
 
         #region constructors
         public InstanceManager(
-            ILog logger, 
-            IConnectionRepository connectionRepo, 
-            IDataRepository<Models.Instance.EventInstance> eventInstanceRepo, 
-            IDataRepository<Models.Instance.ListenerInstance> listenerInstanceRepo, 
-            IHttpClient httpClient, 
-            IDataRepository<Models.Definition.EventDefinition> eventDefRepo, 
-            IDataRepository<Models.Definition.ListenerDefinition> listenerDefRepo, 
-            IDataRepository<Models.Definition.EventDefinitionListenerDefinition> eventDefListenerDefRepo, 
+            ILog logger,
+            IConnectionRepository connectionRepo,
+            IDataRepository<Models.Instance.EventInstance> eventInstanceRepo,
+            IDataRepository<Models.Instance.ListenerInstance> listenerInstanceRepo,
+            IHttpClient httpClient,
+            IDataRepository<Models.Definition.EventDefinition> eventDefRepo,
+            IDataRepository<Models.Definition.ListenerDefinition> listenerDefRepo,
+            IDataRepository<Models.Definition.EventDefinitionListenerDefinition> eventDefListenerDefRepo,
+            IDataRepository<Models.Definition.ListenerType> listenerTypeRepo,
+            ListenerPluginManager listenerPluginManager,
             IDataRepository<Models.Definition.AppOption> appOptionRepo
             )
         {
@@ -48,11 +52,11 @@ namespace SimpleTools.SimpleHooks.Business
 
             this._eventInstanceRepo = eventInstanceRepo ?? throw new ArgumentNullException(nameof(eventInstanceRepo));
             this._listenerInstanceRepo = listenerInstanceRepo ?? throw new ArgumentNullException(nameof(listenerInstanceRepo));
-            
+
             this._httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
-            this._definitionManager = new DefinitionManager(logger, eventDefRepo, listenerDefRepo, eventDefListenerDefRepo, appOptionRepo, connectionRepo);
-            
+            this._definitionManager = new DefinitionManager(logger, eventDefRepo, listenerDefRepo, eventDefListenerDefRepo, appOptionRepo, listenerTypeRepo, connectionRepo, listenerPluginManager);
+
             _definitionManager.DefitionsLoaded += OnDefinitionsLoaded;
 
             var succeeded = this._definitionManager.LoadDefinitions();
@@ -101,7 +105,7 @@ namespace SimpleTools.SimpleHooks.Business
             eventInstance.GroupId = SetGroupId();
 
             Models.Instance.EventInstance resultInstance = null;
-            
+
             object trans = null;
             object conn = this._connectionRepo.CreateConnection();
 
@@ -286,7 +290,7 @@ namespace SimpleTools.SimpleHooks.Business
                     log.Correlation = this._logCorrelation;
                     this._logger.Add(log);
                 }
-                
+
             }
 
             //add end log
@@ -391,7 +395,7 @@ namespace SimpleTools.SimpleHooks.Business
             {
                 log = this.GetLogModelException(log, ex);
                 this._logger.Add(log);
-                
+
                 return eventInstance.EventData;
             }
         }
@@ -507,63 +511,64 @@ namespace SimpleTools.SimpleHooks.Business
                 return;
             }
 
-            #region handle http client result
+            #region handle plugin execution result
             var parameters = new Dictionary<string, string>
             {
                 { "ListenerInstance", listenerInstance.ToString() },
                 { "eventData", eventData }
             };
 
-            HttpResult result = null;
+            ListenerInterfaces.ListenerResult pluginResult = null;
 
             try
             {
-                result = this._httpClient.Post(listenerInstance.Definition.Url, listenerInstance.Definition.Headers,
-                    eventData, listenerInstance.Definition.Timeout);
+                // Get plugin instance from listener definition
+                var plugin = listenerInstance.Definition.ListenerPlugin;
 
-                parameters.Add("result", result.ToString());
-            }
-            catch (HttpRequestException e)
-            {
-                Console.WriteLine(e);
-
-                if (result == null)
+                if (plugin == null)
                 {
-                    result = new HttpResult()
-                    {
-                        HttpCode = 0,
-                        Body = "null result. created in catch HttpRequestException block"
-                    };
-
-                    parameters.Add("result", result.ToString());
+                    throw new InvalidOperationException($"No plugin instance found for ListenerDefinition {listenerInstance.Definition.Id}");
                 }
-                
-                log.LogType = LogModel.LogTypes.Error;
-                log.Counter++;
-                log.Step = "execute listener - IHttpClient.Post";
-                log.NotesA = Newtonsoft.Json.JsonConvert.SerializeObject(parameters);
-                log.NotesB = Newtonsoft.Json.JsonConvert.SerializeObject(e);
 
-                this._logger.Add(log);
+                // Get type options value from environment variable
+                string typeOptionsValue = string.Empty;
+                if (!string.IsNullOrWhiteSpace(listenerInstance.Definition.TypeOptions))
+                {
+                    typeOptionsValue = Environment.GetEnvironmentVariable(listenerInstance.Definition.TypeOptions) ?? string.Empty;
+                }
+
+                // Execute plugin
+                pluginResult = plugin.ExecuteAsync(listenerInstance.Id, eventData, typeOptionsValue).GetAwaiter().GetResult();
+
+                parameters.Add("result", pluginResult.Message);
+
+                // Log plugin execution logs
+                foreach (var pluginLog in pluginResult.Logs.Values)
+                {
+                    pluginLog.Correlation = log.Correlation;
+                    pluginLog.ReferenceName = "listenerInstance.Id";
+                    pluginLog.ReferenceValue = listenerInstance.Id.ToString();
+                    this._logger.Add(pluginLog);
+                }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
 
-                if (result == null)
+                if (pluginResult == null)
                 {
-                    result = new HttpResult()
+                    pluginResult = new ListenerInterfaces.ListenerResult()
                     {
-                        HttpCode = 0,
-                        Body = "null result. created in catch Exception block"
+                        Succeeded = false,
+                        Message = "null result. created in catch Exception block"
                     };
 
-                    parameters.Add("result", result.ToString());
+                    parameters.Add("result", pluginResult.Message);
                 }
 
                 log.LogType = LogModel.LogTypes.Error;
                 log.Counter++;
-                log.Step = "execute listener - IHttpClient.Post";
+                log.Step = "execute listener - plugin.ExecuteAsync";
                 log.NotesA = Newtonsoft.Json.JsonConvert.SerializeObject(parameters);
                 log.NotesB = Newtonsoft.Json.JsonConvert.SerializeObject(e);
 
@@ -571,7 +576,7 @@ namespace SimpleTools.SimpleHooks.Business
             }
 
             //succeeded
-            if (result.HttpCode == InstanceConstants.HttpCodeSucceeded)
+            if (pluginResult != null && pluginResult.Succeeded)
             {
                 listenerInstance.Status = Models.Instance.Enums.ListenerInstanceStatus.Succeeded;
 
@@ -611,7 +616,7 @@ namespace SimpleTools.SimpleHooks.Business
 
             this._connectionRepo.DisposeConnection(conn);
         }
-    
+
         private bool UpdateListenerInstanceStatus(Models.Instance.ListenerInstance listenerInstance, LogModel log, object conn)
         {
             bool succeeded = true;
@@ -631,9 +636,9 @@ namespace SimpleTools.SimpleHooks.Business
             {
                 log = GetLogModelException(log, ex);
                 log = this._logger.Add(log);
-                
+
                 Console.WriteLine($"Error: {ex.Message} logged with Id {log.Id}");
-                
+
                 succeeded = false;
             }
             finally

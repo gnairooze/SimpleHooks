@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Log.Console\Log.Console.csproj" />
+    <ProjectReference Include="..\..\Log.Interface\Log.Interface.csproj" />
+    <ProjectReference Include="..\..\SimpleHooks.ListenerInterfaces\SimpleHooks.ListenerInterfaces.csproj" />
+    <ProjectReference Include="..\SimpleHooks.ListenerPlugins.Anonymous\SimpleHooks.ListenerPlugins.Anonymous.csproj" />
+    <ProjectReference Include="..\SimpleHooks.ListenerPlugins.TypeA\SimpleHooks.ListenerPlugins.TypeA.csproj" />
+  </ItemGroup>
+
+</Project>

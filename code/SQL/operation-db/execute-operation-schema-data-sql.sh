@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # SQL Server connection parameters
-SERVER_NAME=".,14333"
+SERVER_NAME="simple-hooks-dbs"
 SQL_USERNAME="sa"
 SQL_PASSWORD="sample@Strong23Password"
 
@@ -15,6 +15,10 @@ execute_sql_files() {
         fi
     done
 }
+
+
+echo "creating simplehooks db ..."
+sqlcmd -S "$SERVER_NAME" -i "create-db.sql" -U "$SQL_USERNAME" -P "$SQL_PASSWORD" -C
 
 # Execute SQL files from Tables directory
 echo "Executing SQL files from Tables directory..."

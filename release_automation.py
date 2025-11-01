@@ -10,6 +10,7 @@ This script automates the release process for SimpleHooks project including:
 """
 
 import os
+import shutil
 import sys
 import subprocess
 import json
@@ -21,9 +22,10 @@ from typing import List, Dict, Optional
 
 
 class ReleaseAutomation:
-    def __init__(self, new_version: str, docker_registry: str = "gnairooze"):
+    def __init__(self, new_version: str, docker_registry: str = "gnairooze", update_docker_latest: bool = False):
         self.new_version = new_version
         self.docker_registry = docker_registry
+        self.update_docker_latest = update_docker_latest
         self.root_path = Path.cwd()
 
         # if root_path not ending with code then add it to code_path 
@@ -52,6 +54,20 @@ class ReleaseAutomation:
             "SimpleHooks.Assist": {
                 "path": self.code_path / "SimpleHooks.Assist",
                 "csproj": "SimpleHooks.Assist.csproj",
+                "docker_tag": None  # No Docker image for this project
+            }
+        }
+
+        # Listener plugins plugins configurations
+        self.listener_plugins = {
+            "SimpleHooks.ListenerPlugins.Anonymous": {
+                "path": self.code_path / "listener-plugins/SimpleHooks.ListenerPlugins.Anonymous",
+                "csproj": "SimpleHooks.ListenerPlugins.Anonymous.csproj",
+                "docker_tag": None  # No Docker image for this project
+            },
+            "SimpleHooks.ListenerPlugins.TypeA": {
+                "path": self.code_path / "listener-plugins/SimpleHooks.ListenerPlugins.TypeA",
+                "csproj": "SimpleHooks.ListenerPlugins.TypeA.csproj",
                 "docker_tag": None  # No Docker image for this project
             }
         }
@@ -133,6 +149,10 @@ class ReleaseAutomation:
             csproj_path = config["path"] / config["csproj"]
             self.update_version_in_file(csproj_path, self.new_version)
 
+        for plugin_name, config in self.listener_plugins.items():
+            csproj_path = config["path"] / config["csproj"]
+            self.update_version_in_file(csproj_path, self.new_version)
+
     def step_6_commit_changes_and_push(self):
         """Step 6: Commit and push version changes"""
         print(f"\n=== Step 6: Commit and push version changes ===")
@@ -180,6 +200,34 @@ class ReleaseAutomation:
             ]
             
             self.run_command(publish_cmd)
+
+        for plugin_name, config in self.listener_plugins.items():
+            print(f"\nPublishing {plugin_name}...")
+            
+            plugin_publish_path = self.publish_path / plugin_name
+            plugin_publish_path.mkdir(exist_ok=True)
+            
+            # Publish command
+            publish_cmd = [
+                "dotnet", "publish",
+                str(config["path"] / config["csproj"]),
+                "-c", "Release",
+                "-r", "win-x64",
+                "--self-contained", "true",
+                "-o", str(plugin_publish_path)
+            ]
+            
+            self.run_command(publish_cmd)
+
+        # Copy published plugins to each project published path except SimpleHooks.Assist
+        for project_name, config in self.projects.items():
+            if project_name != "SimpleHooks.Assist":
+                project_publish_path = self.publish_path / project_name / "listener-plugins"
+                for plugin_name, config in self.listener_plugins.items():
+                    plugin_publish_path = self.publish_path / plugin_name
+                    project_plugin_publish_path = project_publish_path / plugin_name.split('.')[-1]
+
+                    shutil.copytree(plugin_publish_path, project_plugin_publish_path)
 
     def step_11_to_18_create_github_release(self):
         """Steps 11-18: Create GitHub release and upload compressed files"""
@@ -237,6 +285,8 @@ class ReleaseAutomation:
         """Steps 19-30: Build and push Docker images"""
         print(f"\n=== Steps 19-30: Docker operations ===")
         
+        print(f"\n update docker tag latest: {self.update_docker_latest}")
+
         for project_name, config in self.projects.items():
             docker_tag = config.get("docker_tag")
             if not docker_tag:
@@ -253,18 +303,31 @@ class ReleaseAutomation:
                 continue
             
             # Build Docker image with version tag
+            latest_tag = ""
+
             version_tag = f"{self.docker_registry}/simple-hooks:{docker_tag}-{self.new_version}"
-            latest_tag = f"{self.docker_registry}/simple-hooks:{docker_tag}-latest"
+
+            if self.update_docker_latest:
+                latest_tag = f"{self.docker_registry}/simple-hooks:{docker_tag}-latest"
             
             # Build image with dockerfile path and current directory as context
+            build_cmd = []            
 
-            build_cmd = [
-                "docker", "build",
-                "-f", str(dockerfile_path),
-                "-t", version_tag,
-                "-t", latest_tag,
-                "."
-            ]
+            if self.update_docker_latest:
+                build_cmd = [
+                    "docker", "build",
+                    "-f", str(dockerfile_path),
+                    "-t", version_tag,
+                    "-t", latest_tag,
+                    "."
+                ]
+            else:
+                build_cmd = [
+                    "docker", "build",
+                    "-f", str(dockerfile_path),
+                    "-t", version_tag,
+                    "."
+                ]
             
             try:
                 self.run_command(build_cmd)
@@ -274,8 +337,9 @@ class ReleaseAutomation:
                 self.run_command(push_version_cmd)
                 
                 # Push latest tag
-                push_latest_cmd = ["docker", "push", latest_tag]
-                self.run_command(push_latest_cmd)
+                if self.update_docker_latest:
+                    push_latest_cmd = ["docker", "push", latest_tag]
+                    self.run_command(push_latest_cmd)
                 
             except subprocess.CalledProcessError as e:
                 print(f"Error with Docker operations for {project_name}: {e}")
@@ -326,6 +390,7 @@ def main():
     parser = argparse.ArgumentParser(description="SimpleHooks Release Automation")
     parser.add_argument("version", help="New version number (e.g., 2.8.3)")
     parser.add_argument("--docker-registry", default="gnairooze", help="Docker registry username")
+    parser.add_argument("--update-docker-latest", default=False, help="tag and push latest docker image")
     parser.add_argument("--steps", nargs="+", 
                        choices=["readme", "assemblies", "commit", "publish", "github", "docker"],
                        help="Specific steps to run (default: all)")
@@ -346,7 +411,8 @@ def main():
     # Create release automation instance
     automation = ReleaseAutomation(
         new_version=args.version,
-        docker_registry=args.docker_registry
+        docker_registry=args.docker_registry,
+        update_docker_latest=args.update_docker_latest
     )
     
     # Run release process

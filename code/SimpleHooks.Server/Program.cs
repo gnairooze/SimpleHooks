@@ -42,13 +42,15 @@ namespace SimpleTools.SimpleHooks.Server
 
         private static void Start()
         {
+            var logger = new Logger()
+            {
+                MinLogType = (LogModel.LogTypes)Enum.Parse(typeof(LogModel.LogTypes), _config.LoggerMinLogLevel, true),
+                ConnectionString = _config.ConnectionStringLog,
+                FunctionName = _config.LoggerFunction
+            };
+
             Business.InstanceManager manager = new(
-                new Logger()
-                {
-                    MinLogType = (LogModel.LogTypes)Enum.Parse(typeof(LogModel.LogTypes),_config.LoggerMinLogLevel,true),
-                    ConnectionString = _config.ConnectionStringLog,
-                    FunctionName = _config.LoggerFunction
-                },
+                logger,
                 new SqlConnectionRepo() { ConnectionString = _config.ConnectionStringSimpleHooks },
                 new EventInstanceDataRepo(),
                 new ListenerInstanceDataRepo(),
@@ -56,6 +58,8 @@ namespace SimpleTools.SimpleHooks.Server
                 new EventDefinitionDataRepo(),
                 new ListenerDefinitionDataRepo(),
                 new EventIistenerDefinitionDataRepo(),
+                new ListenerTypeDataRepo(),
+                new ListenerPluginManager(logger),
                 new AppOptionDataRepo());
 
             var instances = manager.GetEventInstancesToProcess(DateTime.UtcNow, _config.GroupId);

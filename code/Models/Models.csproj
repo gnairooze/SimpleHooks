@@ -8,4 +8,8 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleHooks.ListenerInterfaces\SimpleHooks.ListenerInterfaces.csproj" />
+  </ItemGroup>
+
 </Project>

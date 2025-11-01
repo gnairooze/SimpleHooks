@@ -1,4 +1,5 @@
 ﻿using System;
+using SimpleTools.SimpleHooks.Business;
 using SimpleTools.SimpleHooks.Log.Interface;
 using SimpleTools.SimpleHooks.Models.Instance;
 using SimpleTools.SimpleHooks.Repo.SQL;
@@ -11,9 +12,10 @@ namespace SimpleTools.SimpleHooks.TestSimpleHooks
         public static void TestAddEventInstance1()
         {
             string connectionString = "Data Source=.;Initial Catalog=SimpleHooks;Integrated Security=SSPI;";
+            var logger = new Log.Console.Logger() { MinLogType = LogModel.LogTypes.Debug };
 
             Business.InstanceManager manager = new (
-                new Log.Console.Logger() { MinLogType = LogModel.LogTypes.Debug },
+                logger,
                 new SqlConnectionRepo() { ConnectionString = connectionString },
                 new EventInstanceDataRepo(),
                 new ListenerInstanceDataRepo(),
@@ -21,6 +23,8 @@ namespace SimpleTools.SimpleHooks.TestSimpleHooks
                 new EventDefinitionDataRepo(),
                 new ListenerDefinitionDataRepo(),
                 new EventIistenerDefinitionDataRepo(),
+                new ListenerTypeDataRepo(),
+                new ListenerPluginManager(logger),
                 new AppOptionDataRepo());
 
             var instance = manager.Add(new EventInstance() { 
@@ -45,12 +49,15 @@ namespace SimpleTools.SimpleHooks.TestSimpleHooks
         {
             string connectionString = "Data Source=.;Initial Catalog=SimpleHooks;Integrated Security=SSPI;";
 
+            var logger = new Log.SQL.Logger()
+            {
+                MinLogType = LogModel.LogTypes.Debug,
+                ConnectionString = connectionString,
+                FunctionName = "SimpleHooks_Log_Add"
+            };
+
             Business.InstanceManager manager = new(
-                new Log.SQL.Logger() { 
-                    MinLogType = LogModel.LogTypes.Debug,
-                    ConnectionString = connectionString,
-                    FunctionName = "SimpleHooks_Log_Add"
-                },
+                logger,
                 new SqlConnectionRepo() { ConnectionString = connectionString },
                 new EventInstanceDataRepo(),
                 new ListenerInstanceDataRepo(),
@@ -58,6 +65,8 @@ namespace SimpleTools.SimpleHooks.TestSimpleHooks
                 new EventDefinitionDataRepo(),
                 new ListenerDefinitionDataRepo(),
                 new EventIistenerDefinitionDataRepo(),
+                new ListenerTypeDataRepo(),
+                new ListenerPluginManager(logger),
                 new AppOptionDataRepo());
 
             var instance = manager.Add(new EventInstance()
@@ -82,8 +91,10 @@ namespace SimpleTools.SimpleHooks.TestSimpleHooks
         {
             string connectionString = "Data Source=.;Initial Catalog=SimpleHooks;Integrated Security=SSPI;";
 
+            var logger = new Log.Console.Logger() { MinLogType = Log.Interface.LogModel.LogTypes.Debug };
+
             Business.InstanceManager manager = new(
-                new Log.Console.Logger() { MinLogType = Log.Interface.LogModel.LogTypes.Debug },
+                logger,
                 new Repo.SQL.SqlConnectionRepo() { ConnectionString = connectionString },
                 new Repo.SQL.EventInstanceDataRepo(),
                 new Repo.SQL.ListenerInstanceDataRepo(),
@@ -91,6 +102,8 @@ namespace SimpleTools.SimpleHooks.TestSimpleHooks
                 new Repo.SQL.EventDefinitionDataRepo(),
                 new Repo.SQL.ListenerDefinitionDataRepo(),
                 new Repo.SQL.EventIistenerDefinitionDataRepo(),
+                new Repo.SQL.ListenerTypeDataRepo(),
+                new Business.ListenerPluginManager(logger),
                 new Repo.SQL.AppOptionDataRepo());
 
             var instances = manager.GetEventInstancesToProcess(DateTime.UtcNow);
@@ -101,13 +114,15 @@ namespace SimpleTools.SimpleHooks.TestSimpleHooks
         {
             string connectionString = "Data Source=.;Initial Catalog=SimpleHooks;Integrated Security=SSPI;";
 
+            var logger = new Log.SQL.Logger()
+            {
+                MinLogType = LogModel.LogTypes.Information,
+                ConnectionString = connectionString,
+                FunctionName = "SimpleHooks_Log_Add"
+            };
+
             Business.InstanceManager manager = new(
-                new Log.SQL.Logger()
-                {
-                    MinLogType = LogModel.LogTypes.Information,
-                    ConnectionString = connectionString,
-                    FunctionName = "SimpleHooks_Log_Add"
-                },
+                logger,
                 new SqlConnectionRepo() { ConnectionString = connectionString },
                 new EventInstanceDataRepo(),
                 new ListenerInstanceDataRepo(),
@@ -115,6 +130,8 @@ namespace SimpleTools.SimpleHooks.TestSimpleHooks
                 new EventDefinitionDataRepo(),
                 new ListenerDefinitionDataRepo(),
                 new EventIistenerDefinitionDataRepo(),
+                new ListenerTypeDataRepo(),
+                new ListenerPluginManager(logger),
                 new AppOptionDataRepo());
 
             var instances = manager.GetEventInstancesToProcess(DateTime.UtcNow);

@@ -17,7 +17,9 @@ begin
 		Headers,
 		[Timeout],
 		TrialCount,
-		RetrialDelay
+		RetrialDelay,
+		Type_Id,
+		Type_Options
 	from ListenerDefinition
 end
 

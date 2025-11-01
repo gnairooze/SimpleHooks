@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using SimpleTools.SimpleHooks.HttpClient.Interface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace SimpleTools.SimpleHooks.HttpClient.Simple
@@ -19,11 +22,27 @@ namespace SimpleTools.SimpleHooks.HttpClient.Simple
         public Interface.HttpResult Post(string url, List<string> headers, string body, int timeout)
         {
             System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
-            
+
+            #region handle content-type header
             PrepareContentTypeHeader(headers);
 
             var mediaType = headers.Single(t => t.Contains("content-type")).Split(":".ToCharArray())[1].Trim();
             StringContent data = new StringContent(body, Encoding.UTF8, mediaType);
+            #endregion
+
+            #region handle Authorization header
+
+            if (headers.Any(h => h.StartsWith("Authorization:")))
+            {
+                var authValue = headers.Single(t => t.Contains("Authorization")).Split(":".ToCharArray())[1].Trim().Split(" ".ToCharArray());
+                var authScheme = authValue[0].Trim();
+                var authToken = authValue[1].Trim();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(authScheme, authToken);
+            }
+            #endregion
+
+
             client.Timeout = TimeSpan.FromMinutes(timeout);
 
             foreach (var header in headers)
@@ -32,7 +51,7 @@ namespace SimpleTools.SimpleHooks.HttpClient.Simple
 
                 var splitHeader = header.Split(":".ToCharArray());
 
-                if (splitHeader[0] == "content-type") continue;
+                if (splitHeader[0] == "content-type" || splitHeader[0] == "Authorization") continue;
 
                 data.Headers.Add(splitHeader[0], splitHeader[1]);
             }

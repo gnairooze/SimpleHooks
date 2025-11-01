@@ -25,6 +25,8 @@ public class InstanceManagerTests
     private readonly Mock<IDbConnection> _mockConnection;
     private readonly Mock<IDbTransaction> _mockTransaction;
     private readonly Mock<IDataRepositoryEventInstanceStatus> _mockEventInstanceStatusRepo;
+    private readonly Mock<IDataRepository<ListenerType>> _mockListenerTypeRepo;
+    private readonly ListenerPluginManager _listenerPluginManager;
 
     public InstanceManagerTests()
     {
@@ -40,6 +42,10 @@ public class InstanceManagerTests
         _mockConnection = new Mock<IDbConnection>();
         _mockTransaction = new Mock<IDbTransaction>();
         _mockEventInstanceStatusRepo = new Mock<IDataRepositoryEventInstanceStatus>();
+
+        _mockListenerTypeRepo = new Mock<IDataRepository<ListenerType>>();
+
+        _listenerPluginManager = new ListenerPluginManager(_mockLogger.Object);
 
         // Setup the EventInstanceRepo to also implement IDataRepositoryEventInstanceStatus
         _mockEventInstanceRepo.As<IDataRepositoryEventInstanceStatus>();
@@ -76,6 +82,8 @@ public class InstanceManagerTests
             _mockEventDefRepo.Object,
             _mockListenerDefRepo.Object,
             _mockEventDefListenerDefRepo.Object,
+            _mockListenerTypeRepo.Object,
+            _listenerPluginManager,
             _mockAppOptionRepo.Object);
     }
 
@@ -189,6 +197,8 @@ public class InstanceManagerTests
                 _mockEventDefRepo.Object,
                 _mockListenerDefRepo.Object,
                 _mockEventDefListenerDefRepo.Object,
+                _mockListenerTypeRepo.Object,
+                _listenerPluginManager,
                 _mockAppOptionRepo.Object));
 
         Assert.Equal("logger", exception.ParamName);
@@ -208,6 +218,8 @@ public class InstanceManagerTests
                 _mockEventDefRepo.Object,
                 _mockListenerDefRepo.Object,
                 _mockEventDefListenerDefRepo.Object,
+                _mockListenerTypeRepo.Object,
+                _listenerPluginManager,
                 _mockAppOptionRepo.Object));
 
         Assert.Equal("connectionRepo", exception.ParamName);
@@ -227,6 +239,8 @@ public class InstanceManagerTests
                 _mockEventDefRepo.Object,
                 _mockListenerDefRepo.Object,
                 _mockEventDefListenerDefRepo.Object,
+                _mockListenerTypeRepo.Object,
+                _listenerPluginManager,
                 _mockAppOptionRepo.Object));
 
         Assert.Equal("eventInstanceRepo", exception.ParamName);
@@ -246,6 +260,8 @@ public class InstanceManagerTests
                 _mockEventDefRepo.Object,
                 _mockListenerDefRepo.Object,
                 _mockEventDefListenerDefRepo.Object,
+                _mockListenerTypeRepo.Object,
+                _listenerPluginManager,
                 _mockAppOptionRepo.Object));
 
         Assert.Equal("listenerInstanceRepo", exception.ParamName);
@@ -265,6 +281,8 @@ public class InstanceManagerTests
                 _mockEventDefRepo.Object,
                 _mockListenerDefRepo.Object,
                 _mockEventDefListenerDefRepo.Object,
+                _mockListenerTypeRepo.Object,
+                _listenerPluginManager,
                 _mockAppOptionRepo.Object));
 
         Assert.Equal("httpClient", exception.ParamName);

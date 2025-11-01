@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SimpleTools.SimpleHooks.Business;
+using SimpleTools.SimpleHooks.Interfaces;
 using System;
 
 namespace SimpleTools.SimpleHooks.Web.Controllers
@@ -19,6 +21,8 @@ namespace SimpleTools.SimpleHooks.Web.Controllers
             Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.EventDefinition> eventDefRepo,
             Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.ListenerDefinition> listenerDefRepo,
             Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.EventDefinitionListenerDefinition> eventDefListenerDefRepo,
+            IDataRepository<SimpleTools.SimpleHooks.Models.Definition.ListenerType> listenerTypeRepo,
+            ListenerPluginManager listenerPluginManager,
             Interfaces.IDataRepository<SimpleTools.SimpleHooks.Models.Definition.AppOption> appOptionRepo)
         {
             _manager = new SimpleTools.SimpleHooks.Business.InstanceManager(
@@ -30,6 +34,8 @@ namespace SimpleTools.SimpleHooks.Web.Controllers
                 eventDefRepo,
                 listenerDefRepo,
                 eventDefListenerDefRepo,
+                listenerTypeRepo,
+                listenerPluginManager,
                 appOptionRepo
             );
         }

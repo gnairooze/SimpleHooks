@@ -18,6 +18,8 @@ public class DefinitionManagerTests
     private readonly Mock<IDataRepository<ListenerDefinition>> _mockListenerDefRepo;
     private readonly Mock<IDataRepository<EventDefinitionListenerDefinition>> _mockEventDefListenerDefRepo;
     private readonly DefinitionManager _definitionManager;
+    private readonly Mock<IDataRepository<ListenerType>> _mockListenerTypeRepo;
+    private readonly ListenerPluginManager _listenerPluginManager;
 
     public DefinitionManagerTests()
     {
@@ -27,6 +29,9 @@ public class DefinitionManagerTests
         _mockEventDefRepo = new Mock<IDataRepository<EventDefinition>>();
         _mockListenerDefRepo = new Mock<IDataRepository<ListenerDefinition>>();
         _mockEventDefListenerDefRepo = new Mock<IDataRepository<EventDefinitionListenerDefinition>>();
+        _mockListenerTypeRepo = new Mock<IDataRepository<ListenerType>>();
+
+        _listenerPluginManager = new ListenerPluginManager(_mockLogger.Object);
 
         _definitionManager = new SimpleTools.SimpleHooks.Business.DefinitionManager(
             _mockLogger.Object,
@@ -34,7 +39,9 @@ public class DefinitionManagerTests
             _mockListenerDefRepo.Object,
             _mockEventDefListenerDefRepo.Object,
             _mockAppOptionRepo.Object,
-            _mockConnectionRepo.Object);
+            _mockListenerTypeRepo.Object,
+            _mockConnectionRepo.Object,
+            _listenerPluginManager);
     }
 
     [Fact]

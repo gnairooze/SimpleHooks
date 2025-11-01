@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>SimpleTools.SimpleHooks.ListenerPlugins.TypeA</RootNamespace>
+    <AssemblyName>SimpleHooks.ListenerPlugins.TypeA</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SimpleHooks.ListenerInterfaces\SimpleHooks.ListenerInterfaces.csproj" />
+    <ProjectReference Include="..\..\HttpClient.Interface\HttpClient.Interface.csproj" />
+    <ProjectReference Include="..\..\HttpClient.Simple\HttpClient.Simple.csproj" />
+    <ProjectReference Include="..\..\Log.Interface\Log.Interface.csproj" />
+  </ItemGroup>
+
+</Project>
+
