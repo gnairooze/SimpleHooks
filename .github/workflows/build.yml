@@ -47,6 +47,10 @@ jobs:
         mkdir -p ./publish/${{ matrix.runtime }}/${{ matrix.project.name }}/listener-plugins/anonymous
         mkdir -p ./publish/${{ matrix.runtime }}/${{ matrix.project.name }}/listener-plugins/typea
         
+        # Restore plugins with runtime
+        dotnet restore code/listener-plugins/SimpleHooks.ListenerPlugins.Anonymous/SimpleHooks.ListenerPlugins.Anonymous.csproj --runtime ${{ matrix.runtime }}
+        dotnet restore code/listener-plugins/SimpleHooks.ListenerPlugins.TypeA/SimpleHooks.ListenerPlugins.TypeA.csproj --runtime ${{ matrix.runtime }}
+        
         # Publish Anonymous plugin
         dotnet publish code/listener-plugins/SimpleHooks.ListenerPlugins.Anonymous/SimpleHooks.ListenerPlugins.Anonymous.csproj \
           --configuration Release \
