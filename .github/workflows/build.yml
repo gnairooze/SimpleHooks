@@ -41,6 +41,28 @@ jobs:
           --output ./publish/${{ matrix.runtime }}/${{ matrix.project.name }} \
           --no-restore
     
+    - name: Build and copy listener plugins for ${{ matrix.project.name }}
+      run: |
+        # Create listener-plugins directories
+        mkdir -p ./publish/${{ matrix.runtime }}/${{ matrix.project.name }}/listener-plugins/anonymous
+        mkdir -p ./publish/${{ matrix.runtime }}/${{ matrix.project.name }}/listener-plugins/typea
+        
+        # Publish Anonymous plugin
+        dotnet publish code/listener-plugins/SimpleHooks.ListenerPlugins.Anonymous/SimpleHooks.ListenerPlugins.Anonymous.csproj \
+          --configuration Release \
+          --self-contained true \
+          --runtime ${{ matrix.runtime }} \
+          --output ./publish/${{ matrix.runtime }}/${{ matrix.project.name }}/listener-plugins/anonymous \
+          --no-restore
+        
+        # Publish TypeA plugin
+        dotnet publish code/listener-plugins/SimpleHooks.ListenerPlugins.TypeA/SimpleHooks.ListenerPlugins.TypeA.csproj \
+          --configuration Release \
+          --self-contained true \
+          --runtime ${{ matrix.runtime }} \
+          --output ./publish/${{ matrix.runtime }}/${{ matrix.project.name }}/listener-plugins/typea \
+          --no-restore
+    
     - name: Archive ${{ matrix.project.name }} (${{ matrix.runtime }})
       run: |
         cd ./publish/${{ matrix.runtime }}/${{ matrix.project.name }}
