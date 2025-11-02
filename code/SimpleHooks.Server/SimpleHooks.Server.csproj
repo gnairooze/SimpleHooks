@@ -39,21 +39,15 @@
     <MakeDir Directories="$(PublishDir)listener-plugins/anonymous" />
     <MakeDir Directories="$(PublishDir)listener-plugins/typea" />
 
-    <!-- Build and publish Anonymous plugin -->
-    <MSBuild Projects="../listener-plugins/SimpleHooks.ListenerPlugins.Anonymous/SimpleHooks.ListenerPlugins.Anonymous.csproj"
-             Targets="Restore"
-             Properties="Configuration=$(Configuration);TargetFramework=net8.0;RuntimeIdentifier=$(RuntimeIdentifier)" />
+    <!-- Publish Anonymous plugin with runtime -->
     <MSBuild Projects="../listener-plugins/SimpleHooks.ListenerPlugins.Anonymous/SimpleHooks.ListenerPlugins.Anonymous.csproj"
              Targets="Publish"
-             Properties="Configuration=$(Configuration);TargetFramework=net8.0;RuntimeIdentifier=$(RuntimeIdentifier);PublishDir=$(PublishDir)listener-plugins/anonymous/" />
+             Properties="Configuration=$(Configuration);TargetFramework=net8.0;RuntimeIdentifier=$(RuntimeIdentifier);PublishDir=$(PublishDir)listener-plugins/anonymous/;SelfContained=true" />
 
-    <!-- Build and publish TypeA plugin -->
-    <MSBuild Projects="../listener-plugins/SimpleHooks.ListenerPlugins.TypeA/SimpleHooks.ListenerPlugins.TypeA.csproj"
-             Targets="Restore"
-             Properties="Configuration=$(Configuration);TargetFramework=net8.0;RuntimeIdentifier=$(RuntimeIdentifier)" />
+    <!-- Publish TypeA plugin with runtime -->
     <MSBuild Projects="../listener-plugins/SimpleHooks.ListenerPlugins.TypeA/SimpleHooks.ListenerPlugins.TypeA.csproj"
              Targets="Publish"
-             Properties="Configuration=$(Configuration);TargetFramework=net8.0;RuntimeIdentifier=$(RuntimeIdentifier);PublishDir=$(PublishDir)listener-plugins/typea/" />
+             Properties="Configuration=$(Configuration);TargetFramework=net8.0;RuntimeIdentifier=$(RuntimeIdentifier);PublishDir=$(PublishDir)listener-plugins/typea/;SelfContained=true" />
   </Target>
 
   <Target Name="BuildListenerPlugins" AfterTargets="Build" Condition="'$(RuntimeIdentifier)' == ''">
