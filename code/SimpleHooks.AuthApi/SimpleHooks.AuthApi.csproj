@@ -29,4 +29,26 @@
     <ProjectReference Include="..\Repo.SQL\Repo.SQL.csproj" />
   </ItemGroup>
 
+  <Target Name="PublishListenerPlugins" AfterTargets="Build">
+    <!-- Create listener-plugins directories -->
+    <MakeDir Directories="$(OutputPath)listener-plugins/anonymous" />
+    <MakeDir Directories="$(OutputPath)listener-plugins/typea" />
+
+    <!-- Build and publish Anonymous plugin -->
+    <MSBuild Projects="../listener-plugins/SimpleHooks.ListenerPlugins.Anonymous/SimpleHooks.ListenerPlugins.Anonymous.csproj"
+             Targets="Build"
+             Properties="Configuration=$(Configuration);TargetFramework=net8.0" />
+    <MSBuild Projects="../listener-plugins/SimpleHooks.ListenerPlugins.Anonymous/SimpleHooks.ListenerPlugins.Anonymous.csproj"
+             Targets="Publish"
+             Properties="Configuration=$(Configuration);TargetFramework=net8.0;PublishDir=$(OutputPath)listener-plugins/anonymous/" />
+
+    <!-- Build and publish TypeA plugin -->
+    <MSBuild Projects="../listener-plugins/SimpleHooks.ListenerPlugins.TypeA/SimpleHooks.ListenerPlugins.TypeA.csproj"
+             Targets="Build"
+             Properties="Configuration=$(Configuration);TargetFramework=net8.0" />
+    <MSBuild Projects="../listener-plugins/SimpleHooks.ListenerPlugins.TypeA/SimpleHooks.ListenerPlugins.TypeA.csproj"
+             Targets="Publish"
+             Properties="Configuration=$(Configuration);TargetFramework=net8.0;PublishDir=$(OutputPath)listener-plugins/typea/" />
+  </Target>
+
 </Project>
