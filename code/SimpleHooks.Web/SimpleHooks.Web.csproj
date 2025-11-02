@@ -20,8 +20,30 @@
     <ProjectReference Include="..\Repo.SQL\Repo.SQL.csproj" />
   </ItemGroup>
 
-  <Target Name="PublishListenerPlugins" AfterTargets="Build">
+  <Target Name="PublishListenerPlugins" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' != ''">
     <!-- Create listener-plugins directories -->
+    <MakeDir Directories="$(PublishDir)listener-plugins/anonymous" />
+    <MakeDir Directories="$(PublishDir)listener-plugins/typea" />
+
+    <!-- Build and publish Anonymous plugin -->
+    <MSBuild Projects="../listener-plugins/SimpleHooks.ListenerPlugins.Anonymous/SimpleHooks.ListenerPlugins.Anonymous.csproj"
+             Targets="Restore"
+             Properties="Configuration=$(Configuration);TargetFramework=net8.0;RuntimeIdentifier=$(RuntimeIdentifier)" />
+    <MSBuild Projects="../listener-plugins/SimpleHooks.ListenerPlugins.Anonymous/SimpleHooks.ListenerPlugins.Anonymous.csproj"
+             Targets="Publish"
+             Properties="Configuration=$(Configuration);TargetFramework=net8.0;RuntimeIdentifier=$(RuntimeIdentifier);PublishDir=$(PublishDir)listener-plugins/anonymous/" />
+
+    <!-- Build and publish TypeA plugin -->
+    <MSBuild Projects="../listener-plugins/SimpleHooks.ListenerPlugins.TypeA/SimpleHooks.ListenerPlugins.TypeA.csproj"
+             Targets="Restore"
+             Properties="Configuration=$(Configuration);TargetFramework=net8.0;RuntimeIdentifier=$(RuntimeIdentifier)" />
+    <MSBuild Projects="../listener-plugins/SimpleHooks.ListenerPlugins.TypeA/SimpleHooks.ListenerPlugins.TypeA.csproj"
+             Targets="Publish"
+             Properties="Configuration=$(Configuration);TargetFramework=net8.0;RuntimeIdentifier=$(RuntimeIdentifier);PublishDir=$(PublishDir)listener-plugins/typea/" />
+  </Target>
+
+  <Target Name="BuildListenerPlugins" AfterTargets="Build" Condition="'$(RuntimeIdentifier)' == ''">
+    <!-- Create listener-plugins directories for regular builds (no runtime specified) -->
     <MakeDir Directories="$(OutputPath)listener-plugins/anonymous" />
     <MakeDir Directories="$(OutputPath)listener-plugins/typea" />
 
