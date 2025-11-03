@@ -72,6 +72,69 @@ steps:
     zipAfterPublish: false
 
 - task: DotNetCoreCLI@2
+  displayName: 'Restore listener plugins (Linux x64)'
+  inputs:
+    command: 'restore'
+    projects: |
+      code/listener-plugins/SimpleHooks.ListenerPlugins.Anonymous/SimpleHooks.ListenerPlugins.Anonymous.csproj
+      code/listener-plugins/SimpleHooks.ListenerPlugins.TypeA/SimpleHooks.ListenerPlugins.TypeA.csproj
+    arguments: '--runtime linux-x64'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish Anonymous plugin for SimpleHooks.Web (Linux x64)'
+  inputs:
+    command: 'publish'
+    projects: 'code/listener-plugins/SimpleHooks.ListenerPlugins.Anonymous/SimpleHooks.ListenerPlugins.Anonymous.csproj'
+    publishWebProjects: false
+    arguments: '--configuration $(buildConfiguration) --self-contained true --runtime linux-x64 --output $(build.artifactStagingDirectory)/temp/linux-x64/SimpleHooks.Web/listener-plugins/anonymous --no-restore'
+    zipAfterPublish: false
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish TypeA plugin for SimpleHooks.Web (Linux x64)'
+  inputs:
+    command: 'publish'
+    projects: 'code/listener-plugins/SimpleHooks.ListenerPlugins.TypeA/SimpleHooks.ListenerPlugins.TypeA.csproj'
+    publishWebProjects: false
+    arguments: '--configuration $(buildConfiguration) --self-contained true --runtime linux-x64 --output $(build.artifactStagingDirectory)/temp/linux-x64/SimpleHooks.Web/listener-plugins/typea --no-restore'
+    zipAfterPublish: false
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish Anonymous plugin for SimpleHooks.AuthApi (Linux x64)'
+  inputs:
+    command: 'publish'
+    projects: 'code/listener-plugins/SimpleHooks.ListenerPlugins.Anonymous/SimpleHooks.ListenerPlugins.Anonymous.csproj'
+    publishWebProjects: false
+    arguments: '--configuration $(buildConfiguration) --self-contained true --runtime linux-x64 --output $(build.artifactStagingDirectory)/temp/linux-x64/SimpleHooks.AuthApi/listener-plugins/anonymous --no-restore'
+    zipAfterPublish: false
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish TypeA plugin for SimpleHooks.AuthApi (Linux x64)'
+  inputs:
+    command: 'publish'
+    projects: 'code/listener-plugins/SimpleHooks.ListenerPlugins.TypeA/SimpleHooks.ListenerPlugins.TypeA.csproj'
+    publishWebProjects: false
+    arguments: '--configuration $(buildConfiguration) --self-contained true --runtime linux-x64 --output $(build.artifactStagingDirectory)/temp/linux-x64/SimpleHooks.AuthApi/listener-plugins/typea --no-restore'
+    zipAfterPublish: false
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish Anonymous plugin for SimpleHooks.Server (Linux x64)'
+  inputs:
+    command: 'publish'
+    projects: 'code/listener-plugins/SimpleHooks.ListenerPlugins.Anonymous/SimpleHooks.ListenerPlugins.Anonymous.csproj'
+    publishWebProjects: false
+    arguments: '--configuration $(buildConfiguration) --self-contained true --runtime linux-x64 --output $(build.artifactStagingDirectory)/temp/linux-x64/SimpleHooks.Server/listener-plugins/anonymous --no-restore'
+    zipAfterPublish: false
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish TypeA plugin for SimpleHooks.Server (Linux x64)'
+  inputs:
+    command: 'publish'
+    projects: 'code/listener-plugins/SimpleHooks.ListenerPlugins.TypeA/SimpleHooks.ListenerPlugins.TypeA.csproj'
+    publishWebProjects: false
+    arguments: '--configuration $(buildConfiguration) --self-contained true --runtime linux-x64 --output $(build.artifactStagingDirectory)/temp/linux-x64/SimpleHooks.Server/listener-plugins/typea --no-restore'
+    zipAfterPublish: false
+
+- task: DotNetCoreCLI@2
   displayName: 'Publish SimpleHooks.Assist (Linux x64)'
   inputs:
     command: 'publish'
@@ -105,6 +168,69 @@ steps:
     projects: 'code/SimpleHooks.Server/SimpleHooks.Server.csproj'
     publishWebProjects: false
     arguments: '--configuration $(buildConfiguration) --self-contained true --runtime win-x64 --output $(build.artifactStagingDirectory)/temp/win-x64/SimpleHooks.Server'
+    zipAfterPublish: false
+
+- task: DotNetCoreCLI@2
+  displayName: 'Restore listener plugins (Windows x64)'
+  inputs:
+    command: 'restore'
+    projects: |
+      code/listener-plugins/SimpleHooks.ListenerPlugins.Anonymous/SimpleHooks.ListenerPlugins.Anonymous.csproj
+      code/listener-plugins/SimpleHooks.ListenerPlugins.TypeA/SimpleHooks.ListenerPlugins.TypeA.csproj
+    arguments: '--runtime win-x64'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish Anonymous plugin for SimpleHooks.Web (Windows x64)'
+  inputs:
+    command: 'publish'
+    projects: 'code/listener-plugins/SimpleHooks.ListenerPlugins.Anonymous/SimpleHooks.ListenerPlugins.Anonymous.csproj'
+    publishWebProjects: false
+    arguments: '--configuration $(buildConfiguration) --self-contained true --runtime win-x64 --output $(build.artifactStagingDirectory)/temp/win-x64/SimpleHooks.Web/listener-plugins/anonymous --no-restore'
+    zipAfterPublish: false
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish TypeA plugin for SimpleHooks.Web (Windows x64)'
+  inputs:
+    command: 'publish'
+    projects: 'code/listener-plugins/SimpleHooks.ListenerPlugins.TypeA/SimpleHooks.ListenerPlugins.TypeA.csproj'
+    publishWebProjects: false
+    arguments: '--configuration $(buildConfiguration) --self-contained true --runtime win-x64 --output $(build.artifactStagingDirectory)/temp/win-x64/SimpleHooks.Web/listener-plugins/typea --no-restore'
+    zipAfterPublish: false
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish Anonymous plugin for SimpleHooks.AuthApi (Windows x64)'
+  inputs:
+    command: 'publish'
+    projects: 'code/listener-plugins/SimpleHooks.ListenerPlugins.Anonymous/SimpleHooks.ListenerPlugins.Anonymous.csproj'
+    publishWebProjects: false
+    arguments: '--configuration $(buildConfiguration) --self-contained true --runtime win-x64 --output $(build.artifactStagingDirectory)/temp/win-x64/SimpleHooks.AuthApi/listener-plugins/anonymous --no-restore'
+    zipAfterPublish: false
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish TypeA plugin for SimpleHooks.AuthApi (Windows x64)'
+  inputs:
+    command: 'publish'
+    projects: 'code/listener-plugins/SimpleHooks.ListenerPlugins.TypeA/SimpleHooks.ListenerPlugins.TypeA.csproj'
+    publishWebProjects: false
+    arguments: '--configuration $(buildConfiguration) --self-contained true --runtime win-x64 --output $(build.artifactStagingDirectory)/temp/win-x64/SimpleHooks.AuthApi/listener-plugins/typea --no-restore'
+    zipAfterPublish: false
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish Anonymous plugin for SimpleHooks.Server (Windows x64)'
+  inputs:
+    command: 'publish'
+    projects: 'code/listener-plugins/SimpleHooks.ListenerPlugins.Anonymous/SimpleHooks.ListenerPlugins.Anonymous.csproj'
+    publishWebProjects: false
+    arguments: '--configuration $(buildConfiguration) --self-contained true --runtime win-x64 --output $(build.artifactStagingDirectory)/temp/win-x64/SimpleHooks.Server/listener-plugins/anonymous --no-restore'
+    zipAfterPublish: false
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish TypeA plugin for SimpleHooks.Server (Windows x64)'
+  inputs:
+    command: 'publish'
+    projects: 'code/listener-plugins/SimpleHooks.ListenerPlugins.TypeA/SimpleHooks.ListenerPlugins.TypeA.csproj'
+    publishWebProjects: false
+    arguments: '--configuration $(buildConfiguration) --self-contained true --runtime win-x64 --output $(build.artifactStagingDirectory)/temp/win-x64/SimpleHooks.Server/listener-plugins/typea --no-restore'
     zipAfterPublish: false
 
 - task: DotNetCoreCLI@2

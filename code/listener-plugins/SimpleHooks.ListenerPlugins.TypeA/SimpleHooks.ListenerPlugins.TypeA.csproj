@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <RuntimeIdentifiers>linux-x64;win-x64</RuntimeIdentifiers>
     <RootNamespace>SimpleTools.SimpleHooks.ListenerPlugins.TypeA</RootNamespace>
     <AssemblyName>SimpleHooks.ListenerPlugins.TypeA</AssemblyName>
   </PropertyGroup>
